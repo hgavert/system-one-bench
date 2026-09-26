@@ -177,6 +177,7 @@ negative  (negative=0.98, neutral=0.01, positive=0.01)  &lt;- my flight got canc
 <p class="caption">Accuracy on 300 balanced tweets (±5 points of sampling noise). The dashed line marks the best local LLM. "Variant" = SemIf's technique on a 9B base, not a configuration the Decision Index tested. "Bare prompt" = the LLM without class descriptions. The right column is median latency per message on the M5.</p>
 <div class="tbl"><table id="results"></table></div>
 <p class="caption">ECE = expected calibration error of the top-class probability (lower = the probabilities can be taken literally). An LLM returns a bare label, so its "confidence" is always 1.0 and its ECE equals its error rate.</p>
+<p class="caption"><b>Coverage.</b> Every model in the table above was run on all 300 tweets. Decider 4B v2, GLiNER2.5-Decide (340M, 1B) and CLM 8B were added later, after the option-order test and the cascade had been run, so those two sections cover only some of the models.</p>
 
 <h3>Where the errors are</h3>
 <div class="cms" id="cms"></div>

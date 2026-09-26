@@ -90,6 +90,6 @@ if __name__ == "__main__":
         if not a.engine.startswith("http:"):
             raise
         raise SystemExit(f"no model server answering at {a.engine[5:].partition(',')[0]} ({e}). Start it first: "
-                         "Kev with run_kev.sh's command, CLM as in docs/4-zero-shot-reproductions.md section 4.5.")
+                         "Kev with run_kev.sh's command, CLM as in docs/4-zero-shot-reproductions.md section 4.6.")
     print(f"ready: http://127.0.0.1:{a.port}", flush=True)
     ThreadingHTTPServer(("127.0.0.1", a.port), Handler).serve_forever()

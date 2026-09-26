@@ -1,32 +1,47 @@
-# Open-source Jev reproductions, zero-shot on real sentiment
+# Open-source Jev reproductions, tested zero-shot in two situations
 
-A hands-on tutorial. **Jev** (TypeSafe AI, released 15 Sept 2026) is a "System One" model: it
-answers typed questions with probabilities instead of generating text. Within a week, dozens of
-open reproductions appeared. This repo takes the best-ranked ones that run on a 32 GB Apple M5,
-asks each the **same** sentiment question about 300 human-labelled tweets, and benchmarks them
-against local LLMs in LM Studio. **Zero-shot, with no training for the task.**
+[![Decider 2B playing Snake zero-shot: the board on the left, each move's options, probabilities and the exact prompt on the right](docs/snake-demo.png)](docs/snake-report.md)
 
-* **Reproductions run:** [Laya](https://huggingface.co/convaiinnovations/laya) (+ multilingual),
+*Decider 2B, an open 2B System One model, playing Snake zero-shot in the local demo (`08_snake_server.py`): every
+move is one typed question, answered with a probability per option.*
+
+A hands-on tutorial. **Jev** (TypeSafe AI, released 15 Sept 2026) is a "System One" model: it answers typed
+questions with probabilities instead of generating text. Within a week, dozens of open reproductions appeared. This
+repo takes the best-ranked ones that run on a 32 GB Apple M5, plus the strongest ones released since, and tests them
+**zero-shot, with no training for the task**, in two very different situations:
+
+| | Tweet sentiment | Snake |
+|---|---|---|
+| **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game |
+| **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways |
+| **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) |
+| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster | asked to read the board, the models fail (so does Jev); with one verdict per option, Decider 2B eats 36.9 food per game, close to code's 41.1 |
+| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) |
+
+Both reports are generated from `results/`: `uv run python docs/page/build.py` and
+`uv run python docs/snake-report/build.py`.
+
+## The models
+
+* **Reproductions:** [Laya](https://huggingface.co/convaiinnovations/laya) (+ multilingual),
   [Kev](https://github.com/jaredpalmer/kev) 0.8B / 4B / 9B, [SemIf](https://github.com/TheoLeeCJ/openjev),
   [openvons](https://github.com/genai-craft/openvons), [Decider 2B](https://huggingface.co/Mapika/decider-2b),
-  plus the newly released [Decider 4B v2](https://huggingface.co/Mapika/decider-4b/tree/v2),
-  [GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide) (340M and 1B) and [CLM 8B](https://github.com/Contrastive-LM/CLM) (contrastive bi-encoder).
-  Chosen from the [Jev Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index);
-  why the top five don't fit a 32 GB Mac: [docs/1-landscape.md](docs/1-landscape.md)
-* **LLM baselines:** Gemma 4 26B-A4B, Gemma 4 12B and Qwen 3.8 27B in LM Studio, with JSON-schema output
-* **Dataset:** [TweetEval sentiment](https://huggingface.co/datasets/cardiffnlp/tweet_eval)
-  (SemEval-2017 Task 4A): tweets labelled negative / neutral / positive by human annotators,
-  a class-balanced sample of 300 from the test split
+  [Decider 4B v2](https://huggingface.co/Mapika/decider-4b/tree/v2),
+  [GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide) (340M and 1B) and
+  [CLM 8B](https://github.com/Contrastive-LM/CLM) (contrastive bi-encoder).
+  Chosen from the [Jev Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index), plus the
+  last four, released after it; why the index's top five don't fit a 32 GB Mac: [docs/1-landscape.md](docs/1-landscape.md)
+* **Which test ran which:** all of them ran the sentiment test; seven of them also played Snake: Decider 2B,
+  Decider 4B v2, Kev 4B, CLM 8B, GLiNER2.5-Decide 340M and 1B, and Laya.
+* **LLM baselines (sentiment):** Gemma 4 26B-A4B, Gemma 4 12B and Qwen 3.8 27B in LM Studio, with JSON-schema output
 
-**Report:** [docs/sentiment-report.md](docs/sentiment-report.md) · interactive version:
-[docs/page/index.html](docs/page/index.html).
-Both are generated from `results/` by `uv run python docs/page/build.py`.
+## Test 1: tweet sentiment
 
-**Snake follow-up:** [docs/snake-report.md](docs/snake-report.md) · interactive version:
-[docs/snake-report/index.html](docs/snake-report/index.html). The same models play Snake zero-shot, and the
-way the move is asked decides everything. Generated from `results/snake/` by `uv run python docs/snake-report/build.py`.
+[TweetEval sentiment](https://huggingface.co/datasets/cardiffnlp/tweet_eval) (SemEval-2017 Task 4A): tweets labelled
+negative / neutral / positive by human annotators, a class-balanced sample of 300 from the test split. Every engine
+gets the same question dict. Report: [docs/sentiment-report.md](docs/sentiment-report.md).
 
-## Zero-shot results (Apple M5, 32 GB)
+### Results
 
 300 balanced test tweets, one per call, nothing trained on tweets. ±5 points of sampling noise.
 
@@ -53,7 +68,8 @@ way the move is asked decides everything. Generated from `results/snake/` by `uv
 | **CLM 8B** | contrastive bi-encoder | new | 0.517 | 0.451 | 167 ms | 0.271 |
 | *Qwen3-8B raw embeddings* | *bi-encoder baseline* | – | *0.343* | *0.193* | *166 ms* | *0.213* |
 
-(Gemma 4 12B with the bare prompt: 0.697. Full table: [results/REPORT.md](results/REPORT.md).)
+(Gemma 4 12B with the bare prompt: 0.697. Full table: [results/REPORT.md](results/REPORT.md). Index # "new" = released
+after the Decision Index edition used here.)
 
 * **The Decider models tie the best local LLM zero-shot**: Decider 4B v2 0.750 and Decider 2B 0.740 vs
   Gemma 26B 0.740 (paired p ≈ 0.8), with honest probabilities. The 2B is the better deal: as accurate, 4.6× faster
@@ -73,55 +89,7 @@ way the move is asked decides everything. Generated from `results/snake/` by `uv
 * **Cascade**: accept Decider's answer at ≥ 0.5 confidence, else ask Gemma 26B → 0.753 with only 6% of tweets
   sent to the LLM.
 
-## Setup
-
-```bash
-./scripts/setup_engines.sh                         # main env + each engine at the benchmarked commit, own env each
-uv run python scripts/download_models.py --list    # the models, where they go, sizes (~76 GB in total)
-uv run python scripts/download_models.py           # download all at the benchmarked revisions and SHA-256-verify
-```
-
-- `setup_engines.sh` takes engine names to set up only some: `main kev semif openvons clm gliner`.
-- `download_models.py --only decider-2b,gliner-decide` fetches a subset (Kev's Qwen3.5 bases are added
-  automatically); `--verify` checks what is on disk without downloading. If huggingface.co is slow from your
-  network, `--parallel` splits large files into 32 byte ranges and `--modelscope` fetches Qwen3-4B-Instruct from
-  the ModelScope mirror.
-- LLM baselines and `nomic-embed-text`: [LM Studio](https://lmstudio.ai) serving on `localhost:1234`.
-
-## The tutorial, step by step
-
-| Step | Run | What you learn |
-|---|---|---|
-| 1 | `uv run python 01_hello_laya.py` | Declare a typed `choice` question, classify three messages with the simplest reproduction |
-| 2 | `uv run python 02_benchmark.py laya` | Score 300 labelled tweets: accuracy, macro-F1, latency, calibration |
-| 2b | `./run_kev.sh kev-9b` | The same question over Kev's TypeSafe-compatible HTTP API |
-| 2c | `uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat` | The same tweets through a local LLM |
-| 3 | `uv run python adapters/export_test_tweets.py`, then an adapter, then `07_import_predictions.py` | Engines that need their own environment: SemIf, openvons, Decider |
-| 4 | `uv run python 04_report.py` | Every run in one table: `results/REPORT.md` |
-| 5 | `uv run python 05_cascade.py --fast decider-2b` | Route only low-confidence answers to the LLM |
-| 6 | `uv run python adapters/embedding_baseline.py` | Contrast: nearest label description by embedding |
-| 8 | `uv run python 08_snake_server.py` → http://127.0.0.1:8765 | A System One model plays Snake; every request, prompt and probability on the side |
-| 9 | `uv run python 09_snake_benchmark.py` | Ten games per way of asking, next to code-only baselines: `results/snake/SUMMARY.md` |
-| 10 | `uv run python 10_snake_probe.py` | Single moves with a known right answer: which phrasing a model can actually use |
-| 11 | `adapters/position_bias.py <engine>`, then `uv run python 11_position_bias.py` | Does option order change the answer? |
-
-Adapters (each file's docstring has the exact command):
-
-```bash
-third_party/openjev/.venv/bin/python adapters/semif_adapter.py 4b > results/raw/semif.jsonl
-third_party/kev/.venv/bin/python -m mlx_lm.server --model models/Qwen3-4B-Instruct-2507 --port 8300 &
-uv run python adapters/openvons_adapter.py > results/raw/openvons.jsonl
-uv run python adapters/decider_adapter.py > results/raw/decider-2b.jsonl
-uv run python adapters/decider_adapter.py models/decider-4b-v2 > results/raw/decider-4b-v2.jsonl
-third_party/gliner2-env/.venv/bin/python adapters/gliner_adapter.py fastino/GLiNER2.5-Decide > results/raw/gliner-decide.jsonl
-third_party/kev/.venv/bin/python adapters/mlx_embed_server.py --model Qwen/Qwen3-8B --port 8090 &   # CLM's encoder
-(cd third_party/clm && CLM_DEVICE=cpu .venv/bin/clm-serve --port 8700 --emb-url http://127.0.0.1:8090/v1/embeddings --ckpt checkpoints/CLM_v0.1-8B.pt) &
-uv run python 02_benchmark.py s1:clm-latest --url http://127.0.0.1:8700 --name clm-8b
-uv run python 07_import_predictions.py semif results/raw/semif.jsonl       # likewise for the others
-uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat --prompt simple --name llm-google_gemma-4-26b-a4b-qat-simple
-```
-
-### For reference: task fine-tuning
+#### For reference: task fine-tuning
 
 Fine-tuning a general decision model on 3,000 tweets defeats its purpose (you could train a
 classifier head on embeddings instead), but it shows the ceiling. It was done once and isn't
@@ -145,41 +113,144 @@ are Mac-specific (no Apple GPU kernels for Qwen3.5's DeltaNet layers in training
 take minutes. Models are saved in `models/laya-tweet-sentiment`, `models/kev-0.8b-tweets`,
 `models/kev-4b-tweets`. Details: [docs/reference/](docs/reference).
 
+## Test 2: Snake
+
+A 12×12 board, 10 seeded games per model and request. Code owns the rules; the model picks each move from one typed
+`choice` question. We read how six published Jev Snake demos phrase that question, reproduced four of them, wrote
+two more, and also asked for single moves on fixed situations where code knows the right answer (the probe).
+Report: [docs/snake-report.md](docs/snake-report.md); key code: [docs/5-snake.md](docs/5-snake.md).
+
+### Results
+
+Each model's best request (among those where the model decides every move), 10 games each, 500-step cap:
+
+| Model | Best request | Food / game | Best game | Died | Per move | Probe, hard states |
+|---|---|--:|--:|--:|--:|--:|
+| **Decider 2B** | Judged options | **36.9** | 46 | 2 of 10 | 145 ms | 100% |
+| **CLM 8B** | Judged, plain wording | 36.2 | 44 | 5 of 10 | **4 ms** | 100% |
+| Decider 4B v2 | Judged, plain wording | 30.8 | 43 | 9 of 10 | 260 ms | 100% |
+| Kev 4B | Judged options | 29.5 | 41 | 10 of 10 | 108 ms | 100% |
+| GLiNER2.5-Decide (340M) | Judged, plain wording | 26.3 | 37 | 5 of 10 | 70 ms | 90% |
+| GLiNER2.5-Decide-1B | Judged options | 15.3 | 25 | 4 of 10 | 82 ms | 72% |
+| Laya | Facts in the options | 0.5 | 2 | 0 of 10 | 100 ms | 18% |
+| *code only: greedy + dead-end check* | – | *41.1* | *44* | *2 of 10* | – | – |
+
+* **The simple way fails, for Jev too.** Given the raw board, or nadeem4's or sorrycc's published phrasing, the models
+  drive into walls or circle until they starve. Jev's only published result is 1.8 food per game against 17.3 for
+  greedy code. The demos that look good let code do the geometry.
+* **What works: one verdict per option, and nothing else in the state.** Code writes "moves closer to the food; keeps
+  the most room" into each option. Numbers to compare across options and direction words in the state (`heading: up`)
+  are what break the small models.
+* **The wording has to suit the model.** CLM and GLiNER 340M almost never pick an option that says "eats the food";
+  worded "moves closer to the food", CLM goes from 0 to 36.2 food per game.
+* **Better single moves don't mean longer games.** Decider 4B v2 and Kev 4B are as accurate as Decider 2B on single
+  moves but chase the food into tight spaces and die in 9–10 games of 10.
+* **Speed varies 60-fold**, from CLM's ~4 ms per move (everything cached) to Decider 4B v2's ~260 ms.
+
+## Setup
+
+```bash
+./scripts/setup_engines.sh                         # main env + each engine at the benchmarked commit, own env each
+uv run python scripts/download_models.py --list    # the models, where they go, sizes (~76 GB in total)
+uv run python scripts/download_models.py           # download all at the benchmarked revisions and SHA-256-verify
+```
+
+- `setup_engines.sh` takes engine names to set up only some: `main kev semif openvons clm gliner`.
+- `download_models.py --only decider-2b,gliner-decide` fetches a subset (Kev's Qwen3.5 bases are added
+  automatically); `--verify` checks what is on disk without downloading. If huggingface.co is slow from your
+  network, `--parallel` splits large files into 32 byte ranges and `--modelscope` fetches Qwen3-4B-Instruct from
+  the ModelScope mirror.
+- LLM baselines and `nomic-embed-text`: [LM Studio](https://lmstudio.ai) serving on `localhost:1234`.
+
+## The tutorial, step by step
+
+**Test 1, tweet sentiment**
+
+| Step | Run | What you learn |
+|---|---|---|
+| 1 | `uv run python 01_hello_laya.py` | Declare a typed `choice` question, classify three messages with the simplest reproduction |
+| 2 | `uv run python 02_benchmark.py laya` | Score 300 labelled tweets: accuracy, macro-F1, latency, calibration |
+| 2b | `./run_kev.sh kev-9b` | The same question over Kev's TypeSafe-compatible HTTP API |
+| 2c | `uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat` | The same tweets through a local LLM |
+| 3 | `uv run python adapters/export_test_tweets.py`, then an adapter, then `07_import_predictions.py` | Engines that need their own environment: SemIf, openvons, Decider |
+| 4 | `uv run python 04_report.py` | Every run in one table: `results/REPORT.md` |
+| 5 | `uv run python 05_cascade.py --fast decider-2b` | Route only low-confidence answers to the LLM |
+| 6 | `uv run python adapters/embedding_baseline.py` | Contrast: nearest label description by embedding |
+| 11 | `adapters/position_bias.py <engine>`, then `uv run python 11_position_bias.py` | Does option order change the answer? |
+
+Sentiment adapters (each file's docstring has the exact command):
+
+```bash
+third_party/openjev/.venv/bin/python adapters/semif_adapter.py 4b > results/raw/semif.jsonl
+third_party/kev/.venv/bin/python -m mlx_lm.server --model models/Qwen3-4B-Instruct-2507 --port 8300 &
+uv run python adapters/openvons_adapter.py > results/raw/openvons.jsonl
+uv run python adapters/decider_adapter.py > results/raw/decider-2b.jsonl
+uv run python adapters/decider_adapter.py models/decider-4b-v2 > results/raw/decider-4b-v2.jsonl
+third_party/gliner2-env/.venv/bin/python adapters/gliner_adapter.py fastino/GLiNER2.5-Decide > results/raw/gliner-decide.jsonl
+third_party/kev/.venv/bin/python adapters/mlx_embed_server.py --model Qwen/Qwen3-8B --port 8090 &   # CLM's encoder
+(cd third_party/clm && CLM_DEVICE=cpu .venv/bin/clm-serve --port 8700 --emb-url http://127.0.0.1:8090/v1/embeddings --ckpt checkpoints/CLM_v0.1-8B.pt) &
+uv run python 02_benchmark.py s1:clm-latest --url http://127.0.0.1:8700 --name clm-8b
+uv run python 07_import_predictions.py semif results/raw/semif.jsonl       # likewise for the others
+uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat --prompt simple --name llm-google_gemma-4-26b-a4b-qat-simple
+```
+
+**Test 2, Snake**
+
+| Step | Run | What you learn |
+|---|---|---|
+| 8 | `uv run python 08_snake_server.py` → http://127.0.0.1:8765 | A System One model plays Snake; every request, prompt and probability on the side |
+| 9 | `uv run python 09_snake_benchmark.py` | Ten games per way of asking, next to code-only baselines: `results/snake/SUMMARY.md` |
+| 10 | `uv run python 10_snake_probe.py` | Single moves with a known right answer: which phrasing a model can actually use |
+
+All three take `--engine` (`decider`, `decider:models/decider-4b-v2`, `laya`, or `http:<url>,<model>` for Kev, CLM and
+GLiNER behind their servers); [docs/5-snake.md §5.7](docs/5-snake.md) has the server commands.
+
 ## Key-code docs
 
-1. [docs/1-landscape.md](docs/1-landscape.md): what Jev is, the four families of reproductions, the Decision Index and what runs on a Mac
-2. [docs/2-typed-questions.md](docs/2-typed-questions.md): how one typed question gets answered, end to end (worked example: Laya), why a head handles any number of options in one pass, why option order can matter
-3. [docs/3-benchmark-method.md](docs/3-benchmark-method.md): benchmark method, the LLM prompts and the Kev HTTP client
-4. [docs/4-zero-shot-reproductions.md](docs/4-zero-shot-reproductions.md): SemIf, openvons, Decider 2B / 4B v2 (and its letter-slot head), GLiNER2.5-Decide and CLM (with an MLX encoder), position bias, letter-logit readouts, adapters, **all results**, "isn't this just embeddings?"
-5. [docs/5-snake.md](docs/5-snake.md): Snake. How six published Jev demos ask for a move, why the simple way fails
-   (for Jev too), and the phrasing that works, tested on seven open models (Decider 2B/4B, Kev 4B, CLM 8B, GLiNER 340M/1B, Laya).
-   Report: [docs/snake-report.md](docs/snake-report.md)
-6. Reference only: [docs/reference/finetune-laya.md](docs/reference/finetune-laya.md), [docs/reference/finetune-kev.md](docs/reference/finetune-kev.md)
+Both tests:
+
+* [docs/1-landscape.md](docs/1-landscape.md): what Jev is, the families of reproductions, the Decision Index and what runs on a Mac
+* [docs/2-typed-questions.md](docs/2-typed-questions.md): how one typed question gets answered, end to end (worked example: Laya), why a head handles any number of options in one pass, why option order can matter
+
+Tweet sentiment:
+
+* [docs/3-benchmark-method.md](docs/3-benchmark-method.md): benchmark method, the LLM prompts and the Kev HTTP client
+* [docs/4-zero-shot-reproductions.md](docs/4-zero-shot-reproductions.md): SemIf, openvons, Decider 2B / 4B v2 (and its letter-slot head), GLiNER2.5-Decide and CLM (with an MLX encoder), position bias, letter-logit readouts, adapters, **all results**, "isn't this just embeddings?"
+* Reference only: [docs/reference/finetune-laya.md](docs/reference/finetune-laya.md), [docs/reference/finetune-kev.md](docs/reference/finetune-kev.md)
+
+Snake:
+
+* [docs/5-snake.md](docs/5-snake.md): how six published Jev demos ask for a move, how each model plugs in, the probe, what breaks the models, the request that works, all game results
 
 ## Files
 
 ```
-01_hello_laya.py            step 1: hello world
-data.py                     TweetEval loader (balanced, seeded sample)
-laya_classifier.py          Laya wrapper: classify() and batched classify_batch(); SENTIMENT_QUESTION
-systemone_classifier.py     client for any System One HTTP server (Kev, or TypeSafe's hosted Jev)
-llm_classifier.py           LM Studio wrapper (OpenAI API + JSON-schema enum, thinking off)
-02_benchmark.py             one system -> results/runs/<name>.json
-adapters/                   export_test_tweets.py, one adapter per engine, download helpers
-07_import_predictions.py    adapter output -> results/runs/<name>.json (same metrics)
-04_report.py                all runs -> results/REPORT.md
-05_cascade.py               System One -> LLM confidence cascade -> results/cascades/
-11_position_bias.py         option-order test analysis -> results/position_bias.json
-run_kev.sh                  start a Kev server, benchmark it, stop it
-scripts/                    setup_engines.sh, download_models.py (pinned revisions + SHA-256 check), fetch helpers
-03_finetune_laya.py, 06_export_kev_data.py, run_kev_finetune.sh    reference fine-tunes
-08_snake_server.py          step 8: Snake demo server (stdlib HTTP; snake/static/index.html)
-09_snake_benchmark.py       step 9: Snake games per formulation and model
-10_snake_probe.py           step 10: single-decision probe per formulation and model
-snake/                      game + flood fill, the five formulations, engines (Decider, Laya, any /v1/systemone)
-docs/page/                  tutorial page (template + build.py -> index.html)
-docs/snake-report/          Snake report page (template + build.py -> index.html; build_md.py -> docs/snake-report.md)
-results/                    logs, raw adapter output, per-run JSON with every prediction, report
+Both tests
+  scripts/                  setup_engines.sh, download_models.py (pinned revisions + SHA-256 check), fetch helpers
+  01_hello_laya.py          step 1: hello world
+  adapters/                 one adapter per engine: sentiment runs, /v1/systemone servers (GLiNER, CLM's MLX encoder)
+  results/                  every run, per test (results/snake/ for Snake)
+
+Tweet sentiment
+  data.py                   TweetEval loader (balanced, seeded sample)
+  laya_classifier.py        Laya wrapper: classify() and batched classify_batch(); SENTIMENT_QUESTION
+  systemone_classifier.py   client for any System One HTTP server (Kev, or TypeSafe's hosted Jev)
+  llm_classifier.py         LM Studio wrapper (OpenAI API + JSON-schema enum, thinking off)
+  02_benchmark.py           one system -> results/runs/<name>.json
+  07_import_predictions.py  adapter output -> results/runs/<name>.json (same metrics)
+  04_report.py              all runs -> results/REPORT.md
+  05_cascade.py             System One -> LLM confidence cascade -> results/cascades/
+  11_position_bias.py       option-order test analysis -> results/position_bias.json
+  run_kev.sh                start a Kev server, benchmark it, stop it
+  03_finetune_laya.py, 06_export_kev_data.py, run_kev_finetune.sh    reference fine-tunes
+  docs/page/                report page (template + build.py -> index.html; build_md.py -> docs/sentiment-report.md)
+
+Snake
+  snake/                    game + flood fill, the six requests, engines (Decider, Laya, any /v1/systemone)
+  08_snake_server.py        step 8: demo server (stdlib HTTP; snake/static/index.html)
+  09_snake_benchmark.py     step 9: games per request and model
+  10_snake_probe.py         step 10: single-decision probe per request and model
+  docs/snake-report/        report page (template + build.py -> index.html; build_md.py -> docs/snake-report.md)
 ```
 
 ## Data and license

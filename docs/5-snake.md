@@ -1,13 +1,13 @@
-# 5 · A System One model plays Snake
+# 5 · System One models play Snake
 
-*Researched 23 September 2026.* Within a week of Jev's release, several people posted Snake played by Jev.
-This doc reads how they asked for each move, tries the same requests on the open models from this repo,
-and finds the version a small open model can actually play.
+*Researched 23–26 September 2026.* Within a week of Jev's release, several people posted Snake played by Jev. This
+doc reads how they asked for each move, puts the same requests to seven open System One models, and finds the
+requests those models can actually play with. The results in report form: [snake-report.md](snake-report.md).
 
 Files: [`snake/game.py`](../snake/game.py) (rules, flood fill), [`snake/formulations.py`](../snake/formulations.py)
-(the six requests), [`snake/engine.py`](../snake/engine.py) (Decider / Laya / any `/v1/systemone` server),
-[`08_snake_server.py`](../08_snake_server.py) (the demo), [`09_snake_benchmark.py`](../09_snake_benchmark.py) (games),
-[`10_snake_probe.py`](../10_snake_probe.py) (single decisions with a known right answer).
+(the six requests), [`snake/engine.py`](../snake/engine.py) (the engines), [`08_snake_server.py`](../08_snake_server.py)
+(the demo), [`09_snake_benchmark.py`](../09_snake_benchmark.py) (games), [`10_snake_probe.py`](../10_snake_probe.py)
+(single decisions with a known right answer).
 
 ## 5.1 How the published demos ask
 
@@ -25,26 +25,66 @@ They differ in what goes into `state`, what the options say, and how much code d
 
 The one published measurement of Jev itself playing ([nadeem4's arena](https://github.com/nadeem4/jev-demo), 10 games,
 10×10, the *relative, in words* request): **Jev ate 1.8 food per game**, never died, but turned right on 71% of moves
-and circled until the starvation limit. A few lines of greedy code ate 17.3. Laya ate 0.5 and died in 9 of 10.
-So the smooth "straight to the food" videos come from demos where code carries the spatial work: legal-move
-filtering, flood-fill facts, gates, or a waypoint pathfinder.
+and circled until the starvation limit. A few lines of greedy code ate 17.3. So the smooth "straight to the food"
+videos come from demos where code carries the spatial work: legal-move filtering, flood-fill facts, gates, or a
+waypoint pathfinder.
 
-## 5.2 Six requests
+## 5.2 The seven models and how they plug in
 
-`snake/formulations.py` implements four published requests and two written here:
+Every Snake script takes `--engine`, and every engine answers the same Jev request (`engine.ask(request)` returns
+the answers, the latency and the input tokens). Three models load in-process; the other four sit behind a
+TypeSafe-compatible `POST /v1/systemone` server and are reached by `HTTPEngine`.
+
+```python
+def make_engine(spec):
+    """'decider' | 'decider:<model dir>' | 'laya' | 'http:<url>[,<model>]'"""
+    if spec == "decider":
+        return DeciderEngine()
+    if spec.startswith("decider:"):
+        return DeciderEngine(path=spec.split(":", 1)[1])
+    if spec == "laya":
+        return LayaEngine()
+    if spec.startswith("http:"):
+        url, _, model = spec[5:].partition(",")
+        return HTTPEngine(url, model or "kev-latest")
+```
+
+| Model | How it reads the request | `--engine` | Served by |
+|---|---|---|---|
+| Decider 2B | Qwen3.5-2B fine-tune: state, question and lettered options in one sequence; answer from the letter logits | `decider` | in-process (`models/decider-2b`, its own `decider/` package) |
+| Decider 4B v2 | the same, on Qwen3.5-4B | `decider:models/decider-4b-v2` | in-process; only one Decider version per process, since each ships its own `decider/` |
+| Kev 4B | LoRA on Qwen3.5-4B-Base; a pointer head scores each option's end token | `http:http://127.0.0.1:8009,kev-4b` | Kev's own server (MLX) |
+| CLM 8B | bi-encoder: frozen Qwen3-8B embeds state + question and each option *separately*; softmax over cosines | `http:http://127.0.0.1:8700,clm-latest` | unchanged `clm-serve`, with Qwen3-8B on MLX via `adapters/mlx_embed_server.py` ([doc 4 §4.6](4-zero-shot-reproductions.md)) |
+| GLiNER 340M | GLiNER2.5-Decide, a DeBERTa-v3-large schema encoder: question and all labels packed before the text | `http:http://127.0.0.1:8710,gliner-decide` | [`adapters/gliner_systemone_server.py`](../adapters/gliner_systemone_server.py) in `third_party/gliner2-env` |
+| GLiNER 1B | GLiNER2.5-Decide-1B, the larger variant | `http:http://127.0.0.1:8711,gliner-decide-1b` | the same adapter, `--model fastino/GLiNER2.5-Decide-1B` |
+| Laya | ModernBERT-large encoder (421M) with a `[MASK]` marker per option | `laya` | in-process |
+
+The GLiNER adapter maps each Jev question to a gliner2 `Classifier` task (choice → single-label, noul →
+true/false, score → ordinal) because that API returns a probability for every label; the sentiment adapter's
+`classify_text` returns only the winner. gliner2 rejects `(` and `)` in labels and instructions, so the adapter
+writes `{ }` instead. GLiNER scores all questions of a request in one prompt, so extra questions can change its move
+answer; the other engines score each question in its own row (Decider's `independent=True`).
+
+For the demo, "What the model reads" shows Decider's exact rows: `DeciderEngine.rows()` rebuilds them with the
+checkpoint's own prompt builder (Decider 4B exposes `_system_one_items()` for this). The HTTP engines show only the
+request JSON.
+
+## 5.3 Six requests
+
+`snake/formulations.py` implements four published requests and two written here from what the probe (5.4) showed:
 
 * **grid**: raw board, 3 directions (iammusham / coderhh, without the fatal-move filter)
 * **relative**: nadeem4's phrases and `TURN_*` options, verbatim
 * **facts**: sorrycc's state and option text, verbatim
-* **judged**: sorrycc's facts, rewritten as verdicts, with no state (below)
-* **judged-plain**: *judged*, with the eating move worded "moves closer to the food; keeps the most room" (for CLM, 5.6)
+* **judged**: sorrycc's facts, rewritten as verdicts, with no state (5.5)
+* **judged-plain**: *judged*, with the eating move worded "moves closer to the food; keeps the most room"
 * **composed**: ximing's extra `danger` score and `survival` noul on top of *judged*, gated by the same thresholds
 
-## 5.3 Probe: one decision, known answer
+## 5.4 Probe: one decision, known answer
 
-Playing games mixes many effects. `10_snake_probe.py` asks for single moves on fixed states where code knows
-which moves are good (not a dead end, and as close to the food as any non-dead-end move). The **hard** set holds
-only states where going straight is legal but wrong.
+Playing games mixes many effects. `10_snake_probe.py` asks for single moves on fixed states where code knows which
+moves are good (not a dead end, and as close to the food as any non-dead-end move). The **hard** set holds only
+states where going straight is legal but wrong.
 
 Good pick, all states / hard states (chance ≈ 0.50 on both):
 
@@ -57,18 +97,31 @@ Good pick, all states / hard states (chance ≈ 0.50 on both):
 | **judged, verdicts only** | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.93 / 0.89 | 0.93 / 0.86 | 0.81 / 0.72 | 0.61 / 0.39 |
 | judged, eating worded as "closer" | 0.98 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.95 / 0.90 | 0.79 / 0.70 | – |
 
-Two things break the small models:
+Kev 4B is the only model that reads the raw board. Three things break the others:
 
-1. **Numbers to compare across options.** Decider can't tell which of "food is 10 steps away" and "8 steps away"
-   is smaller: 0.67 good. With the rule spelled out in the instruction, still 0.82. With the comparison written
-   into each option (*"moves closer to the food"*, or *"distance changes from 9 to 8"*), 0.98–0.99.
-2. **Direction words in the state pull toward straight.** With `heading: up` and "the food is 5 down and 5 right"
-   in the context, Decider went straight on 43% of hard states, even when that option read "moves away from the
-   food". Remove the state and it went straight 0%. Kev 4B is not distracted by it.
+1. **Numbers to compare across options.** With sorrycc's facts, every model is at 0–46% on the hard states. The
+   same facts as a verdict in each option lift all of them, and all but Laya to 72–100%. On Decider 2B, spelling out
+   the rule in the instruction ("take the move after which the food is the fewest steps away") got only from 0.67 to
+   0.82 on all states; writing the comparison into each option (*"moves closer to the food"*, or *"distance changes
+   from 9 to 8"*) reached 0.98–0.99.
+2. **Direction words in the state pull toward straight.** Compare the two judged rows: with `heading: up` and "the
+   food is 5 down and 5 right" in the context, Decider 2B drops to 0.57 on the hard states, GLiNER 340M to 0.28 and
+   GLiNER 1B to 0.00, going straight even when that option reads "moves away from the food". The two 4B models and
+   CLM are unaffected. On Decider 2B, renaming `up/down/left/right` to `move 1/2/3` changed nothing: it's the context
+   that pulls.
+3. **The word "eats"** (CLM, GLiNER 340M). Both score option text by matching it. CLM embeds each option on its own,
+   so identical option texts get identical probabilities (two "moves away from the food; keeps the most room":
+   0.293 each). On 80 states with an eating move, CLM picked it 0% of the time with every wording tried ("eats the
+   food", "reaches the food", "moves onto the food", "moves closer to the food and eats it") and ranked "moves away
+   from the food" above it; described as "moves closer to the food; keeps the most room" (true: the distance drops
+   to 0), 97%. The probe rarely has the food one step away, so this shows mostly in games (5.6).
 
-The option *names* don't matter: renaming `up/down/left/right` to `move 1/2/3` changed nothing.
+CLM's own game demo ([`examples/t_rex`](https://github.com/Contrastive-LM/CLM/tree/main/examples/t_rex), T-Rex runner
+vs Jev) phrases actions the same way: a physics planner labels each one (`jump: Safe. Clears the 2 large cacti.
+Best.`) and a shield replaces unsafe answers. With that help both survive every course, but CLM agreed with the
+planner on 66% of decisions (4,883 shield interventions) and Jev on 99% (28).
 
-## 5.4 The request that works
+## 5.5 The request that works
 
 ```json
 {
@@ -99,12 +152,17 @@ Options:
 Answer: (
 ```
 
-Code does the geometry: which moves survive, Manhattan distance before and after, flood-fill room, dead ends.
-The model does the one thing left: weigh the verdicts against the instruction and the player's strategy text.
-That is also the only part that responds to natural language. Write "hug the walls" into the strategy and the
-probabilities move; nothing else in the pipeline reads it.
+The verdicts come from `judge()` in `snake/formulations.py`: *eats the food* / *moves closer* / *moves away*, then
+*DEAD END* (flood fill smaller than the snake and no way to follow the tail), *keeps the most room*, *keeps almost as
+much room* (≥ 80%), or *leaves much less room (n of m cells)*. With `plain=True` (the judged-plain request) the eating
+move reads "moves closer to the food; keeps the most room"; use that for CLM and GLiNER 340M.
 
-## 5.5 Games
+Code does the geometry: which moves survive, Manhattan distance before and after, flood-fill room, dead ends. The
+model does the one thing left: weigh the verdicts against the instruction and the player's strategy text. That is
+also the only part that responds to natural language. Write "hug the walls" into the strategy and the probabilities
+move; nothing else in the pipeline reads it.
+
+## 5.6 Games
 
 10 seeds, 12x12 board, max 500 steps.
 
@@ -157,64 +215,41 @@ probabilities move; nothing else in the pipeline reads it.
   every game; with nadeem4's phrasing or sorrycc's facts, all but Kev circle and starve. Kev 4B partly reads the
   board (9.0 raw, 13.1 relative; Jev's published figure with that phrasing, on a 10×10 board, is 1.8).
 * **Best model that decides every move: Decider 2B, judged options**: 36.9 food, best game 46, 2 of 10 died,
-  145 ms per move. The best code baseline, which knows the same facts, gets 41.1.
-* **Better single moves, shorter games.** Decider 4B and Kev 4B match the 2B on the probe but die in 9 and 10 games
-  of 10. Replaying their judged games: when a roomier move existed, they took the "leaves much less room" option
-  26% (4B) and 58% (Kev) of the time, against 6% for the 2B, and almost never stepped away from the food (0.5% and
-  0.2%, against 4.6%). They follow "closer to the food" and skip the "unless it leaves much less room" part.
+  145 ms per move. CLM 8B with the plain wording is level (36.2) at 4 ms. The best code baseline, which knows the same
+  facts, gets 41.1.
+* **The "eats" wording decides two models' games.** Judged → judged-plain: CLM 0 → 36.2, GLiNER 340M 2.7 → 26.3.
+  For the others the plain wording makes little difference (Decider 2B −2.0, Decider 4B +1.5, Kev −4.2, GLiNER 1B
+  −1.6).
+* **Better single moves, shorter games.** Decider 4B and Kev 4B match Decider 2B on the probe and are more decisive
+  (84–91% of the probability on good moves, against 71%), but die in 9 and 10 games of 10. Replaying their judged
+  games: when a roomier move existed, they took the "leaves much less room" option 26% (Decider 4B) and 58% (Kev)
+  of the time, against 6% for Decider 2B, and almost never stepped away from the food (0.5% and 0.2%, against 4.6%).
+  They follow "closer to the food" and skip the "unless it leaves much less room" part.
+* **Speed.** Per move, on average: CLM ~4 ms with judged options (after the first ticks every state and option
+  vector is in its cache; ~300 ms when texts change every tick, as with facts), GLiNER 70–85 ms, Kev ~110 ms,
+  Decider 2B ~145 ms, Decider 4B ~260 ms. CLM's latency medians mostly measure cache hits.
 * **Composed rows are partly code.** ximing's gate hands the move to code when the model is below 0.55 confident.
   Share of moves the model chose itself: Decider 4B 67%, Decider 2B 50%, GLiNER 1B 41%, GLiNER 340M 33%. GLiNER
   340M's 39.4 is therefore mostly the fallback's. CLM stays in survival mode (97% of moves, code picks the roomiest)
   and never eats.
 * Most of the best games hit the 500-step cap, so their food counts are capped too.
 
-## 5.6 CLM 8B: a bi-encoder needs its own wording
-
-[CLM](https://github.com/Contrastive-LM/CLM) serves the same `/v1/systemone` API, so it plugs in as an HTTP
-engine (setup in [doc 4 §4.5](4-zero-shot-reproductions.md): Qwen3-8B on MLX via `adapters/mlx_embed_server.py`,
-then the unchanged `clm-serve`). It embeds state + question and each option **separately** and answers with a
-softmax over cosines. Three consequences:
-
-* **Identical option texts get identical probabilities** (two "moves away from the food; keeps the most room"
-  options: 0.293 each). Nothing is compared across options; only the verdict in each option counts.
-* **A blind spot for "eats".** On 80 states with an eating move, CLM picked it 0% of the time with every wording
-  tried ("eats the food", "reaches the food", "moves onto the food", "moves closer to the food and eats it"),
-  and ranked "moves away from the food" above it. With the eating move described as "moves closer to the food;
-  keeps the most room" (true: the distance drops to 0), 97%. Its judged games went from 0 food (all 10 starved)
-  to 36.2.
-* **Nearly free once warm.** With judged options the state is a fixed sentence and the verdicts come from a handful
-  of strings, so after the first ticks every vector is in CLM's cache: 4 ms per move on average, all 10 games in
-  16 s of wall time. With texts that change every tick (facts), ~300 ms per call here, mostly the 8B encoder.
-
-CLM's own game demo ([`examples/t_rex`](https://github.com/Contrastive-LM/CLM/tree/main/examples/t_rex), T-Rex
-runner vs Jev) phrases actions the same way: a physics planner labels each one (`jump: Safe. Clears the 2 large
-cacti. Best.`) and a shield replaces unsafe answers. With that help both survive every course, but CLM agreed
-with the planner on 66% of decisions (4,883 shield interventions) and Jev on 99% (28).
-
-## 5.7 Decider 4B and GLiNER
-
-* **Decider 4B v2** (`models/decider-4b-v2`, from the sentiment tutorial): pass `--engine decider:models/decider-4b-v2`
-  to any Snake script. It isn't distracted by the heading (judged + heading: 0.99 / 1.00, the 2B: 0.73 / 0.57) and puts 91% of the
-  probability on good moves, but plays the greedier game above, at ~260 ms per move.
-* **GLiNER2.5-Decide 340M and 1B** run in `third_party/gliner2-env` behind
-  [`adapters/gliner_systemone_server.py`](../adapters/gliner_systemone_server.py), a `/v1/systemone` adapter on
-  gliner2's `Classifier` API, which returns a probability for every label (the sentiment adapter's `classify_text`
-  returns only the winner). gliner2 rejects `(` and `)` in labels and instructions, so the adapter writes `{ }`.
-  GLiNER packs all questions of a request into one prompt, so extra questions change its move answer.
-* **GLiNER 340M shares CLM's "eats" blind spot**: 2.7 food with judged options, 26.3 with the plain wording. GLiNER 1B
-  doesn't (15.3 / 13.7); it's just weaker. Both GLiNER models answer in 70–85 ms.
-
-## 5.8 Run it
+## 5.7 Run it
 
 ```bash
 uv run python 08_snake_server.py                   # demo on http://127.0.0.1:8765, Decider 2B
 uv run python 10_snake_probe.py --engine laya      # probe one model
 uv run python 09_snake_benchmark.py --only judged  # 10 games
+uv run python docs/snake-report/build.py           # rebuild both report versions from results/snake/
 ```
 
-Kev 4B: start its server as `run_kev.sh` does (`third_party/kev`, `python -m kev.serve --run jaredpalmer/kev-4b --port 8009`),
-then pass `--engine http:http://127.0.0.1:8009,kev-4b` to any of the three scripts. GLiNER:
-`third_party/gliner2-env/.venv/bin/python adapters/gliner_systemone_server.py --port 8710` (add
-`--model fastino/GLiNER2.5-Decide-1B` for the 1B), then `--engine http:http://127.0.0.1:8710,gliner-decide`. CLM: start its encoder and
-`clm-serve` as in doc 4 §4.5, then `--engine http:http://127.0.0.1:8700,clm-latest`, and pick the
-"Judged, plain wording" tab in the demo.
+Pass `--engine` (5.2) to any of the three scripts. The HTTP engines need their server running first:
+
+* **Kev 4B**: as `run_kev.sh` does, `(cd third_party/kev && uv run --extra serve python -m kev.serve --run jaredpalmer/kev-4b --port 8009)`
+* **CLM 8B**: its encoder, `third_party/kev/.venv/bin/python adapters/mlx_embed_server.py --model Qwen/Qwen3-8B --port 8090`,
+  then `(cd third_party/clm && CLM_DEVICE=cpu .venv/bin/clm-serve --port 8700 --emb-url http://127.0.0.1:8090/v1/embeddings --ckpt checkpoints/CLM_v0.1-8B.pt --no-download)`.
+  In the demo, the page opens on "Judged, plain wording" when the model is CLM.
+* **GLiNER**: `third_party/gliner2-env/.venv/bin/python adapters/gliner_systemone_server.py --port 8710` (add
+  `--model fastino/GLiNER2.5-Decide-1B --port 8711` for the 1B)
+
+Models and engines are fetched by `scripts/download_models.py` and `scripts/setup_engines.sh`.

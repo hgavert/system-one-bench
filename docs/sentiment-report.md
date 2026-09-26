@@ -94,6 +94,8 @@ Same 300 tweets, one per call, after a warm-up call. The LLMs get the same label
 
 ±5 points of sampling noise at n = 300. ECE = expected calibration error of the top-class probability; an LLM returns a bare label, so its confidence is always 1.0 and its ECE equals its error rate. "Variant" = SemIf's technique on a 9B base, not an index configuration; "bare prompt" = the LLM without class descriptions.
 
+> **Coverage.** Every model in the table above was run on all 300 tweets. Decider 4B v2, GLiNER2.5-Decide (340M, 1B) and CLM 8B were added later, after the option-order test and the cascade had been run, so those two sections cover only some of the models.
+
 ### Where the errors are
 
 Rows = truth (100 each), columns = predicted.

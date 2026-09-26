@@ -76,35 +76,54 @@ def main(data):
     w("# Asking for a Snake Move\n")
     w("> Generated from the same data as the interactive version, [`docs/snake-report/index.html`](snake-report/index.html), "
       "by `docs/snake-report/build.py`. Key code and details: [docs/5-snake.md](5-snake.md).\n")
-    w("People posted Jev playing Snake. We read how six of those demos phrase each move, then asked the same questions of "
-      "seven open System One models on a laptop, zero-shot, 10 games each. **The fast, straight-to-the-food videos rely on "
-      "code for the geometry.** Asked to read the board themselves, every model is poor at it, and so is Jev. Given one "
-      "verdict per option, five of the seven play well, but each one needs the wording to suit it.\n")
+    w("People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to "
+      "seven open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, "
+      "straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are "
+      "poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one needs the "
+      "wording to suit it.\n")
 
     w("## What we found\n")
-    w("1. **The simple way fails, for Jev and for every open model.** The only published numbers of Jev playing (nadeem4's "
+    w("1. **The simple way fails, for Jev and for the open models.** The only published numbers of Jev playing (nadeem4's "
       "arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it circled until it starved. On the raw "
-      "board, five of the six models we tried it on died within about 9 steps in every game; with nadeem4's phrasing or "
-      "sorrycc's facts they circled and starved. Only Kev 4B partly reads the board (13.1 food with nadeem4's phrasing), "
-      "and it still dies every game.")
+      "board, five of the six models tried died within about 9 steps in every game; with nadeem4's phrasing or sorrycc's "
+      "facts they circled and starved. Only Kev 4B partly reads the board (13.1 food with nadeem4's phrasing), and it "
+      "still dies every game.")
     w("2. **The demos that look good move the spatial work into code**: filtering out fatal moves, flood-fill facts, "
       "confidence gates, or a waypoint pathfinder that steers every tick while Jev only picks a target every 2.6 seconds. "
       "CLM's own game demo does the same.")
     w("3. **What works: one verdict per option, and nothing else in the state.** Code writes \"moves closer to the food; "
       "keeps the most room\" into each option. For five models the best such request picks a good single move 95–99% of "
-      "the time (90–100% on the hard states below). Two things had broken them: numbers they would have to compare "
-      "across options, and direction words in the state (`heading: up`) that pull them to go straight.")
-    w("4. **The wording has to suit the model.** CLM and GLiNER 340M give any option that says \"eats the food\" almost no "
-      "probability, so they circle next to the food. Worded as \"moves closer to the food\", CLM goes from 0 to 36.2 food "
-      "per game and GLiNER from 2.7 to 26.3. For the others it makes little difference (Decider 2B −2.0, Kev 4B −4.2, "
-      "Decider 4B +1.5).")
+      "the time (90–100% on the hard states). Three things had broken them: numbers to compare across options, direction "
+      "words in the state, and, for two models, the word \"eats\".")
+    w("4. **The wording has to suit the model.** CLM 8B and GLiNER 340M give any option that says \"eats the food\" almost "
+      "no probability, so they circle next to the food. Worded as \"moves closer to the food\", CLM goes from 0 to 36.2 "
+      "food per game and GLiNER from 2.7 to 26.3. For the other models it makes little difference.")
     w("5. **Better single moves don't mean longer games.** Decider 4B and Kev 4B are more decisive than Decider 2B and "
-      "follow \"closer to the food\" almost literally, into tight spaces: they die in 9 and 10 of 10 games, Decider 2B in "
-      "2. With 36.9 food per game, the 2B is the best model that decides every move itself, close to the best code "
-      "baseline (41.1).")
+      "follow \"closer to the food\" into tight spaces: they die in 9 and 10 of 10 games, Decider 2B in 2. With 36.9 food "
+      "per game, Decider 2B is the best model that decides every move itself, close to the best code baseline (41.1).")
     w("6. **Speed varies 60-fold.** CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, "
-      "Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260. Adding ximing's extra questions roughly doubles the time, "
-      "and on those rows code chooses up to two moves in three (below).\n")
+      "Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260 ms per move. ximing's extra questions roughly double that, "
+      "and on those rows code picks up to two moves in three.\n")
+
+    w("## The seven models\n")
+    w("All zero-shot, as released: the same models as in the sentiment benchmark. Every one answers the same Jev request, "
+      "`{state, questions}`, and returns a probability per option. They differ in how they read it, which turns out to "
+      "matter here.\n")
+    w(table(["Model", "How it reads the request", "Runs here as", "Sentiment"], [
+        ["Decider 2B", "Qwen3.5-2B fine-tune: state, question and lettered options in one sequence; answer from the letter logits",
+         "in-process, PyTorch MPS", "74.0%"],
+        ["Decider 4B v2", "the same, on Qwen3.5-4B", "in-process, PyTorch MPS", "75.0%"],
+        ["Kev 4B", "LoRA on Qwen3.5-4B-Base; a pointer head scores each option's end token",
+         "its own `/v1/systemone` server (MLX)", "63.7%"],
+        ["CLM 8B", "bi-encoder: frozen Qwen3-8B embeds state + question and each option *separately*; softmax over cosines",
+         "`clm-serve`, Qwen3-8B on MLX", "51.7%"],
+        ["GLiNER 340M", "GLiNER2.5-Decide, a DeBERTa-v3-large schema encoder: question and all labels packed before the text",
+         "own environment, `/v1/systemone` adapter", "63.7%"],
+        ["GLiNER 1B", "GLiNER2.5-Decide-1B, the larger variant", "own environment, `/v1/systemone` adapter", "63.0%"],
+        ["Laya", "ModernBERT-large encoder (421M) with a `[MASK]` marker per option", "in-process, PyTorch MPS", "63.3%"],
+    ], ["---", "---", "---", "--:"]))
+    w("Sentiment: zero-shot accuracy on 300 tweets, from the companion benchmark ([sentiment-report.md](sentiment-report.md)). "
+      "Laya played games on two requests only (facts and judged options); it can't play with either.\n")
 
     w("## Best result per model\n")
     w("Each model's best request among those where the model decides every move (so not \"composed\", where code steps in "
@@ -122,7 +141,7 @@ def main(data):
     w(table(["Model", "Best request", "Food / game", "Best game", "Died", "Per move", "Probe, hard states"], rows,
             ["---", "---", "--:", "--:", "--:", "--:", "--:"]))
 
-    w("## Who decides what, in each published demo\n")
+    w("## How the published demos ask\n")
     w("Every demo sends the same Jev request: a `state` plus one typed `choice` question per tick. What differs is how "
       "much has already been decided by code before the model sees the options. From model-reads-the-board to "
       "code-does-the-pathing:\n")
@@ -142,6 +161,18 @@ def main(data):
          "`food` / `open_area` / `border_loop`", "every tick: greedy pathing + BFS seatbelt"],
     ]))
 
+    w("## Six ways of asking\n")
+    w("Four requests reproduce published demos; two are written here from what the probe below showed. All are in "
+      "`snake/formulations.py`.\n")
+    w(table(["Request", "Based on", "What the model gets"], [
+        ["Raw board", "iammusham, coderhh", "the board as text rows, head and food coordinates; options up / left / right, fatal ones included"],
+        ["Relative, in words", "nadeem4, verbatim", "phrases about the food and what lies left, ahead and right; options `TURN_LEFT` / `STRAIGHT` / `TURN_RIGHT`"],
+        ["Facts in the options", "sorrycc, verbatim", "board and heading; only safe moves, each with exact numbers (food distance, reachable cells, dead end)"],
+        ["Judged options", "sorrycc's facts, rewritten", "no state; only safe moves, each with a verdict in words"],
+        ["Judged, plain wording", "judged options", "the same, with the eating move worded \"moves closer to the food\""],
+        ["Composed questions", "ximing", "judged options plus a danger score and a survival yes/no in one request; code combines them with thresholds"],
+    ]))
+
     w("## One decision, known answer\n")
     w("Games mix many effects, so we first asked for single moves on fixed situations where code knows the good moves: not "
       "a dead end, and as close to the food as any non-dead-end move. The chart shows the **hard** set, 100 states where "
@@ -152,23 +183,28 @@ def main(data):
         lat = probe.get("decider", {}).get(key, {}).get("all", {}).get("p50_ms")
         cells = [f"{probe[m][key]['all']['good']:.2f} / {probe[m][key]['hard']['good']:.2f}" if key in probe[m] else "–"
                  for m, _ in present]
-        bold = key in ("judged", "judged-plain")
-        rows.append([f"**{label}**" if bold else label] + cells + [f"{lat:.0f} ms" if lat else "–"])
-    w(table(["Request"] + [l for _, l in present] + ["Decider 2B latency"], rows,
-            ["---"] + ["--:"] * (len(present) + 1)))
-    w("Cells: good pick on all 150 states / on the 100 hard states. Kev 4B is the only model that reads the raw board (93%) "
-      "and isn't distracted by the heading. Laya, a 421M encoder, stays below chance on the hard states with every "
-      "request, and in games it never gets going (0–0.5 food).\n")
+        rows.append([f"**{label}**" if key in ("judged", "judged-plain") else label] + cells + [f"{lat:.0f} ms" if lat else "–"])
+    w(table(["Request"] + [l for _, l in present] + ["Decider 2B latency"], rows, ["---"] + ["--:"] * (len(present) + 1)))
+    w("Cells: good pick on all 150 states / on the 100 hard states. Kev 4B is the only model that reads the raw board "
+      "(93%). Laya stays below chance on the hard states with every request.\n")
 
-    w("## The two things that break a small model\n")
-    w("**Numbers that must be compared across options.** sorrycc's options carry exact numbers. Decider 2B picks the good "
-      "move 67% of the time. Adding the rule \"take the move after which the food is the fewest steps away\" to the "
-      "instruction lifts that to 82%. Writing the comparison into each option lifts it to 98–99%, whether as words "
-      "(\"moves closer to the food\") or as a before→after number (\"distance changes from 9 to 8\").\n")
-    w("**Direction words in the state.** With `heading: up` and \"the food is 5 down and 5 right\" in the context, Decider "
-      "went straight on 43% of the hard states, even when the straight option read \"moves away from the food\". With the "
-      "state removed: 0%. Renaming the options from `up/down/left/right` to `move 1/2/3` changed nothing. It's the context "
-      "that pulls.\n")
+    w("## What breaks the models\n")
+    w("### Numbers to compare across options\n")
+    w("sorrycc's options carry exact numbers, and no model does well with them when going straight is wrong (hard states: "
+      "0–46%). The same facts written as a verdict in each option lift every model, and all but Laya to 72–100%. On "
+      "Decider 2B, spelling the rule out in the instruction helped only partly (67% → 82% on all states); writing the "
+      "comparison into each option, as words (\"moves closer to the food\") or as before→after numbers (\"distance changes "
+      "from 9 to 8\"), reached 98–99%.\n")
+    w("### Direction words in the state\n")
+    w("Judged options with `heading: up` and \"the food is 5 down and 5 right\" in the state, against the same options with "
+      "no state (hard states):\n")
+    w(table(["Heading in the state?", "Decider 2B", "Decider 4B", "Kev 4B", "CLM 8B", "GLiNER 340M", "GLiNER 1B", "Laya"], [
+        ["yes", "57%", "100%", "100%", "89%", "28%", "0%", "25%"],
+        ["**no**", "**100%**", "**100%**", "**100%**", "**89%**", "**86%**", "**72%**", "**39%**"],
+    ], ["---"] + ["--:"] * 7))
+    w("The two 4B models and CLM ignore the heading; for the smaller models it pulls hard toward going straight, even when "
+      "that option reads \"moves away from the food\". On Decider 2B, renaming the options from `up/down/left/right` to "
+      "`move 1/2/3` changed nothing: it's the context that pulls.\n")
     w("sorrycc's facts, as Decider reads them (67% good):\n")
     w("```text\nContext:\n{\"board\": [..12 rows..], \"legend\": \"H = snake head, ...\",\n \"head\": {\"row\": 4, \"col\": 9}, "
       "\"food\": {\"row\": 8, \"col\": 4},\n \"heading\": \"right\", \"snake_length\": 3, ...}\n\nQuestion: You are playing "
@@ -183,55 +219,25 @@ def main(data):
       "it leaves much less room than another move. Player strategy: Stay alive and eat food.\nOptions:\n(A) up: moves "
       "away from the food; keeps the most room\n(B) down: moves closer to the food; keeps the most room\n(C) right: "
       "moves away from the food; keeps the most room\nAnswer: (\n```\n")
-    w("Decider scores the logits of the letters `A`, `B`, `C` right after the final `(` and applies its temperature (1.3). "
-      "Nothing is generated. Code has done the geometry: which moves survive, distance before and after, flood-fill "
-      "room, dead ends. The model's remaining job is to weigh the verdicts against the instruction and the player's "
-      "strategy text. That's also the only step that responds to natural language.\n")
-
-    w("## CLM 8B: a bi-encoder reads options differently\n")
-    w("[CLM](https://github.com/Contrastive-LM/CLM) (Contrastive-LM, 24 September) serves the same `/v1/systemone` API but "
-      "works differently: a frozen Qwen3-8B embeds the state + question and each option *separately*, trained heads "
-      "project both into one space, and the answer is a softmax over cosines. On this Mac, Qwen3-8B runs on MLX in place "
-      "of vLLM (`adapters/mlx_embed_server.py`). Three consequences in Snake:\n")
-    w("- **Identical option texts get identical probabilities.** Two moves that both read \"moves away from the food; keeps "
-      "the most room\" score exactly the same (0.293 each). An option can't see the others, so nothing can be compared "
-      "across options. Only the verdict text written into each one counts.")
-    w("- **It has a blind spot for \"eats\".** On 80 states where one move eats the food, CLM picked it 0% of the time with "
-      "every wording tried: \"eats the food\", \"reaches the food\", \"moves onto the food\", \"moves closer to the food "
-      "and eats it\". With the eating move described as \"moves closer to the food; keeps the most room\" (true: the "
-      "distance drops to 0), 97%. Its judged games went from 0 food (all starved) to 36.2.")
-    w("- **It's nearly free once warm.** With judged options the state is a fixed sentence and the verdicts come from a "
-      "handful of strings, so after the first ticks every vector is cached: ~4 ms per move on average, 10 games in 16 s. "
-      "With changing texts (facts in the options) a call costs ~300 ms here, mostly the 8B encoder.\n")
-    w("CLM's own game demo, [T-Rex runner vs Jev](https://github.com/Contrastive-LM/CLM/tree/main/examples/t_rex), phrases "
-      "moves the same way: a physics planner labels each action, as in `jump: Safe. Clears the 2 large cacti. Best.`, and "
-      "a shield replaces unsafe answers. With that help both models survive every course, but CLM agreed with the planner "
-      "on 66% of decisions (4,883 shield interventions) and Jev on 99% (28).\n")
-
-    w("## Decider 4B and GLiNER\n")
-    w("Three more models from the sentiment tutorial, zero-shot as released: **Decider 4B v2** (Qwen3.5-4B, the best "
-      "sentiment model here at 75.0%) and **GLiNER2.5-Decide** at 340M and 1B (DeBERTa-style encoders that pack the "
-      "question and every label into one prompt). GLiNER runs in its own environment behind a small `/v1/systemone` "
-      "adapter (`adapters/gliner_systemone_server.py`), using gliner2's `Classifier` API so every option gets a "
-      "probability. It rejects \"(\" in option text, so the adapter writes braces instead.\n")
-    w("- **Decider 4B isn't distracted by the heading** (judged + heading: 99% / 100%, where the 2B drops to 57% on hard "
-      "states) and puts 91% of the probability on good moves. In games it's the greedier player: when a roomier move "
-      "existed it took the \"leaves much less room\" option 26% of the time (Decider 2B 6%, Kev 4B 58%). It's also about "
-      "twice as slow: ~260 ms per move.")
-    w("- **GLiNER shares CLM's blind spot for \"eats\".** GLiNER 340M picks 93% good moves in the probe but ate 2.7 per game "
-      "with judged options, starving every time. With the eating move worded \"moves closer to the food\", 26.3. Both "
-      "score option text by matching; neither reasons over it.")
-    w("- **The composed rows are mostly the code's work.** ximing's gate hands the move to code when the model is under "
-      "0.55 confident, so the flatter a model's probabilities, the more code plays:\n")
-    rows = [[LABEL.get(r["engine"], r["engine"]), f"{r['score_mean']:.1f}"] + [f"{r['split'][k]:.0%}" for k in ("model", "low", "surv", "code1")]
-            for r in sorted((r for r in data["rows"] if "split" in r), key=lambda r: -r["score_mean"])]
-    w(table(["Composed questions", "Food / game", "Model's choice", "Code: model unsure", "Code: survival mode",
-             "Code: one safe move"], rows, ["---"] + ["--:"] * 5))
-    w("GLiNER 340M's 39.4 food is the best model row, but code chose two moves in three, close to what code alone scores "
-      "(41.1). CLM answers the danger and survival questions as if the snake were always in trouble, so the gate stays in "
-      "survival mode, always takes the roomiest move, and never eats. That 0 is for this request only: composed is built "
-      "on the original judged wording (\"eats the food\"). CLM's own best is **judged, plain wording: 36.2 food at ~4 ms "
-      "per move** (CLM section above).\n")
+    w("Decider scores the logits of the letters `A`, `B`, `C` right after the final `(` and applies its temperature (1.3); "
+      "nothing is generated. Code has done the geometry: which moves survive, distance before and after, flood-fill "
+      "room, dead ends. The model weighs the verdicts against the instruction and the player's strategy text, the only "
+      "step that responds to natural language.\n")
+    w("### The word \"eats\"\n")
+    w("Two models almost never pick an option that says \"eats the food\", so with judged options they circle next to the "
+      "food until they starve:\n")
+    w(table(["Food per game", "Decider 2B", "Decider 4B", "Kev 4B", "CLM 8B", "GLiNER 340M", "GLiNER 1B"], [
+        ["\"eats the food\"", "36.9", "29.3", "29.5", "0.0", "2.7", "15.3"],
+        ["\"moves closer to the food\"", "34.9", "30.8", "25.3", "**36.2**", "**26.3**", "13.7"],
+    ], ["---"] + ["--:"] * 6))
+    w("Both are models that score option text by matching it. CLM embeds each option on its own, so an option can't see "
+      "the others: two options with identical text get identical probabilities. On 80 states where one move eats the food, "
+      "CLM picked it 0% of the time with every wording tried (\"eats the food\", \"reaches the food\", \"moves onto the "
+      "food\", \"moves closer to the food and eats it\"), and 97% once it read \"moves closer to the food; keeps the most "
+      "room\", which is true, since the distance drops to 0. CLM's own game demo, "
+      "[T-Rex runner vs Jev](https://github.com/Contrastive-LM/CLM/tree/main/examples/t_rex), also labels every action for "
+      "the model (`jump: Safe. Clears the 2 large cacti. Best.`) and lets a shield replace unsafe answers; there CLM "
+      "agreed with the planner on 66% of decisions and Jev on 99%.\n")
 
     w("## Full games\n")
     w(games_intro(data["config"]) + "\n")
@@ -247,6 +253,33 @@ def main(data):
     w(table(["Controller", "Food / game", "Best", "Steps", "Ended by", "Per move, p50 / mean"], rows,
             ["---", "--:", "--:", "--:", "---", "--:"]))
     w(f"> {GAMES_NOTE}\n")
+    w("### Better single moves, shorter games\n")
+    w("On the probe, Decider 4B and Kev 4B match Decider 2B and are more decisive (84–91% of the probability on good moves, "
+      "against 71%). In games they die far more. Replaying their judged games shows why: they follow \"closer to the food\" "
+      "and skip \"unless it leaves much less room\".\n")
+    w(table(["Judged options", "Took \"leaves much less room\" when a roomier move existed",
+             "Took \"moves away\" when closer was on offer", "Died"], [
+        ["**Decider 2B**", "6% (4 of 70)", "4.6%", "2 of 10"],
+        ["Decider 4B", "26% (11 of 43)", "0.5%", "9 of 10"],
+        ["Kev 4B", "58% (22 of 38)", "0.2%", "10 of 10"],
+    ], ["---", "--:", "--:", "--:"]))
+    w("### Speed\n")
+    w("CLM is nearly free once warm: with judged options the state is a fixed sentence and the verdicts come from a handful "
+      "of strings, so after the first ticks every vector is in its cache (~4 ms per move, 10 games in 16 s). With texts "
+      "that change every tick (facts in the options) a call costs ~300 ms, mostly the 8B encoder. Its latency medians in "
+      "the table mostly measure cache hits. The other models spend the same time on every move: GLiNER 70–80 ms, Kev "
+      "~110 ms, Decider 2B ~145 ms, Decider 4B ~260 ms.\n")
+    w("### Composed questions: who actually moves\n")
+    w("ximing's gate hands the move to code when the model is under 0.55 confident, and switches to \"most room\" when "
+      "the model reports danger. The flatter a model's probabilities, the more of the game code plays:\n")
+    rows = [[LABEL.get(r["engine"], r["engine"]), f"{r['score_mean']:.1f}"] + [f"{r['split'][k]:.0%}" for k in ("model", "low", "surv", "code1")]
+            for r in sorted((r for r in data["rows"] if "split" in r), key=lambda r: -r["score_mean"])]
+    w(table(["Composed questions", "Food / game", "Model's choice", "Code: model unsure", "Code: survival mode",
+             "Code: one safe move"], rows, ["---"] + ["--:"] * 5))
+    w("GLiNER 340M's 39.4 food is the best model row, but code chose two moves in three, close to what code alone scores "
+      "(41.1). CLM answers the danger and survival questions as if the snake were always in trouble, so the gate stays in "
+      "survival mode, takes the roomiest move, and never eats; composed also uses the \"eats\" wording. CLM's best is "
+      "judged, plain wording: 36.2 food at ~4 ms per move.\n")
 
     w("## The request that works\n")
     w("Sent once per tick when at least two moves survive; with one safe move, code takes it without calling the model.\n")
@@ -265,13 +298,13 @@ def main(data):
     w("We had no TypeSafe API key, so hosted Jev is represented only by nadeem4's published run (10 games, 10×10, relative "
       "phrasing, starvation after 60 steps without food). That setup differs from ours (12×12, 144 steps), so compare the "
       "1.8 with our rows only loosely. Every model runs zero-shot, as released. The probe's \"good move\" only checks food "
-      "distance and dead ends, not room, which is why it misses the 4B models' habit of chasing food into tight spaces. On "
-      "composed rows, code chooses a third to two thirds of the moves. Ten seeds per row give wide intervals, so read "
-      "differences of a few food as noise, and most of the best games hit the 500-step cap.\n")
+      "distance and dead ends, not room, which is why it misses the 4B models' habit of chasing food into tight spaces. "
+      "Some diagnostics were run on one model only: the instruction-rule and option-renaming tests (Decider 2B), the "
+      "80-state \"eats\" test (CLM) and the tight-space replay (the three models shown). Ten seeds per row give wide "
+      "intervals, so read differences of a few food as noise, and most of the best games hit the 500-step cap.\n")
     w("---\n")
     w("Code: `snake/`, `08_snake_server.py` (live demo with the decision panel), `09_snake_benchmark.py`, "
-      "`10_snake_probe.py`; write-up in [docs/5-snake.md](5-snake.md). Models: Decider 2B v10 and 4B v2 (PyTorch MPS), "
-      "Kev 4B (MLX server), CLM 8B (MLX encoder + CPU heads), GLiNER2.5-Decide 340M and 1B (MPS, own environment), Laya "
-      "(MPS), all on an Apple M5 with 32 GB.")
+      "`10_snake_probe.py`, `adapters/gliner_systemone_server.py`, `adapters/mlx_embed_server.py`; write-up in "
+      "[docs/5-snake.md](5-snake.md). All on an Apple M5 with 32 GB.")
     OUT_MD.write_text("\n".join(md) + "\n")
     print("wrote", OUT_MD, "and", OUT_SVG)
