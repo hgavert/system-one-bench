@@ -1,0 +1,15 @@
+device: mps
+train 3000 / val 300 examples
+before: val accuracy 0.623
+  epoch 1 step 25/188  loss 0.587  76s
+  epoch 1 step 50/188  loss 0.489  148s
+  epoch 1 step 75/188  loss 0.407  225s
+  epoch 1 step 100/188  loss 0.469  334s
+  epoch 1 step 125/188  loss 0.770  405s
+  epoch 1 step 150/188  loss 1.112  481s
+  epoch 1 step 175/188  loss 0.483  561s
+  epoch 1 step 188/188  loss 0.565  598s
+after:  val accuracy 0.703, fitted temperature 1.25
+saved -> models/laya-tweet-sentiment
+
+[exited with code 0]

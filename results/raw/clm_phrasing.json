@@ -1,0 +1,54 @@
+{
+ "descriptions (standard)": {
+  "accuracy": 0.5166666666666667,
+  "correct_per_class": {
+   "negative": 96,
+   "neutral": 9,
+   "positive": 50
+  },
+  "predicted": {
+   "negative": 216,
+   "neutral": 14,
+   "positive": 70
+  }
+ },
+ "label words only": {
+  "accuracy": 0.48,
+  "correct_per_class": {
+   "negative": 79,
+   "neutral": 18,
+   "positive": 47
+  },
+  "predicted": {
+   "negative": 187,
+   "positive": 67,
+   "neutral": 46
+  }
+ },
+ "label + description": {
+  "accuracy": 0.55,
+  "correct_per_class": {
+   "negative": 88,
+   "neutral": 3,
+   "positive": 74
+  },
+  "predicted": {
+   "negative": 178,
+   "positive": 116,
+   "neutral": 6
+  }
+ },
+ "answer sentences": {
+  "accuracy": 0.43333333333333335,
+  "correct_per_class": {
+   "negative": 18,
+   "neutral": 22,
+   "positive": 90
+  },
+  "predicted": {
+   "positive": 208,
+   "neutral": 70,
+   "negative": 22
+  }
+ }
+}

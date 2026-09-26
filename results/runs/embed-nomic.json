@@ -1,0 +1,3664 @@
+{
+ "name": "embed-nomic",
+ "system": "import:results/raw/embed-nomic.jsonl",
+ "summary": {
+  "n": 300,
+  "accuracy": 0.5666666666666667,
+  "macro_f1": 0.5373950011332087,
+  "latency_ms_p50": 13.135853499989025,
+  "latency_ms_p95": 15.900124999461696,
+  "throughput_msgs_per_s": 74.18909316177562,
+  "ece": 0.07098221549702535,
+  "confusion_matrix": [
+   [
+    55,
+    29,
+    16
+   ],
+   [
+    25,
+    25,
+    50
+   ],
+   [
+    5,
+    5,
+    90
+   ]
+  ],
+  "selective_accuracy": [
+   {
+    "threshold": 0.0,
+    "coverage": 1.0,
+    "accuracy": 0.5666666666666667
+   },
+   {
+    "threshold": 0.5,
+    "coverage": 0.5566666666666666,
+    "accuracy": 0.6586826347305389
+   },
+   {
+    "threshold": 0.6,
+    "coverage": 0.31,
+    "accuracy": 0.7311827956989247
+   },
+   {
+    "threshold": 0.7,
+    "coverage": 0.15,
+    "accuracy": 0.8666666666666667
+   },
+   {
+    "threshold": 0.8,
+    "coverage": 0.06333333333333334,
+    "accuracy": 0.9473684210526315
+   },
+   {
+    "threshold": 0.9,
+    "coverage": 0.023333333333333334,
+    "accuracy": 0.8571428571428571
+   }
+  ]
+ },
+ "predictions": [
+  {
+   "id": "t000",
+   "row": 10839,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1811129339099569,
+    "neutral": 0.0951790803774026,
+    "positive": 0.7237079857126406
+   },
+   "latency_ms": 61.5
+  },
+  {
+   "id": "t001",
+   "row": 5515,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.36216828368202003,
+    "neutral": 0.36659949969215644,
+    "positive": 0.2712322166258234
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t002",
+   "row": 476,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.43523299200507004,
+    "neutral": 0.45756290694301793,
+    "positive": 0.10720410105191205
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t003",
+   "row": 662,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.40864871198851094,
+    "neutral": 0.40348409846601335,
+    "positive": 0.1878671895454758
+   },
+   "latency_ms": 25.5
+  },
+  {
+   "id": "t004",
+   "row": 10761,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2954241006503418,
+    "neutral": 0.29974402739951095,
+    "positive": 0.4048318719501473
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t005",
+   "row": 3484,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5706205399306484,
+    "neutral": 0.316249925497149,
+    "positive": 0.11312953457220262
+   },
+   "latency_ms": 11.7
+  },
+  {
+   "id": "t006",
+   "row": 8134,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2107209889930015,
+    "neutral": 0.19505655602518415,
+    "positive": 0.5942224549818144
+   },
+   "latency_ms": 12.2
+  },
+  {
+   "id": "t007",
+   "row": 8276,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2533980563740959,
+    "neutral": 0.2609988041183147,
+    "positive": 0.48560313950758927
+   },
+   "latency_ms": 17.1
+  },
+  {
+   "id": "t008",
+   "row": 6382,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.561738757110146,
+    "neutral": 0.21461147360202934,
+    "positive": 0.22364976928782473
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t009",
+   "row": 3992,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2860765841531722,
+    "neutral": 0.25865873653983124,
+    "positive": 0.45526467930699643
+   },
+   "latency_ms": 11.1
+  },
+  {
+   "id": "t010",
+   "row": 3985,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6067973122322127,
+    "neutral": 0.21344972724860464,
+    "positive": 0.17975296051918285
+   },
+   "latency_ms": 11.3
+  },
+  {
+   "id": "t011",
+   "row": 8391,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.23129297823710615,
+    "neutral": 0.24421878305833047,
+    "positive": 0.5244882387045635
+   },
+   "latency_ms": 11.8
+  },
+  {
+   "id": "t012",
+   "row": 4102,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2559937216568143,
+    "neutral": 0.2614673459615568,
+    "positive": 0.48253893238162904
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t013",
+   "row": 6279,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3269695348959406,
+    "neutral": 0.6087591764383777,
+    "positive": 0.06427128866568163
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t014",
+   "row": 11241,
+   "gold": "positive",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4604580633950072,
+    "neutral": 0.23716367980089267,
+    "positive": 0.3023782568041002
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t015",
+   "row": 5879,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.39807560926383734,
+    "neutral": 0.43600602807412675,
+    "positive": 0.16591836266203588
+   },
+   "latency_ms": 12.2
+  },
+  {
+   "id": "t016",
+   "row": 12132,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2967151321166183,
+    "neutral": 0.3309296453668834,
+    "positive": 0.37235522251649833
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t017",
+   "row": 12243,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17917886423445104,
+    "neutral": 0.3486703742869563,
+    "positive": 0.47215076147859253
+   },
+   "latency_ms": 14.3
+  },
+  {
+   "id": "t018",
+   "row": 3014,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.11056086490214138,
+    "neutral": 0.07531229115676122,
+    "positive": 0.8141268439410974
+   },
+   "latency_ms": 14.1
+  },
+  {
+   "id": "t019",
+   "row": 3906,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3268150093589386,
+    "neutral": 0.3144266444936092,
+    "positive": 0.35875834614745233
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t020",
+   "row": 214,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17533757704117564,
+    "neutral": 0.22128007581006923,
+    "positive": 0.6033823471487552
+   },
+   "latency_ms": 16.3
+  },
+  {
+   "id": "t021",
+   "row": 12194,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6399446084810887,
+    "neutral": 0.23423185854961937,
+    "positive": 0.12582353296929197
+   },
+   "latency_ms": 14.1
+  },
+  {
+   "id": "t022",
+   "row": 910,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.565311655273607,
+    "neutral": 0.2304087507395743,
+    "positive": 0.20427959398681866
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t023",
+   "row": 4673,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.12294770534264106,
+    "neutral": 0.43290407983104856,
+    "positive": 0.4441482148263104
+   },
+   "latency_ms": 12.1
+  },
+  {
+   "id": "t024",
+   "row": 1134,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3224612333133991,
+    "neutral": 0.3552712867454584,
+    "positive": 0.3222674799411425
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t025",
+   "row": 9455,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18922514268105278,
+    "neutral": 0.23814716005789893,
+    "positive": 0.5726276972610481
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t026",
+   "row": 2844,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.18088989971192332,
+    "neutral": 0.4320495047041918,
+    "positive": 0.3870605955838849
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t027",
+   "row": 2139,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.39548989274438545,
+    "neutral": 0.3167926890144496,
+    "positive": 0.28771741824116487
+   },
+   "latency_ms": 11.7
+  },
+  {
+   "id": "t028",
+   "row": 4589,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2258742890644139,
+    "neutral": 0.37923375281258176,
+    "positive": 0.3948919581230045
+   },
+   "latency_ms": 15.2
+  },
+  {
+   "id": "t029",
+   "row": 4407,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.28998298380444915,
+    "neutral": 0.16815968363650466,
+    "positive": 0.5418573325590462
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t030",
+   "row": 1910,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4758918230935576,
+    "neutral": 0.4601294830238468,
+    "positive": 0.06397869388259543
+   },
+   "latency_ms": 12.2
+  },
+  {
+   "id": "t031",
+   "row": 10476,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.26884710689657076,
+    "neutral": 0.35910536948306804,
+    "positive": 0.37204752362036114
+   },
+   "latency_ms": 50.7
+  },
+  {
+   "id": "t032",
+   "row": 8437,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.25633222319741633,
+    "neutral": 0.4509118497693555,
+    "positive": 0.29275592703322817
+   },
+   "latency_ms": 17.0
+  },
+  {
+   "id": "t033",
+   "row": 10367,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5351365698375214,
+    "neutral": 0.3869813882712655,
+    "positive": 0.07788204189121312
+   },
+   "latency_ms": 14.0
+  },
+  {
+   "id": "t034",
+   "row": 3858,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.31046648427548396,
+    "neutral": 0.1351779562127071,
+    "positive": 0.5543555595118091
+   },
+   "latency_ms": 14.1
+  },
+  {
+   "id": "t035",
+   "row": 10427,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5709221199789065,
+    "neutral": 0.2535305307297934,
+    "positive": 0.17554734929130003
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t036",
+   "row": 2711,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4439393095282696,
+    "neutral": 0.40743943195200255,
+    "positive": 0.14862125851972785
+   },
+   "latency_ms": 28.3
+  },
+  {
+   "id": "t037",
+   "row": 11324,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5654340913267388,
+    "neutral": 0.2136606798697908,
+    "positive": 0.22090522880347047
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t038",
+   "row": 9342,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3060222458842905,
+    "neutral": 0.16147447298306114,
+    "positive": 0.5325032811326483
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t039",
+   "row": 3215,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18048621757638958,
+    "neutral": 0.2561290879645851,
+    "positive": 0.5633846944590254
+   },
+   "latency_ms": 13.0
+  },
+  {
+   "id": "t040",
+   "row": 6979,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17414287172284634,
+    "neutral": 0.32438707044206216,
+    "positive": 0.5014700578350914
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t041",
+   "row": 11768,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.39847190012165434,
+    "neutral": 0.4520680170755093,
+    "positive": 0.1494600828028363
+   },
+   "latency_ms": 13.0
+  },
+  {
+   "id": "t042",
+   "row": 3493,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.24140512092788907,
+    "neutral": 0.23661243741055804,
+    "positive": 0.5219824416615528
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t043",
+   "row": 10736,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.06013635387442865,
+    "neutral": 0.03112833495130814,
+    "positive": 0.9087353111742632
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t044",
+   "row": 1739,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.13082466475250526,
+    "neutral": 0.17393823844256903,
+    "positive": 0.6952370968049257
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t045",
+   "row": 12141,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.10847454127568053,
+    "neutral": 0.19127703955988312,
+    "positive": 0.7002484191644364
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t046",
+   "row": 4183,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6549479577712928,
+    "neutral": 0.11226361385113567,
+    "positive": 0.23278842837757163
+   },
+   "latency_ms": 11.5
+  },
+  {
+   "id": "t047",
+   "row": 3718,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.40740466722684526,
+    "neutral": 0.4381863709266571,
+    "positive": 0.15440896184649766
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t048",
+   "row": 3402,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.32318092983436736,
+    "neutral": 0.335352151350921,
+    "positive": 0.34146691881471164
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t049",
+   "row": 11054,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4688823548684295,
+    "neutral": 0.1794861576219407,
+    "positive": 0.3516314875096298
+   },
+   "latency_ms": 11.9
+  },
+  {
+   "id": "t050",
+   "row": 6006,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3776666200834096,
+    "neutral": 0.3844986309620806,
+    "positive": 0.23783474895450982
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t051",
+   "row": 2070,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5603669709059901,
+    "neutral": 0.30206431338996037,
+    "positive": 0.13756871570404952
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t052",
+   "row": 9263,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.08380523407931807,
+    "neutral": 0.04026688871377869,
+    "positive": 0.8759278772069032
+   },
+   "latency_ms": 14.1
+  },
+  {
+   "id": "t053",
+   "row": 7458,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4940670901714908,
+    "neutral": 0.2999798814328204,
+    "positive": 0.2059530283956888
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t054",
+   "row": 10582,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6432798768661276,
+    "neutral": 0.20179403731853002,
+    "positive": 0.15492608581534223
+   },
+   "latency_ms": 14.0
+  },
+  {
+   "id": "t055",
+   "row": 6574,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.4069685040180735,
+    "neutral": 0.15852979330214548,
+    "positive": 0.43450170267978094
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t056",
+   "row": 10226,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.49041130576080944,
+    "neutral": 0.4186263425267066,
+    "positive": 0.09096235171248399
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t057",
+   "row": 7574,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5812727054700916,
+    "neutral": 0.32244000417589336,
+    "positive": 0.0962872903540152
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t058",
+   "row": 844,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.21741875412556483,
+    "neutral": 0.3468543387606254,
+    "positive": 0.4357269071138098
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t059",
+   "row": 4305,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.25395711267643023,
+    "neutral": 0.6948133589340533,
+    "positive": 0.05122952838951658
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t060",
+   "row": 8545,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.11474458872331122,
+    "neutral": 0.07036793521803057,
+    "positive": 0.8148874760586582
+   },
+   "latency_ms": 13.0
+  },
+  {
+   "id": "t061",
+   "row": 11285,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5540623599861217,
+    "neutral": 0.28439795862407596,
+    "positive": 0.1615396813898023
+   },
+   "latency_ms": 11.6
+  },
+  {
+   "id": "t062",
+   "row": 11019,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.1924564467126092,
+    "neutral": 0.6792471625013966,
+    "positive": 0.1282963907859942
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t063",
+   "row": 3650,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3623964852343037,
+    "neutral": 0.4306435163495419,
+    "positive": 0.20695999841615442
+   },
+   "latency_ms": 14.3
+  },
+  {
+   "id": "t064",
+   "row": 2883,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3934144956850436,
+    "neutral": 0.5352721895814981,
+    "positive": 0.07131331473345821
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t065",
+   "row": 12031,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4988805432763973,
+    "neutral": 0.3094804865264067,
+    "positive": 0.19163897019719603
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t066",
+   "row": 3724,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2199389058317091,
+    "neutral": 0.24661001816316136,
+    "positive": 0.5334510760051294
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t067",
+   "row": 3275,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.29190698165678425,
+    "neutral": 0.3524394349164667,
+    "positive": 0.35565358342674896
+   },
+   "latency_ms": 63.3
+  },
+  {
+   "id": "t068",
+   "row": 7288,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2363479027892649,
+    "neutral": 0.3203273885498719,
+    "positive": 0.44332470866086315
+   },
+   "latency_ms": 15.6
+  },
+  {
+   "id": "t069",
+   "row": 8287,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.12411833468697898,
+    "neutral": 0.1837836628349276,
+    "positive": 0.6920980024780934
+   },
+   "latency_ms": 14.6
+  },
+  {
+   "id": "t070",
+   "row": 9440,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.051828898081182274,
+    "neutral": 0.034751018814280936,
+    "positive": 0.9134200831045368
+   },
+   "latency_ms": 13.0
+  },
+  {
+   "id": "t071",
+   "row": 5402,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5747521600951041,
+    "neutral": 0.3053149067717321,
+    "positive": 0.11993293313316365
+   },
+   "latency_ms": 14.3
+  },
+  {
+   "id": "t072",
+   "row": 3788,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1241006757362667,
+    "neutral": 0.10975338224936067,
+    "positive": 0.7661459420143727
+   },
+   "latency_ms": 15.4
+  },
+  {
+   "id": "t073",
+   "row": 3337,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2013568418652272,
+    "neutral": 0.23101522146514555,
+    "positive": 0.5676279366696272
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t074",
+   "row": 7775,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2661634100026616,
+    "neutral": 0.3303142821692227,
+    "positive": 0.4035223078281157
+   },
+   "latency_ms": 13.3
+  },
+  {
+   "id": "t075",
+   "row": 185,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2606937631461207,
+    "neutral": 0.12060206174466838,
+    "positive": 0.6187041751092108
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t076",
+   "row": 6486,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.33078646057234357,
+    "neutral": 0.13866083205278715,
+    "positive": 0.5305527073748693
+   },
+   "latency_ms": 18.1
+  },
+  {
+   "id": "t077",
+   "row": 5415,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18914992864921715,
+    "neutral": 0.16242096888018048,
+    "positive": 0.6484291024706024
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t078",
+   "row": 6634,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.44052604574536247,
+    "neutral": 0.1189821360602792,
+    "positive": 0.44049181819435823
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t079",
+   "row": 8608,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3644671733326622,
+    "neutral": 0.38169290119093435,
+    "positive": 0.2538399254764035
+   },
+   "latency_ms": 12.6
+  },
+  {
+   "id": "t080",
+   "row": 7153,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.15565846490235938,
+    "neutral": 0.24368058028202408,
+    "positive": 0.6006609548156165
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t081",
+   "row": 5158,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.194992598037564,
+    "neutral": 0.047263563456015296,
+    "positive": 0.7577438385064207
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t082",
+   "row": 5917,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3750085955519563,
+    "neutral": 0.5282997045480572,
+    "positive": 0.09669169989998656
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t083",
+   "row": 8802,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.3671269396838417,
+    "neutral": 0.36357312084409354,
+    "positive": 0.26929993947206465
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t084",
+   "row": 11742,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.509791209794462,
+    "neutral": 0.3338434670333311,
+    "positive": 0.1563653231722068
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t085",
+   "row": 9021,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.13088584176983414,
+    "neutral": 0.35478314503289743,
+    "positive": 0.5143310131972685
+   },
+   "latency_ms": 14.1
+  },
+  {
+   "id": "t086",
+   "row": 4748,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4481542227353933,
+    "neutral": 0.4077450541700243,
+    "positive": 0.1441007230945823
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t087",
+   "row": 7416,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2586848944087058,
+    "neutral": 0.13925164215563926,
+    "positive": 0.6020634634356549
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t088",
+   "row": 773,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.3875060869154581,
+    "neutral": 0.2597079313720958,
+    "positive": 0.3527859817124462
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t089",
+   "row": 8922,
+   "gold": "positive",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.174801177528704,
+    "neutral": 0.5059525034926727,
+    "positive": 0.31924631897862327
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t090",
+   "row": 4719,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.16815560887122166,
+    "neutral": 0.32577907498886943,
+    "positive": 0.5060653161399089
+   },
+   "latency_ms": 11.8
+  },
+  {
+   "id": "t091",
+   "row": 6141,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18436514915257346,
+    "neutral": 0.24825837542967497,
+    "positive": 0.5673764754177516
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t092",
+   "row": 9056,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.21250433336280863,
+    "neutral": 0.6081827695935136,
+    "positive": 0.17931289704367775
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t093",
+   "row": 8262,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.30480825557738217,
+    "neutral": 0.20370878364935616,
+    "positive": 0.49148296077326176
+   },
+   "latency_ms": 15.7
+  },
+  {
+   "id": "t094",
+   "row": 756,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.7013876570137266,
+    "neutral": 0.17081059434197596,
+    "positive": 0.12780174864429739
+   },
+   "latency_ms": 16.3
+  },
+  {
+   "id": "t095",
+   "row": 3271,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.36252740069591843,
+    "neutral": 0.11567078697692028,
+    "positive": 0.5218018123271613
+   },
+   "latency_ms": 15.8
+  },
+  {
+   "id": "t096",
+   "row": 364,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.44841132121644006,
+    "neutral": 0.3973615176923005,
+    "positive": 0.15422716109125942
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t097",
+   "row": 4481,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2771365002854913,
+    "neutral": 0.2513688593802698,
+    "positive": 0.4714946403342389
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t098",
+   "row": 8222,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17174210286950722,
+    "neutral": 0.10946915894870006,
+    "positive": 0.7187887381817927
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t099",
+   "row": 5605,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1276423507425402,
+    "neutral": 0.08378313511652057,
+    "positive": 0.7885745141409393
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t100",
+   "row": 962,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.35786956492861455,
+    "neutral": 0.4257353255553538,
+    "positive": 0.21639510951603175
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t101",
+   "row": 9719,
+   "gold": "positive",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6311493576883422,
+    "neutral": 0.1561012508805875,
+    "positive": 0.21274939143107033
+   },
+   "latency_ms": 14.9
+  },
+  {
+   "id": "t102",
+   "row": 9214,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.16783900281782263,
+    "neutral": 0.3135561044602945,
+    "positive": 0.5186048927218828
+   },
+   "latency_ms": 14.7
+  },
+  {
+   "id": "t103",
+   "row": 5089,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.24758034246332353,
+    "neutral": 0.25585280122836657,
+    "positive": 0.49656685630830993
+   },
+   "latency_ms": 15.2
+  },
+  {
+   "id": "t104",
+   "row": 6317,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3657535812096837,
+    "neutral": 0.23099165008281866,
+    "positive": 0.4032547687074977
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t105",
+   "row": 5080,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.7684256590037736,
+    "neutral": 0.119774317205372,
+    "positive": 0.11180002379085441
+   },
+   "latency_ms": 11.2
+  },
+  {
+   "id": "t106",
+   "row": 9363,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.20194647259905202,
+    "neutral": 0.15165541631478738,
+    "positive": 0.6463981110861606
+   },
+   "latency_ms": 15.4
+  },
+  {
+   "id": "t107",
+   "row": 1382,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17620356908447965,
+    "neutral": 0.13035555805572563,
+    "positive": 0.6934408728597947
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t108",
+   "row": 2980,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.35661253761459344,
+    "neutral": 0.35588679460344236,
+    "positive": 0.2875006677819642
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t109",
+   "row": 7573,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.2448611490183787,
+    "neutral": 0.4588443574373732,
+    "positive": 0.2962944935442481
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t110",
+   "row": 10405,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3149099740311181,
+    "neutral": 0.2622509968700686,
+    "positive": 0.4228390290988133
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t111",
+   "row": 11669,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4492388867937849,
+    "neutral": 0.29868088943002624,
+    "positive": 0.2520802237761888
+   },
+   "latency_ms": 11.7
+  },
+  {
+   "id": "t112",
+   "row": 1429,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1454269997613854,
+    "neutral": 0.185516139038079,
+    "positive": 0.6690568612005356
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t113",
+   "row": 4025,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.22371830468683448,
+    "neutral": 0.40391947034510384,
+    "positive": 0.37236222496806154
+   },
+   "latency_ms": 14.3
+  },
+  {
+   "id": "t114",
+   "row": 9188,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18765708662559635,
+    "neutral": 0.1110340680473767,
+    "positive": 0.701308845327027
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t115",
+   "row": 6670,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1718033672433279,
+    "neutral": 0.39767321980625125,
+    "positive": 0.4305234129504209
+   },
+   "latency_ms": 10.8
+  },
+  {
+   "id": "t116",
+   "row": 4016,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.24963948103727568,
+    "neutral": 0.213991226176485,
+    "positive": 0.5363692927862393
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t117",
+   "row": 1807,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4694312322649937,
+    "neutral": 0.442596390899729,
+    "positive": 0.0879723768352774
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t118",
+   "row": 1054,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.20928830252240244,
+    "neutral": 0.3289746939104868,
+    "positive": 0.4617370035671108
+   },
+   "latency_ms": 12.5
+  },
+  {
+   "id": "t119",
+   "row": 5534,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5069123643065152,
+    "neutral": 0.37284050774220506,
+    "positive": 0.12024712795127981
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t120",
+   "row": 407,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.14157436404339216,
+    "neutral": 0.15662335781939607,
+    "positive": 0.7018022781372117
+   },
+   "latency_ms": 12.2
+  },
+  {
+   "id": "t121",
+   "row": 1437,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.10469003854782152,
+    "neutral": 0.06796320249385822,
+    "positive": 0.8273467589583202
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t122",
+   "row": 1686,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.39752686987841196,
+    "neutral": 0.14306579110666454,
+    "positive": 0.45940733901492353
+   },
+   "latency_ms": 15.1
+  },
+  {
+   "id": "t123",
+   "row": 6578,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.2814709992971476,
+    "neutral": 0.4569975350099843,
+    "positive": 0.2615314656928681
+   },
+   "latency_ms": 14.1
+  },
+  {
+   "id": "t124",
+   "row": 339,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5332651627784347,
+    "neutral": 0.4283494949053032,
+    "positive": 0.038385342316262026
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t125",
+   "row": 10940,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.048916005984202066,
+    "neutral": 0.015419803126209377,
+    "positive": 0.9356641908895886
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t126",
+   "row": 6826,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4209089914621511,
+    "neutral": 0.2643893254076165,
+    "positive": 0.3147016831302324
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t127",
+   "row": 6312,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3637617722337764,
+    "neutral": 0.2152238944542296,
+    "positive": 0.4210143333119941
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t128",
+   "row": 2636,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3795063148703834,
+    "neutral": 0.38441562128467965,
+    "positive": 0.2360780638449369
+   },
+   "latency_ms": 15.3
+  },
+  {
+   "id": "t129",
+   "row": 4357,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.14010444213685067,
+    "neutral": 0.2242285612194504,
+    "positive": 0.635666996643699
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t130",
+   "row": 2759,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.40824047153056053,
+    "neutral": 0.3480430842480716,
+    "positive": 0.24371644422136793
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t131",
+   "row": 4915,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.745187378071436,
+    "neutral": 0.13477888521490852,
+    "positive": 0.12003373671365558
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t132",
+   "row": 1270,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.13719999774281239,
+    "neutral": 0.19296685649184986,
+    "positive": 0.6698331457653377
+   },
+   "latency_ms": 13.3
+  },
+  {
+   "id": "t133",
+   "row": 3019,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.23879135862466594,
+    "neutral": 0.4282106169192329,
+    "positive": 0.33299802445610116
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t134",
+   "row": 7956,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.28722035975571575,
+    "neutral": 0.3429127960936575,
+    "positive": 0.3698668441506269
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t135",
+   "row": 10446,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.26644879144212325,
+    "neutral": 0.4109377688963773,
+    "positive": 0.3226134396614993
+   },
+   "latency_ms": 11.7
+  },
+  {
+   "id": "t136",
+   "row": 9411,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.442595293363298,
+    "neutral": 0.37701785971607077,
+    "positive": 0.1803868469206312
+   },
+   "latency_ms": 15.5
+  },
+  {
+   "id": "t137",
+   "row": 832,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.42921214525542994,
+    "neutral": 0.4436640403326074,
+    "positive": 0.12712381441196263
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t138",
+   "row": 2768,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17892953652694793,
+    "neutral": 0.22188283391019756,
+    "positive": 0.5991876295628545
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t139",
+   "row": 11985,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5305099279859753,
+    "neutral": 0.37052436517721377,
+    "positive": 0.09896570683681091
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t140",
+   "row": 9743,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.3805376841831276,
+    "neutral": 0.2438476516509983,
+    "positive": 0.375614664165874
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t141",
+   "row": 7008,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.14142322611399455,
+    "neutral": 0.20219648259138712,
+    "positive": 0.6563802912946183
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t142",
+   "row": 7657,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.22509529290275063,
+    "neutral": 0.6873216571642039,
+    "positive": 0.08758304993304551
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t143",
+   "row": 4780,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.19521706083455642,
+    "neutral": 0.15097640468811918,
+    "positive": 0.6538065344773244
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t144",
+   "row": 7591,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.27888993992264305,
+    "neutral": 0.20941004073515285,
+    "positive": 0.511700019342204
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t145",
+   "row": 286,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.41111813237783723,
+    "neutral": 0.226656410965824,
+    "positive": 0.3622254566563388
+   },
+   "latency_ms": 13.0
+  },
+  {
+   "id": "t146",
+   "row": 1590,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.21171393859861515,
+    "neutral": 0.12920797132831482,
+    "positive": 0.6590780900730699
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t147",
+   "row": 2051,
+   "gold": "positive",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.14293316741423942,
+    "neutral": 0.5117848086320712,
+    "positive": 0.3452820239536894
+   },
+   "latency_ms": 11.9
+  },
+  {
+   "id": "t148",
+   "row": 1276,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5357470594742918,
+    "neutral": 0.07356586133636735,
+    "positive": 0.39068707918934087
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t149",
+   "row": 10220,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.09280835237731341,
+    "neutral": 0.16330107049712167,
+    "positive": 0.743890577125565
+   },
+   "latency_ms": 12.1
+  },
+  {
+   "id": "t150",
+   "row": 6842,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.11059874621652965,
+    "neutral": 0.8410098441003301,
+    "positive": 0.048391409683140256
+   },
+   "latency_ms": 13.3
+  },
+  {
+   "id": "t151",
+   "row": 6071,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2832791661102992,
+    "neutral": 0.1933172602606548,
+    "positive": 0.523403573629046
+   },
+   "latency_ms": 15.9
+  },
+  {
+   "id": "t152",
+   "row": 2982,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4654424389006207,
+    "neutral": 0.28941532715115487,
+    "positive": 0.2451422339482244
+   },
+   "latency_ms": 15.7
+  },
+  {
+   "id": "t153",
+   "row": 8032,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.48242269486491174,
+    "neutral": 0.43746608563432177,
+    "positive": 0.08011121950076637
+   },
+   "latency_ms": 11.9
+  },
+  {
+   "id": "t154",
+   "row": 1677,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5182034059611417,
+    "neutral": 0.24549569399562593,
+    "positive": 0.23630090004323245
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t155",
+   "row": 12070,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.22482814363652856,
+    "neutral": 0.18087682946192876,
+    "positive": 0.5942950269015427
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t156",
+   "row": 12100,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2591401180054498,
+    "neutral": 0.3572411088932483,
+    "positive": 0.38361877310130194
+   },
+   "latency_ms": 13.3
+  },
+  {
+   "id": "t157",
+   "row": 6177,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5673061934264453,
+    "neutral": 0.22392799875611968,
+    "positive": 0.2087658078174351
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t158",
+   "row": 1104,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4046081588714427,
+    "neutral": 0.28896401840365243,
+    "positive": 0.30642782272490493
+   },
+   "latency_ms": 14.3
+  },
+  {
+   "id": "t159",
+   "row": 8162,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.08581385264608048,
+    "neutral": 0.1104979959354035,
+    "positive": 0.803688151418516
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t160",
+   "row": 9952,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.03810322880928323,
+    "neutral": 0.028022301508196904,
+    "positive": 0.9338744696825199
+   },
+   "latency_ms": 12.5
+  },
+  {
+   "id": "t161",
+   "row": 7594,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18419017862674436,
+    "neutral": 0.1013847244825845,
+    "positive": 0.7144250968906711
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t162",
+   "row": 721,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3787067214652291,
+    "neutral": 0.4689341728881662,
+    "positive": 0.15235910564660474
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t163",
+   "row": 6295,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.38931317833039003,
+    "neutral": 0.5315719924779113,
+    "positive": 0.07911482919169865
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t164",
+   "row": 504,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.10444119902590826,
+    "neutral": 0.34962779902933255,
+    "positive": 0.5459310019447592
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t165",
+   "row": 1730,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.1908536456240306,
+    "neutral": 0.4644045830402813,
+    "positive": 0.344741771335688
+   },
+   "latency_ms": 14.9
+  },
+  {
+   "id": "t166",
+   "row": 423,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1606489314195075,
+    "neutral": 0.17724676675069342,
+    "positive": 0.6621043018297991
+   },
+   "latency_ms": 15.0
+  },
+  {
+   "id": "t167",
+   "row": 9950,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3151219745843588,
+    "neutral": 0.49972810725969535,
+    "positive": 0.18514991815594584
+   },
+   "latency_ms": 13.1
+  },
+  {
+   "id": "t168",
+   "row": 6150,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4434627796489721,
+    "neutral": 0.22821181631854617,
+    "positive": 0.3283254040324817
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t169",
+   "row": 5942,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2359213810923767,
+    "neutral": 0.12398009451703589,
+    "positive": 0.6400985243905875
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t170",
+   "row": 2618,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.19968196115508788,
+    "neutral": 0.6135382246352152,
+    "positive": 0.18677981420969683
+   },
+   "latency_ms": 11.8
+  },
+  {
+   "id": "t171",
+   "row": 8896,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.32381538589623693,
+    "neutral": 0.3281310051351258,
+    "positive": 0.34805360896863735
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t172",
+   "row": 28,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4660494046249517,
+    "neutral": 0.42918806191038106,
+    "positive": 0.1047625334646673
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t173",
+   "row": 3338,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5423245057411024,
+    "neutral": 0.28630128871452937,
+    "positive": 0.17137420554436839
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t174",
+   "row": 9896,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.42886939179152167,
+    "neutral": 0.3488152236262089,
+    "positive": 0.22231538458226938
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t175",
+   "row": 3647,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.48999976084954655,
+    "neutral": 0.16406840491525118,
+    "positive": 0.3459318342352023
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t176",
+   "row": 7903,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.36162487801412185,
+    "neutral": 0.3791210378896329,
+    "positive": 0.25925408409624523
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t177",
+   "row": 7483,
+   "gold": "positive",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.38494810742456786,
+    "neutral": 0.3975711376435311,
+    "positive": 0.21748075493190103
+   },
+   "latency_ms": 12.5
+  },
+  {
+   "id": "t178",
+   "row": 7223,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.28847313699876903,
+    "neutral": 0.3082455067585181,
+    "positive": 0.40328135624271294
+   },
+   "latency_ms": 16.3
+  },
+  {
+   "id": "t179",
+   "row": 11586,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.12570415066676313,
+    "neutral": 0.18527797671901294,
+    "positive": 0.6890178726142238
+   },
+   "latency_ms": 16.0
+  },
+  {
+   "id": "t180",
+   "row": 6538,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.7474258829217502,
+    "neutral": 0.18121006189703837,
+    "positive": 0.0713640551812115
+   },
+   "latency_ms": 14.8
+  },
+  {
+   "id": "t181",
+   "row": 4659,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1613228756485287,
+    "neutral": 0.19374870386277057,
+    "positive": 0.6449284204887008
+   },
+   "latency_ms": 14.4
+  },
+  {
+   "id": "t182",
+   "row": 3976,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.31163204419462964,
+    "neutral": 0.21558165436545845,
+    "positive": 0.4727863014399119
+   },
+   "latency_ms": 10.4
+  },
+  {
+   "id": "t183",
+   "row": 2840,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.35171470262354565,
+    "neutral": 0.4603852434731562,
+    "positive": 0.18790005390329817
+   },
+   "latency_ms": 14.0
+  },
+  {
+   "id": "t184",
+   "row": 3355,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5421154463996964,
+    "neutral": 0.28208975117558494,
+    "positive": 0.1757948024247186
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t185",
+   "row": 2256,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6443305624086749,
+    "neutral": 0.19220131801356344,
+    "positive": 0.1634681195777616
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t186",
+   "row": 5798,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3086930037810418,
+    "neutral": 0.47746057569652656,
+    "positive": 0.2138464205224318
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t187",
+   "row": 7706,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.35776522848898556,
+    "neutral": 0.13858964531925028,
+    "positive": 0.503645126191764
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t188",
+   "row": 10096,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.12536889414907817,
+    "neutral": 0.21134889089199993,
+    "positive": 0.6632822149589219
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t189",
+   "row": 11216,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.29658631797968266,
+    "neutral": 0.294971658494715,
+    "positive": 0.40844202352560227
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t190",
+   "row": 6975,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2071780033775325,
+    "neutral": 0.14057352768313175,
+    "positive": 0.6522484689393357
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t191",
+   "row": 11704,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3204693664434705,
+    "neutral": 0.18363355365788148,
+    "positive": 0.49589707989864795
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t192",
+   "row": 3759,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.327694069627511,
+    "neutral": 0.4116503066286349,
+    "positive": 0.26065562374385404
+   },
+   "latency_ms": 17.8
+  },
+  {
+   "id": "t193",
+   "row": 2888,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2512255760970603,
+    "neutral": 0.29086053508410376,
+    "positive": 0.457913888818836
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t194",
+   "row": 10454,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4360557591196767,
+    "neutral": 0.41753749523004013,
+    "positive": 0.14640674565028317
+   },
+   "latency_ms": 12.6
+  },
+  {
+   "id": "t195",
+   "row": 4647,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.25955117485515616,
+    "neutral": 0.2825348006478568,
+    "positive": 0.45791402449698715
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t196",
+   "row": 4033,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3894769814947552,
+    "neutral": 0.46647435673663945,
+    "positive": 0.14404866176860534
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t197",
+   "row": 6426,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3507237073161435,
+    "neutral": 0.25377549816466594,
+    "positive": 0.3955007945191905
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t198",
+   "row": 4955,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3026456248295252,
+    "neutral": 0.26869659397318185,
+    "positive": 0.4286577811972929
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t199",
+   "row": 3677,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.35211153582092525,
+    "neutral": 0.4395574342490269,
+    "positive": 0.20833102993004785
+   },
+   "latency_ms": 14.2
+  },
+  {
+   "id": "t200",
+   "row": 10007,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.44270376938171146,
+    "neutral": 0.3765377078156847,
+    "positive": 0.18075852280260382
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t201",
+   "row": 5814,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.39574481612406537,
+    "neutral": 0.21805401710105485,
+    "positive": 0.38620116677487987
+   },
+   "latency_ms": 12.5
+  },
+  {
+   "id": "t202",
+   "row": 2640,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.42838925468711286,
+    "neutral": 0.24517774349678134,
+    "positive": 0.3264330018161058
+   },
+   "latency_ms": 13.6
+  },
+  {
+   "id": "t203",
+   "row": 8745,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3149965405902078,
+    "neutral": 0.6203939585047018,
+    "positive": 0.06460950090509042
+   },
+   "latency_ms": 13.3
+  },
+  {
+   "id": "t204",
+   "row": 10984,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18530612780713226,
+    "neutral": 0.13367316614173905,
+    "positive": 0.6810207060511287
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t205",
+   "row": 10655,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3118516064153424,
+    "neutral": 0.15658161569045417,
+    "positive": 0.5315667778942034
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t206",
+   "row": 6976,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.33257207447149106,
+    "neutral": 0.5633902633239273,
+    "positive": 0.10403766220458158
+   },
+   "latency_ms": 12.5
+  },
+  {
+   "id": "t207",
+   "row": 9749,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4274851356467835,
+    "neutral": 0.3853564742961342,
+    "positive": 0.18715839005708235
+   },
+   "latency_ms": 17.8
+  },
+  {
+   "id": "t208",
+   "row": 5354,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3466391914077238,
+    "neutral": 0.10099317882398047,
+    "positive": 0.5523676297682957
+   },
+   "latency_ms": 14.7
+  },
+  {
+   "id": "t209",
+   "row": 3157,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.38669466469267705,
+    "neutral": 0.49105939342423877,
+    "positive": 0.12224594188308426
+   },
+   "latency_ms": 12.6
+  },
+  {
+   "id": "t210",
+   "row": 1170,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18894746021153727,
+    "neutral": 0.25025176175117686,
+    "positive": 0.5608007780372858
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t211",
+   "row": 4061,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3463282558439254,
+    "neutral": 0.3881052530243242,
+    "positive": 0.26556649113175035
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t212",
+   "row": 9968,
+   "gold": "neutral",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5860295102940224,
+    "neutral": 0.23171731698069647,
+    "positive": 0.182253172725281
+   },
+   "latency_ms": 13.8
+  },
+  {
+   "id": "t213",
+   "row": 2561,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3923527197321038,
+    "neutral": 0.19748863187579077,
+    "positive": 0.4101586483921054
+   },
+   "latency_ms": 12.1
+  },
+  {
+   "id": "t214",
+   "row": 7713,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6822447779487086,
+    "neutral": 0.2049478202175605,
+    "positive": 0.11280740183373085
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t215",
+   "row": 11369,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.036108360160469276,
+    "neutral": 0.04190842345313753,
+    "positive": 0.9219832163863931
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t216",
+   "row": 11690,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3197365645242268,
+    "neutral": 0.23026278511721177,
+    "positive": 0.45000065035856146
+   },
+   "latency_ms": 12.2
+  },
+  {
+   "id": "t217",
+   "row": 10605,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3543645157053288,
+    "neutral": 0.5788364241361129,
+    "positive": 0.06679906015855831
+   },
+   "latency_ms": 12.4
+  },
+  {
+   "id": "t218",
+   "row": 1986,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.17151733470335911,
+    "neutral": 0.7050875842298948,
+    "positive": 0.1233950810667461
+   },
+   "latency_ms": 12.9
+  },
+  {
+   "id": "t219",
+   "row": 2643,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.33834231963957045,
+    "neutral": 0.402502896750681,
+    "positive": 0.2591547836097485
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t220",
+   "row": 420,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.7011643828147112,
+    "neutral": 0.22779013449283966,
+    "positive": 0.07104548269244926
+   },
+   "latency_ms": 13.7
+  },
+  {
+   "id": "t221",
+   "row": 12127,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4942178694169929,
+    "neutral": 0.2574553105172238,
+    "positive": 0.2483268200657833
+   },
+   "latency_ms": 12.0
+  },
+  {
+   "id": "t222",
+   "row": 8564,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5228608806336087,
+    "neutral": 0.2001802355961264,
+    "positive": 0.27695888377026484
+   },
+   "latency_ms": 14.9
+  },
+  {
+   "id": "t223",
+   "row": 12236,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.30637170114186335,
+    "neutral": 0.2593021551936901,
+    "positive": 0.4343261436644466
+   },
+   "latency_ms": 14.5
+  },
+  {
+   "id": "t224",
+   "row": 11356,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4695161008890833,
+    "neutral": 0.34801414282252036,
+    "positive": 0.18246975628839637
+   },
+   "latency_ms": 13.2
+  },
+  {
+   "id": "t225",
+   "row": 12196,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18793107358053168,
+    "neutral": 0.26439179531503604,
+    "positive": 0.5476771311044322
+   },
+   "latency_ms": 13.0
+  },
+  {
+   "id": "t226",
+   "row": 4141,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17044349119783309,
+    "neutral": 0.336161686732272,
+    "positive": 0.4933948220698949
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t227",
+   "row": 10559,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5451929521850337,
+    "neutral": 0.21624614296042746,
+    "positive": 0.23856090485453887
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t228",
+   "row": 1693,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.17699601228170792,
+    "neutral": 0.7990219676842238,
+    "positive": 0.023982020034068217
+   },
+   "latency_ms": 12.7
+  },
+  {
+   "id": "t229",
+   "row": 10813,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.18231710655126773,
+    "neutral": 0.2038731952452519,
+    "positive": 0.6138096982034804
+   },
+   "latency_ms": 12.8
+  },
+  {
+   "id": "t230",
+   "row": 2146,
+   "gold": "neutral",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.18722685509522782,
+    "neutral": 0.47424796334667696,
+    "positive": 0.33852518155809525
+   },
+   "latency_ms": 13.5
+  },
+  {
+   "id": "t231",
+   "row": 3000,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.13871897666923583,
+    "neutral": 0.12167776333256179,
+    "positive": 0.7396032599982023
+   },
+   "latency_ms": 12.1
+  },
+  {
+   "id": "t232",
+   "row": 5528,
+   "gold": "neutral",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2590853113510492,
+    "neutral": 0.1165574402546605,
+    "positive": 0.6243572483942904
+   },
+   "latency_ms": 13.4
+  },
+  {
+   "id": "t233",
+   "row": 6600,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3671385878967107,
+    "neutral": 0.3941526076368289,
+    "positive": 0.2387088044664605
+   },
+   "latency_ms": 11.9
+  },
+  {
+   "id": "t234",
+   "row": 310,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.3948841927982601,
+    "neutral": 0.39458995195881014,
+    "positive": 0.21052585524292985
+   },
+   "latency_ms": 11.8
+  },
+  {
+   "id": "t235",
+   "row": 8038,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5428833542853883,
+    "neutral": 0.28029972689905547,
+    "positive": 0.1768169188155562
+   },
+   "latency_ms": 11.3
+  },
+  {
+   "id": "t236",
+   "row": 1218,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.46560165936684905,
+    "neutral": 0.4464917245263758,
+    "positive": 0.08790661610677525
+   },
+   "latency_ms": 11.9
+  },
+  {
+   "id": "t237",
+   "row": 648,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.14447721044033102,
+    "neutral": 0.19354182640193043,
+    "positive": 0.6619809631577386
+   },
+   "latency_ms": 12.3
+  },
+  {
+   "id": "t238",
+   "row": 11042,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5361397722721719,
+    "neutral": 0.20217919192431064,
+    "positive": 0.2616810358035175
+   },
+   "latency_ms": 15.3
+  },
+  {
+   "id": "t239",
+   "row": 10415,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.13627706831700487,
+    "neutral": 0.16769061740554958,
+    "positive": 0.6960323142774456
+   },
+   "latency_ms": 11.4
+  },
+  {
+   "id": "t240",
+   "row": 7164,
+   "gold": "positive",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.18048471197265903,
+    "neutral": 0.4506202802465512,
+    "positive": 0.3688950077807898
+   },
+   "latency_ms": 11.8
+  },
+  {
+   "id": "t241",
+   "row": 11360,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2028984618453367,
+    "neutral": 0.22023226805453805,
+    "positive": 0.5768692701001253
+   },
+   "latency_ms": 11.4
+  },
+  {
+   "id": "t242",
+   "row": 6562,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5936732362738455,
+    "neutral": 0.2036458756589646,
+    "positive": 0.20268088806718998
+   },
+   "latency_ms": 11.7
+  },
+  {
+   "id": "t243",
+   "row": 9627,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4820084433624044,
+    "neutral": 0.32605801835931647,
+    "positive": 0.19193353827827916
+   },
+   "latency_ms": 11.9
+  },
+  {
+   "id": "t244",
+   "row": 10537,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.21027859910601884,
+    "neutral": 0.2559809901266051,
+    "positive": 0.533740410767376
+   },
+   "latency_ms": 11.2
+  },
+  {
+   "id": "t245",
+   "row": 148,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3424943074286576,
+    "neutral": 0.494340768152293,
+    "positive": 0.16316492441904945
+   },
+   "latency_ms": 10.8
+  },
+  {
+   "id": "t246",
+   "row": 12023,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.31715216349711917,
+    "neutral": 0.3522250113957968,
+    "positive": 0.3306228251070841
+   },
+   "latency_ms": 10.6
+  },
+  {
+   "id": "t247",
+   "row": 7207,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.07752330961490658,
+    "neutral": 0.13728642032247357,
+    "positive": 0.7851902700626199
+   },
+   "latency_ms": 10.6
+  },
+  {
+   "id": "t248",
+   "row": 2772,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1382420081061056,
+    "neutral": 0.12183719307622233,
+    "positive": 0.739920798817672
+   },
+   "latency_ms": 10.9
+  },
+  {
+   "id": "t249",
+   "row": 7642,
+   "gold": "positive",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4456772488013608,
+    "neutral": 0.22335130136153042,
+    "positive": 0.3309714498371087
+   },
+   "latency_ms": 11.5
+  },
+  {
+   "id": "t250",
+   "row": 8823,
+   "gold": "positive",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5015494179008699,
+    "neutral": 0.08800584785363802,
+    "positive": 0.410444734245492
+   },
+   "latency_ms": 11.8
+  },
+  {
+   "id": "t251",
+   "row": 9610,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.034688092993790304,
+    "neutral": 0.022763400847304154,
+    "positive": 0.9425485061589055
+   },
+   "latency_ms": 11.0
+  },
+  {
+   "id": "t252",
+   "row": 5104,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2724517394653542,
+    "neutral": 0.10557943586751328,
+    "positive": 0.6219688246671325
+   },
+   "latency_ms": 11.4
+  },
+  {
+   "id": "t253",
+   "row": 8638,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.340648010943946,
+    "neutral": 0.2776171853729464,
+    "positive": 0.38173480368310764
+   },
+   "latency_ms": 11.6
+  },
+  {
+   "id": "t254",
+   "row": 9065,
+   "gold": "positive",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.1806882321060394,
+    "neutral": 0.4274134712567494,
+    "positive": 0.3918982966372113
+   },
+   "latency_ms": 12.0
+  },
+  {
+   "id": "t255",
+   "row": 2374,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.6859433530314574,
+    "neutral": 0.17974950669343617,
+    "positive": 0.1343071402751064
+   },
+   "latency_ms": 13.9
+  },
+  {
+   "id": "t256",
+   "row": 9860,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.22965309729389702,
+    "neutral": 0.4262254803519947,
+    "positive": 0.34412142235410836
+   },
+   "latency_ms": 15.5
+  },
+  {
+   "id": "t257",
+   "row": 6401,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.16941517954572166,
+    "neutral": 0.3842521162333974,
+    "positive": 0.446332704220881
+   },
+   "latency_ms": 10.4
+  },
+  {
+   "id": "t258",
+   "row": 11703,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.2840332344554588,
+    "neutral": 0.543709209365025,
+    "positive": 0.1722575561795162
+   },
+   "latency_ms": 10.5
+  },
+  {
+   "id": "t259",
+   "row": 7285,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4245680741746676,
+    "neutral": 0.36142607818638284,
+    "positive": 0.21400584763894964
+   },
+   "latency_ms": 10.8
+  },
+  {
+   "id": "t260",
+   "row": 9800,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.5416280493828013,
+    "neutral": 0.2645823974038263,
+    "positive": 0.1937895532133725
+   },
+   "latency_ms": 10.7
+  },
+  {
+   "id": "t261",
+   "row": 2032,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3321365779668217,
+    "neutral": 0.5039650244773445,
+    "positive": 0.1638983975558337
+   },
+   "latency_ms": 11.0
+  },
+  {
+   "id": "t262",
+   "row": 12264,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.423162605219931,
+    "neutral": 0.3168954220452338,
+    "positive": 0.25994197273483527
+   },
+   "latency_ms": 10.6
+  },
+  {
+   "id": "t263",
+   "row": 9899,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.22414165383939733,
+    "neutral": 0.37185392120176336,
+    "positive": 0.40400442495883926
+   },
+   "latency_ms": 10.8
+  },
+  {
+   "id": "t264",
+   "row": 10520,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.10181694724909261,
+    "neutral": 0.10522857071148957,
+    "positive": 0.7929544820394178
+   },
+   "latency_ms": 10.9
+  },
+  {
+   "id": "t265",
+   "row": 7621,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.21206926658525707,
+    "neutral": 0.09662273896473945,
+    "positive": 0.6913079944500035
+   },
+   "latency_ms": 12.6
+  },
+  {
+   "id": "t266",
+   "row": 1593,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.19899637667241113,
+    "neutral": 0.2664107269009613,
+    "positive": 0.5345928964266274
+   },
+   "latency_ms": 11.1
+  },
+  {
+   "id": "t267",
+   "row": 6483,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.566624668293611,
+    "neutral": 0.2812572870183234,
+    "positive": 0.15211804468806553
+   },
+   "latency_ms": 11.3
+  },
+  {
+   "id": "t268",
+   "row": 2703,
+   "gold": "negative",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.525083820139055,
+    "neutral": 0.2731970233819371,
+    "positive": 0.20171915647900787
+   },
+   "latency_ms": 11.3
+  },
+  {
+   "id": "t269",
+   "row": 10743,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.23373433240979002,
+    "neutral": 0.3143170499566891,
+    "positive": 0.4519486176335208
+   },
+   "latency_ms": 12.1
+  },
+  {
+   "id": "t270",
+   "row": 2134,
+   "gold": "negative",
+   "pred": "neutral",
+   "probs": {
+    "negative": 0.3206135339609741,
+    "neutral": 0.46103914964933335,
+    "positive": 0.21834731638969274
+   },
+   "latency_ms": 11.3
+  },
+  {
+   "id": "t271",
+   "row": 10253,
+   "gold": "negative",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3844230232120114,
+    "neutral": 0.2164586574396868,
+    "positive": 0.3991183193483018
+   },
+   "latency_ms": 9.7
+  },
+  {
+   "id": "t272",
+   "row": 7982,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.20817902610440675,
+    "neutral": 0.17934996004900539,
+    "positive": 0.612471013846588
+   },
+   "latency_ms": 9.8
+  },
+  {
+   "id": "t273",
+   "row": 7551,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.0846123352512322,
+    "neutral": 0.05280756290354946,
+    "positive": 0.8625801018452184
+   },
+   "latency_ms": 10.2
+  },
+  {
+   "id": "t274",
+   "row": 720,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.10522702371275433,
+    "neutral": 0.03607105214933803,
+    "positive": 0.8587019241379077
+   },
+   "latency_ms": 16.8
+  },
+  {
+   "id": "t275",
+   "row": 158,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1334751032717939,
+    "neutral": 0.14161977996139544,
+    "positive": 0.7249051167668107
+   },
+   "latency_ms": 11.5
+  },
+  {
+   "id": "t276",
+   "row": 7370,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1990187890263617,
+    "neutral": 0.2741927199592738,
+    "positive": 0.5267884910143645
+   },
+   "latency_ms": 9.9
+  },
+  {
+   "id": "t277",
+   "row": 4491,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.16223480337393728,
+    "neutral": 0.15627146495904604,
+    "positive": 0.6814937316670168
+   },
+   "latency_ms": 9.5
+  },
+  {
+   "id": "t278",
+   "row": 5602,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.3111976970048443,
+    "neutral": 0.2700141308179919,
+    "positive": 0.41878817217716374
+   },
+   "latency_ms": 9.6
+  },
+  {
+   "id": "t279",
+   "row": 1282,
+   "gold": "positive",
+   "pred": "negative",
+   "probs": {
+    "negative": 0.4166532077288282,
+    "neutral": 0.1697023261072778,
+    "positive": 0.41364446616389394
+   },
+   "latency_ms": 10.5
+  },
+  {
+   "id": "t280",
+   "row": 9098,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.08148931656374751,
+    "neutral": 0.17838351459504143,
+    "positive": 0.7401271688412111
+   },
+   "latency_ms": 10.2
+  },
+  {
+   "id": "t281",
+   "row": 1580,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.16268265270426535,
+    "neutral": 0.17684427009498474,
+    "positive": 0.66047307720075
+   },
+   "latency_ms": 7.0
+  },
+  {
+   "id": "t282",
+   "row": 5540,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.1594843754997289,
+    "neutral": 0.08867883791972651,
+    "positive": 0.7518367865805445
+   },
+   "latency_ms": 9.8
+  },
+  {
+   "id": "t283",
+   "row": 2467,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2444850232984345,
+    "neutral": 0.25448894326336663,
+    "positive": 0.5010260334381988
+   },
+   "latency_ms": 9.6
+  },
+  {
+   "id": "t284",
+   "row": 9551,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.17784083455588642,
+    "neutral": 0.06203516436845964,
+    "positive": 0.7601240010756539
+   },
+   "latency_ms": 9.7
+  },
+  {
+   "id": "t285",
+   "row": 2920,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.0898826183574636,
+    "neutral": 0.09172411821780263,
+    "positive": 0.8183932634247338
+   },
+   "latency_ms": 9.6
+  },
+  {
+   "id": "t286",
+   "row": 8042,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.14259379394667038,
+    "neutral": 0.20483225876440045,
+    "positive": 0.6525739472889291
+   },
+   "latency_ms": 9.9
+  },
+  {
+   "id": "t287",
+   "row": 9700,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.19414052766063028,
+    "neutral": 0.3825028927056658,
+    "positive": 0.4233565796337038
+   },
+   "latency_ms": 10.5
+  },
+  {
+   "id": "t288",
+   "row": 189,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.09365484211889835,
+    "neutral": 0.03749930562341978,
+    "positive": 0.8688458522576818
+   },
+   "latency_ms": 9.5
+  },
+  {
+   "id": "t289",
+   "row": 11430,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.43605948694080243,
+    "neutral": 0.06319684269867347,
+    "positive": 0.500743670360524
+   },
+   "latency_ms": 9.2
+  },
+  {
+   "id": "t290",
+   "row": 11409,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2462990384233787,
+    "neutral": 0.34613818445529543,
+    "positive": 0.4075627771213258
+   },
+   "latency_ms": 9.3
+  },
+  {
+   "id": "t291",
+   "row": 7016,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2457566937087676,
+    "neutral": 0.15628086045637107,
+    "positive": 0.5979624458348614
+   },
+   "latency_ms": 9.2
+  },
+  {
+   "id": "t292",
+   "row": 1396,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2917398145028778,
+    "neutral": 0.21258040711704446,
+    "positive": 0.4956797783800777
+   },
+   "latency_ms": 9.5
+  },
+  {
+   "id": "t293",
+   "row": 8573,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.24942917494439748,
+    "neutral": 0.19939270742559892,
+    "positive": 0.5511781176300037
+   },
+   "latency_ms": 15.2
+  },
+  {
+   "id": "t294",
+   "row": 2602,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.11010867413567386,
+    "neutral": 0.058532136563322755,
+    "positive": 0.8313591893010034
+   },
+   "latency_ms": 11.6
+  },
+  {
+   "id": "t295",
+   "row": 7165,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.012876656892636593,
+    "neutral": 0.009486942919867349,
+    "positive": 0.9776364001874961
+   },
+   "latency_ms": 10.2
+  },
+  {
+   "id": "t296",
+   "row": 1431,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.22344025810578644,
+    "neutral": 0.16598760254608477,
+    "positive": 0.6105721393481287
+   },
+   "latency_ms": 10.8
+  },
+  {
+   "id": "t297",
+   "row": 11529,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.12808442923084196,
+    "neutral": 0.1297444098535606,
+    "positive": 0.7421711609155974
+   },
+   "latency_ms": 10.6
+  },
+  {
+   "id": "t298",
+   "row": 8757,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.053212282044041645,
+    "neutral": 0.1206066986657737,
+    "positive": 0.8261810192901847
+   },
+   "latency_ms": 10.8
+  },
+  {
+   "id": "t299",
+   "row": 1653,
+   "gold": "positive",
+   "pred": "positive",
+   "probs": {
+    "negative": 0.2326373042789663,
+    "neutral": 0.3062836209486742,
+    "positive": 0.4610790747723595
+   },
+   "latency_ms": 9.8
+  }
+ ]
+}

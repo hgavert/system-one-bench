@@ -1,0 +1,48 @@
+{
+ "fast": "decider-2b",
+ "slow": "llm-google_gemma-4-26b-a4b-qat",
+ "rows": [
+  {
+   "threshold": 0.0,
+   "accuracy": 0.74,
+   "llm_share": 0.0,
+   "avg_ms": 145.60633333333342
+  },
+  {
+   "threshold": 0.5,
+   "accuracy": 0.7533333333333333,
+   "llm_share": 0.06,
+   "avg_ms": 187.6166666666667
+  },
+  {
+   "threshold": 0.6,
+   "accuracy": 0.7433333333333333,
+   "llm_share": 0.21,
+   "avg_ms": 291.03333333333336
+  },
+  {
+   "threshold": 0.7,
+   "accuracy": 0.7533333333333333,
+   "llm_share": 0.38666666666666666,
+   "avg_ms": 408.7163333333333
+  },
+  {
+   "threshold": 0.8,
+   "accuracy": 0.7566666666666667,
+   "llm_share": 0.6066666666666667,
+   "avg_ms": 554.4393333333333
+  },
+  {
+   "threshold": 0.9,
+   "accuracy": 0.7466666666666667,
+   "llm_share": 0.8133333333333334,
+   "avg_ms": 694.7799999999999
+  },
+  {
+   "threshold": 1.01,
+   "accuracy": 0.74,
+   "llm_share": 1.0,
+   "avg_ms": 668.5273333333333
+  }
+ ]
+}

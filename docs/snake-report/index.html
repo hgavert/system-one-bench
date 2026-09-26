@@ -1,0 +1,441 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asking for a Snake Move</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Silkscreen&display=swap">
+<style>
+:root {
+  --ground: #eef0e6; --surface: #f9faf4; --ink: #1c2419; --muted: #5d6857; --line: #d6dbcb;
+  --accent: #2d6a3e; --accent-soft: #d3e3cf; --code: #3450a1; --code-soft: #dbe1f3; --warn: #a8472a; --warn-soft: #f2dcd3; --clm: #a8761b; --d4: #174a26; --gl: #8a3f8c;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --pixel: "Silkscreen", "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #12160f; --surface: #1a2016; --ink: #e2e8da; --muted: #9aa590; --line: #2f3829;
+    --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #12160f; --surface: #1a2016; --ink: #e2e8da; --muted: #9aa590; --line: #2f3829;
+  --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8;
+}
+body { background: var(--ground); color: var(--ink); font: 16px/1.6 var(--sans); padding-inline: 20px; padding-block: 40px 80px; }
+main { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+h1 { font: 400 clamp(30px, 6vw, 46px)/1.1 var(--pixel); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+h2 { font-size: 22px; line-height: 1.25; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { font-size: 16px; margin: 6px 0 0; font-weight: 600; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 18px; color: var(--ink); }
+.muted { color: var(--muted); }
+a { color: var(--accent); text-underline-offset: 2px; }
+code { font: 0.88em var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+pre { margin: 0; font: 12.5px/1.55 var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; white-space: pre; }
+pre .hl { background: var(--accent-soft); }
+.findings { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; }
+.findings li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+.findings .n { font: 400 20px var(--pixel); color: var(--accent); }
+/* spectrum */
+.spectrum { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; overflow-x: auto; }
+.spectrum svg { display: block; min-width: 640px; width: 100%; height: auto; }
+.spectrum text { font-family: var(--sans); fill: var(--ink); }
+.spectrum .lab { font-size: 12px; }
+.spectrum .sub { font-size: 11px; fill: var(--muted); }
+/* tables */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px var(--mono); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.win td { background: var(--accent-soft); }
+tr.base td { color: var(--muted); font-style: italic; }
+.pill { display: inline-block; font: 500 11px var(--mono); padding: 1px 7px; border-radius: 99px; white-space: nowrap; }
+.pill.model { background: var(--accent-soft); color: var(--accent); }
+.pill.code { background: var(--code-soft); color: var(--code); }
+.pill.bad { background: var(--warn-soft); color: var(--warn); }
+/* probe chart */
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 16px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+.grp { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 6px 14px; align-items: center; }
+.grp .name { font-size: 13px; line-height: 1.3; }
+.bars { display: grid; gap: 3px; position: relative; }
+.bar { display: grid; grid-template-columns: 1fr 40px; gap: 8px; align-items: center; }
+.track { height: 12px; background: color-mix(in srgb, var(--line) 55%, transparent); border-radius: 2px; position: relative; }
+.fill { height: 100%; border-radius: 2px; background: var(--c); }
+.chance { position: absolute; top: -3px; bottom: -3px; left: 50%; border-left: 1px dashed var(--muted); }
+.val { font: 12px var(--mono); font-variant-numeric: tabular-nums; text-align: right; color: var(--muted); }
+.axis { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 14px; font: 11px var(--mono); color: var(--muted); }
+.axis div:last-child { display: flex; justify-content: space-between; padding-right: 48px; }
+/* side-by-side prompts */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pair figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pair figcaption { font-size: 13px; }
+.pair pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; }
+@media (max-width: 680px) { .pair { grid-template-columns: 1fr; } .grp, .axis { grid-template-columns: 1fr; } .axis div:first-child { display: none; } }
+.note { border-left: 3px solid var(--line); padding-left: 14px; color: var(--muted); font-size: 14px; }
+footer { font-size: 13px; color: var(--muted); }
+</style>
+
+<main>
+<header style="display:flex;flex-direction:column;gap:14px">
+  <div class="eyebrow">Jev reproductions · follow-up to the sentiment benchmark · 23 Sep 2026, updated 26 Sep</div>
+  <h1>Asking for a Snake Move</h1>
+  <p class="lede">People posted Jev playing Snake. We read how six of those demos phrase each move, then asked the
+  same questions of seven open System One models on a laptop, zero-shot, 10 games each.
+  <b>The fast, straight-to-the-food videos rely on code for the geometry.</b> Asked to read the board themselves,
+  every model is poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one
+  needs the wording to suit it.</p>
+</header>
+
+<section>
+  <h2>What we found</h2>
+  <ul class="findings">
+    <li><span class="n">1</span><p><b>The simple way fails, for Jev and for every open model.</b> The only published
+      numbers of Jev playing (nadeem4's arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it
+      circled until it starved. On the raw board, five of the six models we tried it on died within about 9 steps in every
+      game; with nadeem4's phrasing or sorrycc's facts they circled and starved. Only Kev 4B partly reads the board
+      (13.1 food with nadeem4's phrasing), and it still dies every game.</p></li>
+    <li><span class="n">2</span><p><b>The demos that look good move the spatial work into code</b>: filtering out fatal
+      moves, flood-fill facts, confidence gates, or a waypoint pathfinder that steers every tick while Jev only picks a
+      target every 2.6 seconds. CLM's own game demo does the same.</p></li>
+    <li><span class="n">3</span><p><b>What works: one verdict per option, and nothing else in the state.</b> Code writes
+      "moves closer to the food; keeps the most room" into each option. For five models the best such request picks a
+      good single move 95–99% of the time (90–100% on the hard states below). Two things had broken them: numbers they would have to compare across options, and
+      direction words in the state (<code>heading: up</code>) that pull them to go straight.</p></li>
+    <li><span class="n">4</span><p><b>The wording has to suit the model.</b> CLM and GLiNER 340M give any option that
+      says "eats the food" almost no probability, so they circle next to the food. Worded as "moves closer to the
+      food", CLM goes from 0 to 36.2 food per game and GLiNER from 2.7 to 26.3. For the others it makes little difference
+      (Decider 2B −2.0, Kev 4B −4.2, Decider 4B +1.5).</p></li>
+    <li><span class="n">5</span><p><b>Better single moves don't mean longer games.</b> Decider 4B and Kev 4B are more
+      decisive than Decider 2B and follow "closer to the food" almost literally, into tight spaces: they die in 9 and
+      10 of 10 games, Decider 2B in 2. With 36.9 food per game, the 2B is the best model that decides every move
+      itself, close to the best code baseline (41.1).</p></li>
+    <li><span class="n">6</span><p><b>Speed varies 60-fold.</b> CLM answers in ~4 ms once its cache is warm (10 games in
+      16 s), GLiNER in 70–80 ms, Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260. Adding ximing's extra
+      questions roughly doubles the time, and on those rows code chooses up to two moves in three (below).</p></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Best result per model</h2>
+  <p>Each model's best request among those where the model decides every move (so not "composed", where code steps in
+  when the model is unsure). 10 games each, 12×12 board, 500-step cap.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Model</th><th>Best request</th><th class="num">Food / game</th><th class="num">Best game</th><th class="num">Died</th><th class="num">Per move</th><th class="num">Probe, hard states</th></tr></thead>
+      <tbody><tr class="win"><td>Decider 2B</td><td>Judged options</td><td class="num">36.9</td><td class="num">46</td><td class="num">2 of 10</td><td class="num">145 ms</td><td class="num">100%</td></tr>
+<tr class="win"><td>CLM 8B</td><td>Judged, plain wording</td><td class="num">36.2</td><td class="num">44</td><td class="num">5 of 10</td><td class="num">4 ms</td><td class="num">100%</td></tr>
+<tr class="win"><td>Decider 4B</td><td>Judged, plain wording</td><td class="num">30.8</td><td class="num">43</td><td class="num">9 of 10</td><td class="num">260 ms</td><td class="num">100%</td></tr>
+<tr class="win"><td>Kev 4B</td><td>Judged options</td><td class="num">29.5</td><td class="num">41</td><td class="num">10 of 10</td><td class="num">108 ms</td><td class="num">100%</td></tr>
+<tr class=""><td>GLiNER 340M</td><td>Judged, plain wording</td><td class="num">26.3</td><td class="num">37</td><td class="num">5 of 10</td><td class="num">70 ms</td><td class="num">90%</td></tr>
+<tr class=""><td>GLiNER 1B</td><td>Judged options</td><td class="num">15.3</td><td class="num">25</td><td class="num">4 of 10</td><td class="num">82 ms</td><td class="num">72%</td></tr>
+<tr class=""><td>Laya</td><td>Facts in the options</td><td class="num">0.5</td><td class="num">2</td><td class="num">0 of 10</td><td class="num">100 ms</td><td class="num">18%</td></tr>
+<tr class="base"><td>code only</td><td>greedy + dead-end check</td><td class="num">41.1</td><td class="num">44</td><td class="num">2 of 10</td><td class="num">–</td><td class="num">–</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>Who decides what, in each published demo</h2>
+  <p>Every demo sends the same Jev request: a <code>state</code> plus one typed <code>choice</code> question per tick. What
+  differs is how much has already been decided by code before the model sees the options.</p>
+  <div class="spectrum">
+    <svg viewBox="0 0 720 210" role="img" aria-label="Six snake demos placed from model-reads-the-board to code-does-the-pathing">
+      <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--code)"/></linearGradient></defs>
+      <rect x="20" y="96" width="680" height="6" rx="3" fill="url(#g)"/>
+      <text class="lab" x="20" y="130" font-weight="600">Model reads the board</text>
+      <text class="lab" x="700" y="130" text-anchor="end" font-weight="600">Code does the pathing</text>
+      <g>
+        <circle cx="60" cy="99" r="8" fill="var(--accent)"/>
+        <text class="lab" x="60" y="40" text-anchor="middle">iammusham</text>
+        <text class="sub" x="60" y="56" text-anchor="middle">coords as JSON</text>
+        <line x1="60" y1="62" x2="60" y2="89" stroke="var(--line)"/>
+      </g>
+      <g>
+        <circle cx="170" cy="99" r="8" fill="var(--accent)"/>
+        <text class="lab" x="170" y="160" text-anchor="middle">nadeem4</text>
+        <text class="sub" x="170" y="176" text-anchor="middle">relative phrases</text>
+        <text class="sub" x="170" y="192" text-anchor="middle" fill="var(--warn)">Jev: 1.8 food / game</text>
+        <line x1="170" y1="109" x2="170" y2="146" stroke="var(--line)"/>
+      </g>
+      <g>
+        <circle cx="300" cy="99" r="8" fill="color-mix(in srgb, var(--accent) 55%, var(--code))"/>
+        <text class="lab" x="300" y="40" text-anchor="middle">coderhh</text>
+        <text class="sub" x="300" y="56" text-anchor="middle">legal moves only</text>
+        <line x1="300" y1="62" x2="300" y2="89" stroke="var(--line)"/>
+      </g>
+      <g>
+        <circle cx="400" cy="99" r="8" fill="color-mix(in srgb, var(--accent) 45%, var(--code))"/>
+        <text class="lab" x="400" y="160" text-anchor="middle">sorrycc</text>
+        <text class="sub" x="400" y="176" text-anchor="middle">flood-fill facts</text>
+        <line x1="400" y1="109" x2="400" y2="146" stroke="var(--line)"/>
+      </g>
+      <g>
+        <circle cx="510" cy="99" r="8" fill="color-mix(in srgb, var(--accent) 30%, var(--code))"/>
+        <text class="lab" x="510" y="40" text-anchor="middle">ximing</text>
+        <text class="sub" x="510" y="56" text-anchor="middle">facts + code gates</text>
+        <line x1="510" y1="62" x2="510" y2="89" stroke="var(--line)"/>
+      </g>
+      <g>
+        <circle cx="640" cy="99" r="8" fill="var(--code)"/>
+        <text class="lab" x="640" y="160" text-anchor="middle">StevanusPangau</text>
+        <text class="sub" x="640" y="176" text-anchor="middle">waypoint every 2.6 s</text>
+        <line x1="640" y1="109" x2="640" y2="146" stroke="var(--line)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Demo</th><th>State sent</th><th>Options</th><th>Code decides</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://github.com/iammusham/jev-snake">iammusham</a></td><td>coordinates, body, walls, danger cells (JSON)</td><td><code>UP</code> "Move one cell in negative y", ×4</td><td><span class="pill model">nothing</span></td></tr>
+        <tr><td><a href="https://github.com/nadeem4/jev-demo">nadeem4</a></td><td>"food: 3 cells ahead and 2 to your right", "if_you_turn_left: clear for 4 cells, then the wall"</td><td><code>TURN_LEFT</code> <code>STRAIGHT</code> <code>TURN_RIGHT</code></td><td><span class="pill model">nothing</span></td></tr>
+        <tr><td><a href="https://github.com/coderhh/jev-snake">coderhh</a></td><td>text grid, heading</td><td>only non-fatal directions</td><td><span class="pill code">fatal-move filter</span> <span class="pill code">override for Laya</span></td></tr>
+        <tr><td><a href="https://github.com/sorrycc/typesafe-snake">sorrycc</a></td><td>text grid, head, food, heading</td><td>safe directions with facts: "food is 8 steps away after this move; 141 of 141 empty cells stay reachable"</td><td><span class="pill code">filter</span> <span class="pill code">flood fill</span></td></tr>
+        <tr><td><a href="https://github.com/ximing/jev-snake-game">ximing</a></td><td>grid + per-candidate facts</td><td>move choice, danger score, survival noul, safe + progress noul per direction</td><td><span class="pill code">filter</span> <span class="pill code">thresholds + fallbacks</span></td></tr>
+        <tr><td><a href="https://github.com/StevanusPangau/jev-snake">StevanusPangau</a></td><td>snapshot + waypoints</td><td><code>food</code> / <code>open_area</code> / <code>border_loop</code></td><td><span class="pill code">every tick: greedy pathing + BFS seatbelt</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>One decision, known answer</h2>
+  <p>Games mix many effects, so we first asked for single moves on fixed situations where code knows the good
+  moves: not a dead end, and as close to the food as any non-dead-end move. The chart shows the <b>hard</b> set,
+  100 states where going straight is legal but wrong. Chance is about 50%.</p>
+  <div class="chart" role="img" aria-label="Share of good picks on hard states, per request and model">
+    <div class="legend"><span style="--c: var(--accent)">Decider 2B</span><span style="--c: var(--d4)">Decider 4B</span><span style="--c: var(--code)">Kev 4B</span><span style="--c: var(--clm)">CLM 8B</span><span style="--c: var(--gl)">GLiNER 340M</span><span style="--c: color-mix(in srgb, var(--gl) 55%, var(--muted))">GLiNER 1B</span><span style="--c: var(--muted)">Laya</span><span style="--c: transparent; border-left: 1px dashed var(--muted); padding-left: 4px">chance</span></div>
+    <div class="grp"><div class="name">Raw board</div><div class="bars"><div class="bar" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:5%"></div><div class="chance"></div></div><div class="val">5%</div></div><div class="bar" style="--c:var(--d4)"><div class="track"><div class="fill" style="width:10%"></div><div class="chance"></div></div><div class="val">10%</div></div><div class="bar" style="--c:var(--code)"><div class="track"><div class="fill" style="width:79%"></div><div class="chance"></div></div><div class="val">79%</div></div><div class="bar" style="--c:var(--clm)"><div class="track"><div class="fill" style="width:25%"></div><div class="chance"></div></div><div class="val">25%</div></div><div class="bar" style="--c:var(--gl)"><div class="track"><div class="fill" style="width:0%"></div><div class="chance"></div></div><div class="val">0%</div></div><div class="bar" style="--c:color-mix(in srgb, var(--gl) 55%, var(--muted))"><div class="track"><div class="fill" style="width:0%"></div><div class="chance"></div></div><div class="val">0%</div></div><div class="bar" style="--c:var(--muted)"><div class="track"><div class="fill" style="width:0%"></div><div class="chance"></div></div><div class="val">0%</div></div></div></div>
+<div class="grp"><div class="name">Relative, in words</div><div class="bars"><div class="bar" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:46%"></div><div class="chance"></div></div><div class="val">46%</div></div><div class="bar" style="--c:var(--d4)"><div class="track"><div class="fill" style="width:54%"></div><div class="chance"></div></div><div class="val">54%</div></div><div class="bar" style="--c:var(--code)"><div class="track"><div class="fill" style="width:93%"></div><div class="chance"></div></div><div class="val">93%</div></div><div class="bar" style="--c:var(--clm)"><div class="track"><div class="fill" style="width:45%"></div><div class="chance"></div></div><div class="val">45%</div></div><div class="bar" style="--c:var(--gl)"><div class="track"><div class="fill" style="width:59%"></div><div class="chance"></div></div><div class="val">59%</div></div><div class="bar" style="--c:color-mix(in srgb, var(--gl) 55%, var(--muted))"><div class="track"><div class="fill" style="width:60%"></div><div class="chance"></div></div><div class="val">60%</div></div><div class="bar" style="--c:var(--muted)"><div class="track"><div class="fill" style="width:40%"></div><div class="chance"></div></div><div class="val">40%</div></div></div></div>
+<div class="grp"><div class="name">Facts in the options (sorrycc)</div><div class="bars"><div class="bar" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:10%"></div><div class="chance"></div></div><div class="val">10%</div></div><div class="bar" style="--c:var(--d4)"><div class="track"><div class="fill" style="width:46%"></div><div class="chance"></div></div><div class="val">46%</div></div><div class="bar" style="--c:var(--code)"><div class="track"><div class="fill" style="width:31%"></div><div class="chance"></div></div><div class="val">31%</div></div><div class="bar" style="--c:var(--clm)"><div class="track"><div class="fill" style="width:19%"></div><div class="chance"></div></div><div class="val">19%</div></div><div class="bar" style="--c:var(--gl)"><div class="track"><div class="fill" style="width:0%"></div><div class="chance"></div></div><div class="val">0%</div></div><div class="bar" style="--c:color-mix(in srgb, var(--gl) 55%, var(--muted))"><div class="track"><div class="fill" style="width:14%"></div><div class="chance"></div></div><div class="val">14%</div></div><div class="bar" style="--c:var(--muted)"><div class="track"><div class="fill" style="width:18%"></div><div class="chance"></div></div><div class="val">18%</div></div></div></div>
+<div class="grp"><div class="name">Judged options + heading in state</div><div class="bars"><div class="bar" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:57%"></div><div class="chance"></div></div><div class="val">57%</div></div><div class="bar" style="--c:var(--d4)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--code)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--clm)"><div class="track"><div class="fill" style="width:89%"></div><div class="chance"></div></div><div class="val">89%</div></div><div class="bar" style="--c:var(--gl)"><div class="track"><div class="fill" style="width:28%"></div><div class="chance"></div></div><div class="val">28%</div></div><div class="bar" style="--c:color-mix(in srgb, var(--gl) 55%, var(--muted))"><div class="track"><div class="fill" style="width:0%"></div><div class="chance"></div></div><div class="val">0%</div></div><div class="bar" style="--c:var(--muted)"><div class="track"><div class="fill" style="width:25%"></div><div class="chance"></div></div><div class="val">25%</div></div></div></div>
+<div class="grp"><div class="name">Judged options, verdicts only</div><div class="bars"><div class="bar" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--d4)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--code)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--clm)"><div class="track"><div class="fill" style="width:89%"></div><div class="chance"></div></div><div class="val">89%</div></div><div class="bar" style="--c:var(--gl)"><div class="track"><div class="fill" style="width:86%"></div><div class="chance"></div></div><div class="val">86%</div></div><div class="bar" style="--c:color-mix(in srgb, var(--gl) 55%, var(--muted))"><div class="track"><div class="fill" style="width:72%"></div><div class="chance"></div></div><div class="val">72%</div></div><div class="bar" style="--c:var(--muted)"><div class="track"><div class="fill" style="width:39%"></div><div class="chance"></div></div><div class="val">39%</div></div></div></div>
+<div class="grp"><div class="name">Judged, eating worded as 'closer'</div><div class="bars"><div class="bar" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--d4)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--code)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--clm)"><div class="track"><div class="fill" style="width:100%"></div><div class="chance"></div></div><div class="val">100%</div></div><div class="bar" style="--c:var(--gl)"><div class="track"><div class="fill" style="width:90%"></div><div class="chance"></div></div><div class="val">90%</div></div><div class="bar" style="--c:color-mix(in srgb, var(--gl) 55%, var(--muted))"><div class="track"><div class="fill" style="width:70%"></div><div class="chance"></div></div><div class="val">70%</div></div></div></div>
+    <div class="axis"><div></div><div><span>0%</span><span>50%</span><span>100%</span></div></div>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Request</th><th class="num">Decider 2B</th><th class="num">Decider 4B</th><th class="num">Kev 4B</th><th class="num">CLM 8B</th><th class="num">GLiNER 340M</th><th class="num">GLiNER 1B</th><th class="num">Laya</th><th class="num">Decider 2B latency</th></tr></thead>
+      <tbody><tr class=""><td>Raw board</td><td class="num">0.59 / 0.05</td><td class="num">0.63 / 0.10</td><td class="num">0.93 / 0.79</td><td class="num">0.45 / 0.25</td><td class="num">0.58 / 0.00</td><td class="num">0.58 / 0.00</td><td class="num">0.58 / 0.00</td><td class="num">353 ms</td></tr>
+<tr class=""><td>Relative, in words</td><td class="num">0.69 / 0.46</td><td class="num">0.69 / 0.54</td><td class="num">0.84 / 0.93</td><td class="num">0.35 / 0.45</td><td class="num">0.38 / 0.59</td><td class="num">0.65 / 0.60</td><td class="num">0.47 / 0.40</td><td class="num">184 ms</td></tr>
+<tr class=""><td>Facts in the options (sorrycc)</td><td class="num">0.68 / 0.10</td><td class="num">0.74 / 0.46</td><td class="num">0.74 / 0.31</td><td class="num">0.64 / 0.19</td><td class="num">0.65 / 0.00</td><td class="num">0.60 / 0.14</td><td class="num">0.52 / 0.18</td><td class="num">532 ms</td></tr>
+<tr class=""><td>Judged options + heading in state</td><td class="num">0.73 / 0.57</td><td class="num">0.99 / 1.00</td><td class="num">0.99 / 1.00</td><td class="num">0.93 / 0.89</td><td class="num">0.80 / 0.28</td><td class="num">0.69 / 0.00</td><td class="num">0.73 / 0.25</td><td class="num">185 ms</td></tr>
+<tr class="win"><td>Judged options, verdicts only</td><td class="num">0.99 / 1.00</td><td class="num">0.99 / 1.00</td><td class="num">0.99 / 1.00</td><td class="num">0.93 / 0.89</td><td class="num">0.93 / 0.86</td><td class="num">0.81 / 0.72</td><td class="num">0.61 / 0.39</td><td class="num">142 ms</td></tr>
+<tr class="win"><td>Judged, eating worded as 'closer'</td><td class="num">0.98 / 1.00</td><td class="num">0.99 / 1.00</td><td class="num">0.99 / 1.00</td><td class="num">0.99 / 1.00</td><td class="num">0.95 / 0.90</td><td class="num">0.79 / 0.70</td><td class='num'>–</td><td class="num">140 ms</td></tr></tbody>
+    </table>
+  </div>
+  <p class="muted" style="font-size:14px">Cells: good pick on all 150 states / on the 100 hard states. Kev 4B is the only model that reads the raw
+  board (93%) and isn't distracted by the heading. Laya, a 421M encoder, stays below chance on the hard states with every request, and in games it never gets going (0–0.5 food).</p>
+</section>
+
+<section>
+  <h2>The two things that break a small model</h2>
+  <h3>Numbers that must be compared across options</h3>
+  <p>sorrycc's options carry exact numbers. Decider picks the good move 67% of the time. Adding the rule "take the
+  move after which the food is the fewest steps away" to the instruction lifts that to 82%. Writing the comparison
+  into each option lifts it to 98–99%, whether as words ("moves closer to the food") or as a before→after number
+  ("distance changes from 9 to 8").</p>
+  <h3>Direction words in the state</h3>
+  <p>With <code>heading: up</code> and "the food is 5 down and 5 right" in the context, Decider went straight on 43% of the hard
+  states, even when the straight option read "moves away from the food". With the state removed: 0%. Renaming
+  the options from <code>up/down/left/right</code> to <code>move 1/2/3</code> changed nothing. It's the context that pulls.</p>
+  <div class="pair">
+    <figure>
+      <figcaption><span class="pill bad">67% good</span> sorrycc's facts, as Decider reads them</figcaption>
+<pre>Context:
+{"board": [..12 rows..], "legend": "H = snake head, ...",
+ "head": {"row": 4, "col": 9}, "food": {"row": 8, "col": 4},
+ "heading": "right", "snake_length": 3, ...}
+
+Question: You are playing the game Snake. Choose the
+direction ... Player strategy: Stay alive and eat food.
+Options:
+(A) up: left turn, head moves to row 3 col 9; food is
+    10 steps away after this move; 141 of 141 empty
+    cells stay reachable; can still follow its own tail out
+(B) down: right turn, head moves to row 5 col 9; food is
+    8 steps away after this move; 141 of 141 ...
+(C) right: straight, head moves to row 4 col 10; food is
+    10 steps away after this move; 141 of 141 ...
+Answer: (</pre>
+    </figure>
+    <figure>
+      <figcaption><span class="pill model">99% good</span> judged options, same situation</figcaption>
+<pre>Context:
+Choose the best move for the snake.
+
+Question: Snake game: pick the next move. Every listed
+move is safe for this step. Never take a DEAD END.
+Prefer a move that eats the food or moves closer to it,
+unless it leaves much less room than another move.
+Player strategy: Stay alive and eat food.
+Options:
+(A) up: moves away from the food; keeps the most room
+<span class="hl">(B) down: moves closer to the food; keeps the most room</span>
+(C) right: moves away from the food; keeps the most room
+Answer: (</pre>
+    </figure>
+  </div>
+  <p class="muted" style="font-size:14px">Decider scores the logits of the letters <code>A</code>, <code>B</code>, <code>C</code> right after the final <code>(</code> and
+  applies its temperature (1.3). Nothing is generated. Code has done the geometry: which moves survive, distance
+  before and after, flood-fill room, dead ends. The model's remaining job is to weigh the verdicts against the
+  instruction and the player's strategy text. That's also the only step that responds to natural language.</p>
+</section>
+
+<section>
+  <h2>CLM 8B: a bi-encoder reads options differently</h2>
+  <p><a href="https://github.com/Contrastive-LM/CLM">CLM</a> (Contrastive-LM, 24 September) serves the same
+  <code>/v1/systemone</code> API but works differently: a frozen Qwen3-8B embeds the state + question and each option
+  <i>separately</i>, trained heads project both into one space, and the answer is a softmax over cosines. On this
+  Mac, Qwen3-8B runs on MLX in place of vLLM (<code>adapters/mlx_embed_server.py</code>). That design has three
+  visible consequences in Snake:</p>
+  <ul class="findings">
+    <li><span class="n">·</span><p><b>Identical option texts get identical probabilities.</b> Two moves that both read
+      "moves away from the food; keeps the most room" score exactly the same (0.293 each). An option can't see the
+      others, so nothing can be compared across options. Only the verdict text written into each one counts.</p></li>
+    <li><span class="n">·</span><p><b>It has a blind spot for "eats".</b> On 80 states where one move eats the food,
+      CLM picked it 0% of the time with every wording tried: "eats the food", "reaches the food", "moves onto the
+      food", "moves closer to the food and eats it". With the eating move described as "moves closer to the food;
+      keeps the most room" (true: the distance drops to 0), 97%. Its judged games went from 0 food (all starved) to
+      36.2.</p></li>
+    <li><span class="n">·</span><p><b>It's nearly free once warm.</b> With judged options the state is a fixed sentence
+      and the verdicts come from a handful of strings, so after the first ticks every vector is cached: ~4 ms per
+      move on average, 10 games in 16 s. With changing texts (facts in the options) a call costs ~300 ms here,
+      mostly the 8B encoder.</p></li>
+  </ul>
+  <p>CLM's own game demo, <a href="https://github.com/Contrastive-LM/CLM/tree/main/examples/t_rex">T-Rex runner vs Jev</a>,
+  phrases moves the same way: a physics planner labels each action, as in <code>jump: Safe. Clears the 2 large cacti.
+  Best.</code>, and a shield replaces unsafe answers. With that help both models survive every course, but CLM
+  agreed with the planner on 66% of decisions (4,883 shield interventions) and Jev on 99% (28).</p>
+</section>
+
+<section>
+  <h2>Decider 4B and GLiNER</h2>
+  <p>Three more models from the sentiment tutorial, zero-shot as released: <b>Decider 4B v2</b> (Qwen3.5-4B, the
+  best sentiment model here at 75.0%) and <b>GLiNER2.5-Decide</b> at 340M and 1B (DeBERTa-style encoders that pack
+  the question and every label into one prompt). GLiNER runs in its own environment behind a small
+  <code>/v1/systemone</code> adapter (<code>adapters/gliner_systemone_server.py</code>), using gliner2's
+  <code>Classifier</code> API so every option gets a probability. It rejects "(" in option text, so the adapter
+  writes braces instead.</p>
+  <ul class="findings">
+    <li><span class="n">·</span><p><b>Decider 4B isn't distracted by the heading</b> (judged + heading: 99% / 100%, where
+      the 2B drops to 57% on hard states) and puts 91% of the probability on good moves. In games it's the greedier
+      player (above). It's also about twice as slow: ~260 ms per move.</p></li>
+    <li><span class="n">·</span><p><b>GLiNER shares CLM's blind spot for "eats".</b> GLiNER 340M picks 93% good moves
+      in the probe but ate 2.7 per game with judged options, starving every time. With the eating move worded
+      "moves closer to the food", 26.3. Both score option text by matching; neither reasons over it.</p></li>
+    <li><span class="n">·</span><p><b>The composed rows are mostly the code's work.</b> ximing's gate hands the move to
+      code when the model is under 0.55 confident, so the flatter a model's probabilities, the more code plays:</p></li>
+  </ul>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Composed questions</th><th class="num">Food / game</th><th class="num">Model's choice</th><th class="num">Code: model unsure</th><th class="num">Code: survival mode</th><th class="num">Code: one safe move</th></tr></thead>
+      <tbody><tr><td>GLiNER 340M</td><td class="num">39.4</td><td class="num">33%</td><td class="num">59%</td><td class="num">0%</td><td class="num">7%</td></tr>
+<tr><td>Decider 2B</td><td class="num">38.3</td><td class="num">50%</td><td class="num">43%</td><td class="num">0%</td><td class="num">7%</td></tr>
+<tr><td>Decider 4B</td><td class="num">32.7</td><td class="num">67%</td><td class="num">26%</td><td class="num">0%</td><td class="num">7%</td></tr>
+<tr><td>GLiNER 1B</td><td class="num">3.8</td><td class="num">41%</td><td class="num">54%</td><td class="num">0%</td><td class="num">5%</td></tr>
+<tr><td>CLM 8B</td><td class="num">0.0</td><td class="num">0%</td><td class="num">0%</td><td class="num">97%</td><td class="num">3%</td></tr></tbody>
+    </table>
+  </div>
+  <p class="muted" style="font-size:14px">GLiNER 340M's 39.4 food is the best model row, but code chose two moves in three,
+  close to what code alone scores (41.1). CLM answers the danger and survival questions as if the snake were always
+  in trouble, so the gate stays in survival mode, always takes the roomiest move, and never eats. That 0 is for this
+  request only: composed is built on the original judged wording ("eats the food"). CLM's own best is
+  <b>judged, plain wording: 36.2 food at ~4 ms per move</b> (CLM section above).</p>
+</section>
+
+<section>
+  <h2>Full games</h2>
+  <p>Same 10 seeds for every row, 12×12 board. A game ends on death, after 144 steps without food (starved), or at 500 steps. Raw board and relative phrasing let the model pick fatal moves; the other requests only offer safe ones.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Controller</th><th class="num">Food / game</th><th class="num">Best</th><th class="num">Steps</th><th>Ended by</th><th class="num">Per move, p50 / mean</th></tr></thead>
+      <tbody><tr class=""><td>Decider 2B · Raw board</td><td class="num">0.0</td><td class="num">0</td><td class="num">7</td><td>died 10</td><td class="num">357 / 358 ms</td></tr>
+<tr class=""><td>Decider 2B · Relative, in words</td><td class="num">0.1</td><td class="num">1</td><td class="num">145</td><td>starved 10</td><td class="num">185 / 185 ms</td></tr>
+<tr class=""><td>Decider 2B · Facts in the options</td><td class="num">1.2</td><td class="num">4</td><td class="num">175</td><td>starved 10</td><td class="num">448 / 456 ms</td></tr>
+<tr class="win"><td>Decider 2B · Judged options</td><td class="num">36.9</td><td class="num">46</td><td class="num">477</td><td>step cap (500) 8, died 2</td><td class="num">141 / 145 ms</td></tr>
+<tr class="win"><td>Decider 2B · Judged, plain wording</td><td class="num">34.9</td><td class="num">46</td><td class="num">459</td><td>died 5, step cap (500) 5</td><td class="num">140 / 141 ms</td></tr>
+<tr class=""><td>Decider 2B · Composed questions</td><td class="num">38.3</td><td class="num">44</td><td class="num">486</td><td>step cap (500) 8, died 2</td><td class="num">308 / 311 ms</td></tr>
+<tr class=""><td>Decider 4B · Raw board</td><td class="num">0.1</td><td class="num">1</td><td class="num">9</td><td>died 10</td><td class="num">557 / 556 ms</td></tr>
+<tr class=""><td>Decider 4B · Relative, in words</td><td class="num">0.0</td><td class="num">0</td><td class="num">144</td><td>starved 10</td><td class="num">310 / 312 ms</td></tr>
+<tr class=""><td>Decider 4B · Facts in the options</td><td class="num">3.6</td><td class="num">7</td><td class="num">211</td><td>starved 10</td><td class="num">813 / 773 ms</td></tr>
+<tr class="win"><td>Decider 4B · Judged options</td><td class="num">29.3</td><td class="num">43</td><td class="num">312</td><td>died 9, step cap (500) 1</td><td class="num">257 / 259 ms</td></tr>
+<tr class="win"><td>Decider 4B · Judged, plain wording</td><td class="num">30.8</td><td class="num">43</td><td class="num">332</td><td>died 9, step cap (500) 1</td><td class="num">261 / 260 ms</td></tr>
+<tr class=""><td>Decider 4B · Composed questions</td><td class="num">32.7</td><td class="num">40</td><td class="num">380</td><td>died 7, step cap (500) 3</td><td class="num">502 / 504 ms</td></tr>
+<tr class=""><td>Kev 4B · Raw board</td><td class="num">9.0</td><td class="num">17</td><td class="num">92</td><td>died 10</td><td class="num">265 / 268 ms</td></tr>
+<tr class=""><td>Kev 4B · Relative, in words</td><td class="num">13.1</td><td class="num">22</td><td class="num">166</td><td>died 10</td><td class="num">207 / 208 ms</td></tr>
+<tr class=""><td>Kev 4B · Facts in the options</td><td class="num">17.2</td><td class="num">25</td><td class="num">411</td><td>step cap (500) 6, starved 4</td><td class="num">332 / 334 ms</td></tr>
+<tr class="win"><td>Kev 4B · Judged options</td><td class="num">29.5</td><td class="num">41</td><td class="num">321</td><td>died 10</td><td class="num">108 / 108 ms</td></tr>
+<tr class=""><td>Kev 4B · Judged, plain wording</td><td class="num">25.3</td><td class="num">34</td><td class="num">251</td><td>died 10</td><td class="num">108 / 110 ms</td></tr>
+<tr class=""><td>CLM 8B · Raw board</td><td class="num">0.0</td><td class="num">0</td><td class="num">7</td><td>died 10</td><td class="num">284 / 254 ms</td></tr>
+<tr class=""><td>CLM 8B · Relative, in words</td><td class="num">0.0</td><td class="num">0</td><td class="num">144</td><td>starved 10</td><td class="num">0 / 5 ms</td></tr>
+<tr class=""><td>CLM 8B · Facts in the options</td><td class="num">1.8</td><td class="num">6</td><td class="num">167</td><td>starved 9, died 1</td><td class="num">0 / 295 ms</td></tr>
+<tr class=""><td>CLM 8B · Judged options</td><td class="num">0.0</td><td class="num">0</td><td class="num">144</td><td>starved 10</td><td class="num">0 / 0 ms</td></tr>
+<tr class="win"><td>CLM 8B · Judged, plain wording</td><td class="num">36.2</td><td class="num">44</td><td class="num">461</td><td>died 5, step cap (500) 5</td><td class="num">0 / 4 ms</td></tr>
+<tr class=""><td>CLM 8B · Composed questions</td><td class="num">0.0</td><td class="num">0</td><td class="num">144</td><td>starved 10</td><td class="num">0 / 0 ms</td></tr>
+<tr class=""><td>GLiNER 340M · Raw board</td><td class="num">0.0</td><td class="num">0</td><td class="num">7</td><td>died 10</td><td class="num">256 / 256 ms</td></tr>
+<tr class=""><td>GLiNER 340M · Relative, in words</td><td class="num">0.0</td><td class="num">0</td><td class="num">144</td><td>starved 10</td><td class="num">102 / 103 ms</td></tr>
+<tr class=""><td>GLiNER 340M · Facts in the options</td><td class="num">0.4</td><td class="num">2</td><td class="num">153</td><td>starved 10</td><td class="num">373 / 375 ms</td></tr>
+<tr class=""><td>GLiNER 340M · Judged options</td><td class="num">2.7</td><td class="num">15</td><td class="num">181</td><td>starved 10</td><td class="num">72 / 71 ms</td></tr>
+<tr class=""><td>GLiNER 340M · Judged, plain wording</td><td class="num">26.3</td><td class="num">37</td><td class="num">371</td><td>died 5, step cap (500) 4, starved 1</td><td class="num">71 / 70 ms</td></tr>
+<tr class=""><td>GLiNER 340M · Composed questions</td><td class="num">39.4</td><td class="num">44</td><td class="num">497</td><td>step cap (500) 9, died 1</td><td class="num">169 / 166 ms</td></tr>
+<tr class=""><td>GLiNER 1B · Raw board</td><td class="num">0.0</td><td class="num">0</td><td class="num">7</td><td>died 10</td><td class="num">268 / 273 ms</td></tr>
+<tr class=""><td>GLiNER 1B · Relative, in words</td><td class="num">1.7</td><td class="num">6</td><td class="num">121</td><td>starved 7, died 3</td><td class="num">123 / 123 ms</td></tr>
+<tr class=""><td>GLiNER 1B · Facts in the options</td><td class="num">0.3</td><td class="num">1</td><td class="num">151</td><td>starved 10</td><td class="num">317 / 320 ms</td></tr>
+<tr class=""><td>GLiNER 1B · Judged options</td><td class="num">15.3</td><td class="num">25</td><td class="num">315</td><td>starved 4, died 4, step cap (500) 2</td><td class="num">84 / 82 ms</td></tr>
+<tr class=""><td>GLiNER 1B · Judged, plain wording</td><td class="num">13.7</td><td class="num">24</td><td class="num">324</td><td>starved 6, died 3, step cap (500) 1</td><td class="num">81 / 82 ms</td></tr>
+<tr class=""><td>GLiNER 1B · Composed questions</td><td class="num">3.8</td><td class="num">8</td><td class="num">235</td><td>starved 10</td><td class="num">196 / 196 ms</td></tr>
+<tr class=""><td>Laya · Facts in the options</td><td class="num">0.5</td><td class="num">2</td><td class="num">155</td><td>starved 10</td><td class="num">100 / 100 ms</td></tr>
+<tr class=""><td>Laya · Judged options</td><td class="num">0.0</td><td class="num">0</td><td class="num">144</td><td>starved 10</td><td class="num">38 / 39 ms</td></tr>
+<tr class="base"><td>code only: random safe move</td><td class="num">0.5</td><td class="num">2</td><td class="num">175</td><td>starved 10</td><td class="num">–</td></tr>
+<tr class="base"><td>code only: greedy</td><td class="num">21.0</td><td class="num">32</td><td class="num">213</td><td>died 10</td><td class="num">–</td></tr>
+<tr class="base"><td>code only: greedy + dead-end check</td><td class="num">41.1</td><td class="num">44</td><td class="num">484</td><td>step cap (500) 8, died 2</td><td class="num">–</td></tr></tbody>
+    </table>
+  </div>
+  <p class="note">Most judged, composed and greedy + dead-end games reach the 500-step cap, so their food counts are capped too. The code baselines use the same facts the judged options are written from, so the judged request doesn't beat code at Snake. It matches code while the move stays a model decision, one you can steer with the strategy text.</p>
+</section>
+
+<section>
+  <h2>The request that works</h2>
+  <p>Sent once per tick when at least two moves survive; with one safe move, code takes it without calling the model.</p>
+<pre>{
+  "state": "Choose the best move for the snake.",
+  "questions": {"move": {
+    "type": "choice",
+    "instructions": "Snake game: pick the next move. Every listed move is safe for this step. Never take a DEAD END. Prefer a move that eats the food or moves closer to it, unless it leaves much less room than another move. Player strategy: Stay alive and eat food.",
+    "criteria": {
+      "up":    "moves away from the food; keeps the most room",
+      "down":  "moves closer to the food; keeps the most room",
+      "right": "moves away from the food; keeps the most room"
+    }}}
+}</pre>
+  <p>Verdicts come from <code>snake/formulations.py</code> (<code>judge()</code>): <i>eats the food</i> / <i>moves closer</i> / <i>moves away</i>, then
+  <i>DEAD END</i> (flood fill smaller than the snake and no way to follow the tail), <i>keeps the most room</i>,
+  <i>keeps almost as much room</i> (≥ 80%), or <i>leaves much less room (n of m cells)</i>.</p>
+</section>
+
+<section>
+  <h2>Limits of this test</h2>
+  <p>We had no TypeSafe API key, so hosted Jev is represented only by nadeem4's published run (10 games, 10×10,
+  relative phrasing, starvation after 60 steps without food). That setup differs from ours (12×12, 144 steps),
+  so compare the 1.8 with our rows only loosely. Every model runs zero-shot, as released. The probe's "good move"
+  only checks food distance and dead ends, not room, which is why it misses the 4B models' habit of chasing food
+  into tight spaces. On composed rows, code chooses a third to two thirds of the moves. Ten seeds per row give wide
+  intervals, so read differences of a few food as noise, and most of the best games hit the 500-step cap.</p>
+</section>
+
+<footer>
+  CLM was run with its unchanged <code>clm-serve</code> on CPU and <code>CLM_v0.1-8B.pt</code>, with Qwen3-8B on MLX (cosine 0.9998–1.0 against the
+  transformers encoder). Latency medians for CLM mostly measure cache hits. Code: <code>snake/</code>, <code>08_snake_server.py</code> (live demo with the decision panel), <code>09_snake_benchmark.py</code>,
+  <code>10_snake_probe.py</code>; write-up in <code>docs/5-snake.md</code>. Models: Decider 2B v10 and 4B v2 (PyTorch MPS), Kev 4B (MLX server),
+  CLM 8B (MLX encoder + CPU heads), GLiNER2.5-Decide 340M and 1B (MPS, own environment), Laya (MPS), all on an Apple M5 with 32 GB.
+</footer>
+</main>

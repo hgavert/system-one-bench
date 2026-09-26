@@ -1,0 +1,101 @@
+{
+ "engine": "gliner-decide over HTTP",
+ "results": {
+  "grid": {
+   "all": {
+    "n": 150,
+    "good": 0.58,
+    "mass": 0.576,
+    "straight": 1.0,
+    "p50_ms": 252.6
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.0,
+    "mass": 0.009,
+    "straight": 1.0,
+    "p50_ms": 252.2
+   }
+  },
+  "relative": {
+   "all": {
+    "n": 150,
+    "good": 0.38,
+    "mass": 0.47,
+    "straight": 0.0,
+    "p50_ms": 102.4
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.59,
+    "mass": 0.442,
+    "straight": 0.01,
+    "p50_ms": 101.8
+   }
+  },
+  "facts": {
+   "all": {
+    "n": 150,
+    "good": 0.647,
+    "mass": 0.643,
+    "straight": 0.893,
+    "p50_ms": 415.5
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.0,
+    "mass": 0.016,
+    "straight": 1.0,
+    "p50_ms": 412.9
+   }
+  },
+  "judged+state": {
+   "all": {
+    "n": 150,
+    "good": 0.8,
+    "mass": 0.759,
+    "straight": 0.767,
+    "p50_ms": 83.5
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.28,
+    "mass": 0.37,
+    "straight": 0.72,
+    "p50_ms": 83.1
+   }
+  },
+  "judged": {
+   "all": {
+    "n": 150,
+    "good": 0.933,
+    "mass": 0.752,
+    "straight": 0.487,
+    "p50_ms": 71.9
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.86,
+    "mass": 0.636,
+    "straight": 0.11,
+    "p50_ms": 71.7
+   }
+  },
+  "judged-plain": {
+   "all": {
+    "n": 150,
+    "good": 0.947,
+    "mass": 0.762,
+    "straight": 0.493,
+    "p50_ms": 72.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.9,
+    "mass": 0.655,
+    "straight": 0.1,
+    "p50_ms": 72.8
+   }
+  }
+ }
+}

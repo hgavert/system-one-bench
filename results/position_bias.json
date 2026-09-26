@@ -1,0 +1,83 @@
+{
+ "decider": {
+  "accuracy_per_order": {
+   "negative / neutral / positive": 0.74,
+   "negative / positive / neutral": 0.7466666666666667,
+   "neutral / negative / positive": 0.74,
+   "neutral / positive / negative": 0.74,
+   "positive / negative / neutral": 0.7366666666666667,
+   "positive / neutral / negative": 0.7433333333333333
+  },
+  "accuracy_min_max": [
+   0.7366666666666667,
+   0.7466666666666667
+  ],
+  "accuracy_by_correct_position": {
+   "1": 0.7466666666666667,
+   "2": 0.7316666666666667,
+   "3": 0.745
+  },
+  "pick_share_by_position": {
+   "1": 0.33666666666666667,
+   "2": 0.32666666666666666,
+   "3": 0.33666666666666667
+  },
+  "pick_chi2_p": 0.835270211411272,
+  "tweets_whose_answer_flips": 0.056666666666666664,
+  "mean_max_probability_swing": 0.05555566666666666
+ },
+ "laya": {
+  "accuracy_per_order": {
+   "negative / neutral / positive": 0.6333333333333333,
+   "negative / positive / neutral": 0.6433333333333333,
+   "neutral / negative / positive": 0.6266666666666667,
+   "neutral / positive / negative": 0.6166666666666667,
+   "positive / negative / neutral": 0.64,
+   "positive / neutral / negative": 0.63
+  },
+  "accuracy_min_max": [
+   0.6166666666666667,
+   0.6433333333333333
+  ],
+  "accuracy_by_correct_position": {
+   "1": 0.6916666666666667,
+   "2": 0.6116666666666667,
+   "3": 0.5916666666666667
+  },
+  "pick_share_by_position": {
+   "1": 0.3688888888888889,
+   "2": 0.3233333333333333,
+   "3": 0.30777777777777776
+  },
+  "pick_chi2_p": 0.004310649601290086,
+  "tweets_whose_answer_flips": 0.22,
+  "mean_max_probability_swing": 0.16118033333333334
+ },
+ "semif": {
+  "accuracy_per_order": {
+   "negative / neutral / positive": 0.7166666666666667,
+   "negative / positive / neutral": 0.7166666666666667,
+   "neutral / negative / positive": 0.73,
+   "neutral / positive / negative": 0.7166666666666667,
+   "positive / negative / neutral": 0.72,
+   "positive / neutral / negative": 0.71
+  },
+  "accuracy_min_max": [
+   0.71,
+   0.73
+  ],
+  "accuracy_by_correct_position": {
+   "1": 0.72,
+   "2": 0.71,
+   "3": 0.725
+  },
+  "pick_share_by_position": {
+   "1": 0.335,
+   "2": 0.32722222222222225,
+   "3": 0.3377777777777778
+  },
+  "pick_chi2_p": 0.8507247321937301,
+  "tweets_whose_answer_flips": 0.19333333333333333,
+  "mean_max_probability_swing": 0.18560193395873145
+ }
+}

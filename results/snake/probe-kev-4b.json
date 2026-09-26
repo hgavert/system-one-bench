@@ -1,0 +1,101 @@
+{
+ "engine": "kev-4b over HTTP",
+ "results": {
+  "grid": {
+   "all": {
+    "n": 150,
+    "good": 0.927,
+    "mass": 0.817,
+    "straight": 0.6,
+    "p50_ms": 277.6
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.79,
+    "mass": 0.661,
+    "straight": 0.19,
+    "p50_ms": 274.1
+   }
+  },
+  "relative": {
+   "all": {
+    "n": 150,
+    "good": 0.84,
+    "mass": 0.62,
+    "straight": 0.12,
+    "p50_ms": 212.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.93,
+    "mass": 0.599,
+    "straight": 0.04,
+    "p50_ms": 209.0
+   }
+  },
+  "facts": {
+   "all": {
+    "n": 150,
+    "good": 0.74,
+    "mass": 0.675,
+    "straight": 0.827,
+    "p50_ms": 361.3
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.31,
+    "mass": 0.391,
+    "straight": 0.69,
+    "p50_ms": 352.9
+   }
+  },
+  "judged+state": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.868,
+    "straight": 0.547,
+    "p50_ms": 206.1
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.769,
+    "straight": 0.0,
+    "p50_ms": 205.3
+   }
+  },
+  "judged": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.84,
+    "straight": 0.427,
+    "p50_ms": 110.3
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.796,
+    "straight": 0.0,
+    "p50_ms": 110.4
+   }
+  },
+  "judged-plain": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.779,
+    "straight": 0.34,
+    "p50_ms": 107.7
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.703,
+    "straight": 0.0,
+    "p50_ms": 108.0
+   }
+  }
+ }
+}

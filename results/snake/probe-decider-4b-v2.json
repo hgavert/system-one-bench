@@ -1,0 +1,101 @@
+{
+ "engine": "Decider 4B (4b-v2, zero-shot)",
+ "results": {
+  "grid": {
+   "all": {
+    "n": 150,
+    "good": 0.633,
+    "mass": 0.592,
+    "straight": 0.92,
+    "p50_ms": 549.1
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.1,
+    "mass": 0.287,
+    "straight": 0.9,
+    "p50_ms": 547.0
+   }
+  },
+  "relative": {
+   "all": {
+    "n": 150,
+    "good": 0.693,
+    "mass": 0.561,
+    "straight": 0.28,
+    "p50_ms": 307.4
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.54,
+    "mass": 0.448,
+    "straight": 0.2,
+    "p50_ms": 309.5
+   }
+  },
+  "facts": {
+   "all": {
+    "n": 150,
+    "good": 0.74,
+    "mass": 0.666,
+    "straight": 0.767,
+    "p50_ms": 820.6
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.46,
+    "mass": 0.418,
+    "straight": 0.52,
+    "p50_ms": 817.9
+   }
+  },
+  "judged+state": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.839,
+    "straight": 0.393,
+    "p50_ms": 312.9
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.744,
+    "straight": 0.0,
+    "p50_ms": 316.9
+   }
+  },
+  "judged": {
+   "all": {
+    "n": 150,
+    "good": 0.987,
+    "mass": 0.913,
+    "straight": 0.413,
+    "p50_ms": 261.5
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.888,
+    "straight": 0.0,
+    "p50_ms": 262.2
+   }
+  },
+  "judged-plain": {
+   "all": {
+    "n": 150,
+    "good": 0.987,
+    "mass": 0.908,
+    "straight": 0.413,
+    "p50_ms": 261.3
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.88,
+    "straight": 0.0,
+    "p50_ms": 266.0
+   }
+  }
+ }
+}

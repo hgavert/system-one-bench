@@ -1,0 +1,85 @@
+{
+ "engine": "Laya (zero-shot)",
+ "results": {
+  "grid": {
+   "all": {
+    "n": 150,
+    "good": 0.58,
+    "mass": 0.545,
+    "straight": 1.0,
+    "p50_ms": 68.3
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.0,
+    "mass": 0.081,
+    "straight": 1.0,
+    "p50_ms": 68.3
+   }
+  },
+  "relative": {
+   "all": {
+    "n": 150,
+    "good": 0.467,
+    "mass": 0.462,
+    "straight": 0.287,
+    "p50_ms": 47.8
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.4,
+    "mass": 0.36,
+    "straight": 0.25,
+    "p50_ms": 47.8
+   }
+  },
+  "facts": {
+   "all": {
+    "n": 150,
+    "good": 0.52,
+    "mass": 0.511,
+    "straight": 0.433,
+    "p50_ms": 102.6
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.18,
+    "mass": 0.332,
+    "straight": 0.64,
+    "p50_ms": 101.9
+   }
+  },
+  "judged+state": {
+   "all": {
+    "n": 150,
+    "good": 0.727,
+    "mass": 0.593,
+    "straight": 0.66,
+    "p50_ms": 45.2
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.25,
+    "mass": 0.34,
+    "straight": 0.64,
+    "p50_ms": 45.0
+   }
+  },
+  "judged": {
+   "all": {
+    "n": 150,
+    "good": 0.607,
+    "mass": 0.518,
+    "straight": 0.393,
+    "p50_ms": 39.1
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.39,
+    "mass": 0.359,
+    "straight": 0.27,
+    "p50_ms": 38.9
+   }
+  }
+ }
+}

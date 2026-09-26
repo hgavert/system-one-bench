@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System One Snake</title>
+<style>
+:root {
+  --bg: #f4f5f1; --panel: #ffffff; --ink: #1d2320; --muted: #66706a; --line: #dfe3dc;
+  --lcd: #c7d9a7; --lcd-ink: #2b3a1f; --lcd-dim: #b3c793;
+  --accent: #2f6f4f; --warn: #b5541c; --code: #4a5ba8; --bar: #cfe0c3;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151816; --panel: #1e2320; --ink: #e5e9e4; --muted: #98a39c; --line: #313833;
+    --accent: #7fc79c; --warn: #f09a62; --code: #9aa8ef; --bar: #2d4436;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, sans-serif; }
+header { padding: 14px 20px 10px; display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+h1 { font-size: 18px; margin: 0; }
+.sub { color: var(--muted); font-size: 13px; }
+main { display: grid; grid-template-columns: minmax(300px, 460px) minmax(0, 1fr); gap: 16px; padding: 0 20px 20px; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 0 16px 16px; } header { padding: 12px 16px; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+/* Nokia handset */
+.phone { background: #2e3440; border-radius: 28px; padding: 22px 22px 18px; }
+.lcd { background: var(--lcd); border-radius: 6px; padding: 10px; box-shadow: inset 0 0 12px rgba(0,0,0,.25); }
+.lcd-top { display: flex; justify-content: space-between; color: var(--lcd-ink); font: bold 15px var(--mono); margin-bottom: 6px; }
+canvas { width: 100%; aspect-ratio: 1; display: block; image-rendering: pixelated; border: 2px solid var(--lcd-ink); }
+.brand { color: #aeb6c4; text-align: center; font: 600 11px/1 system-ui; letter-spacing: .35em; margin-top: 12px; }
+.status { color: var(--lcd-ink); font: 12px var(--mono); margin-top: 6px; min-height: 16px; }
+/* controls */
+.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
+.tab { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 8px; padding: 7px 6px; cursor: pointer; font: inherit; font-size: 13px; }
+.tab[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); font-weight: 600; }
+.blurb { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+.origin { font-size: 12px; color: var(--muted); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+label { font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+input, select { font: inherit; font-size: 13px; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+input[type=number] { width: 64px; }
+#strategy { flex: 1; min-width: 180px; }
+button.btn { font: inherit; font-size: 13px; border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+button.btn.ghost { background: transparent; color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.stat b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 11px; color: var(--muted); }
+/* decision */
+h2 { font-size: 14px; margin: 0 0 8px; display: flex; justify-content: space-between; gap: 8px; }
+h2 small { font-weight: 400; color: var(--muted); }
+.opt { display: grid; grid-template-columns: 22px minmax(0, 1fr) 52px; gap: 8px; align-items: center; margin: 5px 0; }
+.opt .arrow { font-size: 16px; text-align: center; }
+.opt .bar { position: relative; background: color-mix(in srgb, var(--line) 50%, transparent); border-radius: 5px; overflow: hidden; min-height: 26px; }
+.opt .fill { position: absolute; inset: 0 auto 0 0; background: var(--bar); }
+.opt .txt { position: relative; padding: 4px 8px; font-size: 12px; }
+.opt .txt b { font-family: var(--mono); }
+.opt .p { text-align: right; font: 13px var(--mono); }
+.opt.chosen .fill { background: color-mix(in srgb, var(--accent) 45%, transparent); }
+.opt.chosen .txt b::after { content: " ← played"; color: var(--accent); font-family: system-ui; font-weight: 600; }
+.how { font-size: 13px; margin-top: 8px; }
+.how .src { font: 11px var(--mono); padding: 1px 6px; border-radius: 4px; border: 1px solid; margin-right: 6px; }
+.src.model { color: var(--accent); } .src.code { color: var(--code); }
+.extra { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.extra b { color: var(--ink); }
+.died { color: var(--warn); font-weight: 600; }
+.vtabs { display: flex; gap: 4px; margin: 12px 0 6px; border-bottom: 1px solid var(--line); }
+.vtab { background: none; border: 0; border-bottom: 2px solid transparent; padding: 6px 8px; color: var(--muted); cursor: pointer; font: inherit; font-size: 13px; }
+.vtab[aria-selected="true"] { color: var(--ink); border-color: var(--accent); }
+pre { margin: 0; font: 11.5px/1.5 var(--mono); white-space: pre-wrap; word-break: break-word; background: var(--bg); border-radius: 6px; padding: 10px; max-height: 360px; overflow: auto; }
+.rowhead { font-size: 11px; color: var(--muted); margin: 8px 0 3px; }
+.feed { max-height: 260px; overflow: auto; font: 12px var(--mono); }
+.feed div { display: grid; grid-template-columns: 44px 58px 1fr 64px 60px; gap: 8px; padding: 3px 6px; border-radius: 4px; cursor: pointer; }
+.feed div:hover, .feed div.sel { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.feed .c { color: var(--code); }
+.feed .d { color: var(--warn); }
+.hint { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>System One Snake</h1>
+  <span class="sub" id="model">loading…</span>
+</header>
+<main>
+  <div class="stack">
+    <div class="phone">
+      <div class="lcd">
+        <div class="lcd-top"><span id="score">0000</span><span id="len">len 3</span></div>
+        <canvas id="board" width="480" height="480" aria-label="Snake board"></canvas>
+        <div class="status" id="status">press Start</div>
+      </div>
+      <div class="brand">SYSTEM ONE</div>
+    </div>
+    <div class="card">
+      <div class="stats">
+        <div class="stat"><b id="s-calls">0</b><span>model calls</span></div>
+        <div class="stat"><b id="s-code">0</b><span>code-only ticks</span></div>
+        <div class="stat"><b id="s-lat">–</b><span>median ms</span></div>
+        <div class="stat"><b id="s-tok">–</b><span>tokens / call</span></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="run">Start</button>
+        <button class="btn ghost" id="step">Step</button>
+        <button class="btn ghost" id="new">New game</button>
+        <label>seed <input type="number" id="seed" value="0"></label>
+        <label>grid <select id="size"><option>8</option><option>10</option><option selected>12</option><option>16</option></select></label>
+        <label>min tick <select id="tick"><option value="0" selected>as fast as possible</option><option value="150">150 ms</option><option value="400">400 ms</option><option value="1000">1 s</option></select></label>
+      </div>
+      <div class="row"><label><input type="checkbox" id="autonew"> start a new seed after each game</label></div>
+    </div>
+  </div>
+
+  <div class="stack">
+    <div class="card">
+      <h2>How the move is asked <small id="origin"></small></h2>
+      <div class="tabs" id="forms"></div>
+      <p class="blurb" id="blurb"></p>
+      <div class="row" id="strategy-row">
+        <label for="strategy">Player strategy</label>
+        <input id="strategy" placeholder="Stay alive and eat food.">
+        <select id="preset" aria-label="Strategy presets">
+          <option value="">presets…</option>
+          <option>Stay alive above all. Prefer the move that keeps the most empty cells reachable, never enter a dead end, and only go for the food when that does not shrink your room.</option>
+          <option>Get to the food as fast as possible. Always shorten the distance to the food unless that move is a dead end.</option>
+          <option>Be unpredictable. Wander, take strange detours and hug the walls. Ignore the food most of the time, but do not die.</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card" id="decision">
+      <h2>Decision <small id="d-meta">no decision yet</small></h2>
+      <div id="d-opts"></div>
+      <div class="how" id="d-how"></div>
+      <div class="extra" id="d-extra"></div>
+      <div class="vtabs" role="tablist">
+        <button class="vtab" role="tab" data-v="rows" aria-selected="true">What the model reads</button>
+        <button class="vtab" role="tab" data-v="request" aria-selected="false">Request JSON</button>
+        <button class="vtab" role="tab" data-v="answers" aria-selected="false">Answer JSON</button>
+      </div>
+      <div id="d-view"><p class="hint">Each tick sends one Jev-shaped request, <code>{state, questions}</code>. Decider turns it into the text shown here and reads the answer from the logits of the option letters after the final <code>(</code>. Nothing is generated.</p></div>
+    </div>
+
+    <div class="card">
+      <h2>Decision feed <small>click a row to inspect it</small></h2>
+      <div class="feed" id="feed"></div>
+    </div>
+  </div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const ARROW = { up: "↑", down: "↓", left: "←", right: "→" };
+const S = { meta: null, form: "facts", id: null, frame: null, running: false, busy: false,
+            history: [], sel: null, view: "rows", lat: [], tok: [], calls: 0, code: 0 };
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) } : {});
+  if (!r.ok) throw new Error((await r.json()).error || r.status);
+  return r.json();
+}
+
+// ---------- board ----------
+function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function draw(frame, dec) {
+  const cv = $("board"), ctx = cv.getContext("2d"), n = frame.size, cell = cv.width / n;
+  const ink = css("--lcd-ink"), dim = css("--lcd-dim");
+  ctx.fillStyle = css("--lcd"); ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.fillStyle = dim;
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) ctx.fillRect(c * cell + cell / 2 - 1, r * cell + cell / 2 - 1, 2, 2);
+  // the model's probabilities, painted on the cells it chose between
+  if (dec && dec.answers && !frame.over) {
+    const probs = dec.answers.move.probabilities, prev = S.prevHead;
+    if (prev) for (const [opt, p] of Object.entries(probs)) {
+      const d = dec.option_dirs[opt], v = { up: [-1, 0], down: [1, 0], left: [0, -1], right: [0, 1] }[d];
+      const r = prev[0] + v[0], c = prev[1] + v[1];
+      if (r < 0 || c < 0 || r >= n || c >= n) continue;
+      ctx.fillStyle = `rgba(43,58,31,${0.08 + 0.35 * p})`;
+      ctx.fillRect(c * cell, r * cell, cell, cell);
+    }
+  }
+  const pad = Math.max(1, cell * 0.08);
+  if (frame.food) {
+    const [r, c] = frame.food, m = cell / 2;
+    ctx.fillStyle = ink;
+    ctx.fillRect(c * cell + m - cell * .12, r * cell + pad * 2, cell * .24, cell - pad * 4);
+    ctx.fillRect(c * cell + pad * 2, r * cell + m - cell * .12, cell - pad * 4, cell * .24);
+  }
+  frame.snake.forEach(([r, c], i) => {
+    ctx.fillStyle = ink;
+    ctx.fillRect(c * cell + pad, r * cell + pad, cell - 2 * pad, cell - 2 * pad);
+    if (i === 0) { ctx.fillStyle = css("--lcd"); ctx.fillRect(c * cell + cell * .38, r * cell + cell * .38, cell * .24, cell * .24); }
+  });
+  $("score").textContent = String(frame.score).padStart(4, "0");
+  $("len").textContent = `len ${frame.snake.length} · step ${frame.steps}`;
+  $("status").textContent = frame.over ? `GAME OVER: ${frame.cause}` : S.running ? "playing…" : "paused";
+}
+
+// ---------- decision panel ----------
+function esc(s) { return String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+function showDecision(d) {
+  if (!d) return;
+  $("d-meta").textContent = `step ${d.step} · ${d.formulation}` + (d.source === "model" ? ` · ${d.latency_ms} ms · ${d.input_tokens} tokens` : " · no model call");
+  const opts = $("d-opts"); opts.innerHTML = "";
+  if (d.answers) {
+    const crit = d.request.questions.move.criteria, probs = d.answers.move.probabilities;
+    for (const [o, p] of Object.entries(probs)) {
+      const dir = d.option_dirs[o], chosen = dir === d.move;
+      const el = document.createElement("div"); el.className = "opt" + (chosen ? " chosen" : "");
+      el.innerHTML = `<div class="arrow">${ARROW[dir]}</div><div class="bar"><div class="fill" style="width:${(p * 100).toFixed(1)}%"></div>` +
+        `<div class="txt"><b>${esc(o)}</b> ${esc(crit[o] || "")}</div></div><div class="p">${(p * 100).toFixed(1)}%</div>`;
+      opts.appendChild(el);
+    }
+  } else {
+    opts.innerHTML = `<div class="opt chosen"><div class="arrow">${ARROW[d.move]}</div><div class="bar"><div class="fill" style="width:100%"></div><div class="txt"><b>${d.move}</b></div></div><div class="p">code</div></div>`;
+  }
+  $("d-how").innerHTML = `<span class="src ${d.source}">${d.source === "model" ? "MODEL" : "CODE"}</span>${esc(d.how)}` +
+    (d.died ? ` <span class="died">→ died: ${esc(d.died)}</span>` : d.ate ? " → ate the food" : "");
+  const ex = [];
+  if (d.answers) {
+    const m = d.answers.move;
+    const top = Math.max(...Object.values(m.probabilities));     // engines differ: CLM's "confidence" isn't P(top), and it has no "certainty"
+    ex.push(`P(top) <b>${top.toFixed(2)}</b>`);
+    if (typeof m.confidence === "number") ex.push(`confidence <b>${m.confidence.toFixed(2)}</b>`);
+    if (typeof m.certainty === "number") ex.push(`certainty <b>${m.certainty.toFixed(2)}</b>`);
+    if (d.answers.danger) ex.push(`danger score <b>${d.answers.danger.score.toFixed(2)}</b> / 2`);
+    if (d.answers.survival) ex.push(`P(ignore food to survive) <b>${d.answers.survival.noul.toFixed(2)}</b>`);
+  }
+  $("d-extra").innerHTML = ex.map(x => `<span>${x}</span>`).join("");
+  renderView(d);
+  document.querySelectorAll("#feed div").forEach(el => el.classList.toggle("sel", +el.dataset.i === S.history.indexOf(d)));
+}
+function renderView(d) {
+  const v = $("d-view");
+  if (!d || !d.request) { v.innerHTML = `<p class="hint">${d ? "Code decided this tick, so nothing was sent to the model." : ""}</p>`; return; }
+  if (S.view === "rows") {
+    v.innerHTML = d.rows.map((r, i) => (d.rows.length > 1 ? `<div class="rowhead">row ${i + 1} of ${d.rows.length} (scored in the same forward batch)</div>` : "") + `<pre>${esc(r)}</pre>`).join("");
+  } else {
+    v.innerHTML = `<pre>${esc(JSON.stringify(S.view === "request" ? d.request : d.answers, null, 2))}</pre>`;
+  }
+}
+function addFeed(d) {
+  const i = S.history.length; S.history.push(d);
+  const el = document.createElement("div"); el.dataset.i = i;
+  const p = d.answers ? (Math.max(...Object.values(d.answers.move.probabilities)) * 100).toFixed(0) + "%" : "";
+  el.innerHTML = `<span>#${d.step}</span><span>${ARROW[d.move]} ${d.move}</span>` +
+    `<span class="${d.died ? "d" : d.source === "code" ? "c" : ""}">${d.died ? "died: " + esc(d.died) : d.source === "code" ? "code" : d.ate ? "ate" : esc(d.how).slice(0, 38)}</span>` +
+    `<span>${p}</span><span>${d.latency_ms ? Math.round(d.latency_ms) + " ms" : "–"}</span>`;
+  el.onclick = () => { S.sel = d; showDecision(d); draw(S.frame); };
+  $("feed").prepend(el);
+  while ($("feed").children.length > 300) $("feed").lastChild.remove();
+}
+function stats(d) {
+  if (d.source === "model") { S.calls++; S.lat.push(d.latency_ms); S.tok.push(d.input_tokens); } else S.code++;
+  const med = a => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : null; };
+  $("s-calls").textContent = S.calls; $("s-code").textContent = S.code;
+  $("s-lat").textContent = S.lat.length ? Math.round(med(S.lat.slice(-100))) : "–";
+  $("s-tok").textContent = S.tok.length ? Math.round(med(S.tok.slice(-100))) : "–";
+}
+
+// ---------- loop ----------
+async function newGame() {
+  const r = await api("/api/new", { seed: +$("seed").value, size: +$("size").value });
+  S.id = r.id; S.frame = r.frame; S.prevHead = null; S.sel = null;
+  draw(S.frame);
+}
+async function tick() {
+  if (S.busy || !S.id) return;
+  if (S.frame.over) {
+    if ($("autonew").checked) { $("seed").value = +$("seed").value + 1; await newGame(); }
+    else { setRunning(false); return; }
+  }
+  S.busy = true;
+  try {
+    S.prevHead = S.frame.snake[0];
+    const r = await api("/api/step", { id: S.id, formulation: S.form, strategy: $("strategy").value });
+    S.frame = r.frame; addFeed(r.decision); stats(r.decision); S.sel = null;
+    showDecision(r.decision); draw(S.frame, r.decision);
+  } catch (e) { setRunning(false); $("status").textContent = "error: " + e.message; console.error(e); }
+  S.busy = false;
+}
+async function loop() {
+  while (S.running) {
+    const t0 = performance.now();
+    await tick();
+    const wait = +$("tick").value - (performance.now() - t0);
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+  }
+}
+function setRunning(on) { S.running = on; $("run").textContent = on ? "Pause" : "Start"; if (S.frame) draw(S.frame); if (on) loop(); }
+
+// ---------- controls ----------
+function selectForm(name) {
+  S.form = name;
+  const f = S.meta.formulations.find(x => x.name === name);
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-pressed", t.dataset.f === name));
+  $("blurb").textContent = f.blurb; $("origin").textContent = "after " + f.origin;
+  $("strategy-row").style.display = ["facts", "judged", "composed"].includes(name) ? "" : "none";
+}
+$("run").onclick = () => setRunning(!S.running);
+$("step").onclick = () => { setRunning(false); tick(); };
+$("new").onclick = () => { setRunning(false); newGame(); };
+$("size").onchange = $("new").onclick;
+$("preset").onchange = e => { if (e.target.value) $("strategy").value = e.target.value; e.target.value = ""; };
+document.querySelectorAll(".vtab").forEach(b => b.onclick = () => {
+  S.view = b.dataset.v;
+  document.querySelectorAll(".vtab").forEach(x => x.setAttribute("aria-selected", x === b));
+  renderView(S.sel || S.history[S.history.length - 1]);
+});
+document.addEventListener("keydown", e => { if (e.code === "Space" && e.target.tagName !== "INPUT") { e.preventDefault(); setRunning(!S.running); } });
+
+(async () => {
+  S.meta = await api("/api/meta");
+  $("model").textContent = `${S.meta.model} · running locally`;
+  $("strategy").placeholder = S.meta.default_strategy;
+  for (const f of S.meta.formulations) {
+    const b = document.createElement("button"); b.className = "tab"; b.dataset.f = f.name; b.textContent = f.title;
+    b.onclick = () => selectForm(f.name); $("forms").appendChild(b);
+  }
+  selectForm(/clm/i.test(S.meta.model) ? "judged-plain" : "judged");   // CLM never eats with "judged" (docs/5-snake.md 5.6)
+  await newGame();
+})();
+</script>
+</body>
+</html>
