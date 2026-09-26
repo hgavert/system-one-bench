@@ -22,6 +22,10 @@ against local LLMs in LM Studio. **Zero-shot, with no training for the task.**
 [docs/page/index.html](docs/page/index.html).
 Both are generated from `results/` by `uv run python docs/page/build.py`.
 
+**Snake follow-up:** [docs/snake-report.md](docs/snake-report.md) · interactive version:
+[docs/snake-report/index.html](docs/snake-report/index.html). The same models play Snake zero-shot, and the
+way the move is asked decides everything. Generated from `results/snake/` by `uv run python docs/snake-report/build.py`.
+
 ## Zero-shot results (Apple M5, 32 GB)
 
 300 balanced test tweets, one per call, nothing trained on tweets. ±5 points of sampling noise.
@@ -149,7 +153,7 @@ take minutes. Models are saved in `models/laya-tweet-sentiment`, `models/kev-0.8
 4. [docs/4-zero-shot-reproductions.md](docs/4-zero-shot-reproductions.md): SemIf, openvons, Decider 2B / 4B v2 (and its letter-slot head), GLiNER2.5-Decide and CLM (with an MLX encoder), position bias, letter-logit readouts, adapters, **all results**, "isn't this just embeddings?"
 5. [docs/5-snake.md](docs/5-snake.md): Snake. How six published Jev demos ask for a move, why the simple way fails
    (for Jev too), and the phrasing that works, tested on seven open models (Decider 2B/4B, Kev 4B, CLM 8B, GLiNER 340M/1B, Laya).
-   Report page: `docs/snake-report/`
+   Report: [docs/snake-report.md](docs/snake-report.md)
 6. Reference only: [docs/reference/finetune-laya.md](docs/reference/finetune-laya.md), [docs/reference/finetune-kev.md](docs/reference/finetune-kev.md)
 
 ## Files
@@ -174,7 +178,7 @@ scripts/                    setup_engines.sh, download_models.py (pinned revisio
 10_snake_probe.py           step 10: single-decision probe per formulation and model
 snake/                      game + flood fill, the five formulations, engines (Decider, Laya, any /v1/systemone)
 docs/page/                  tutorial page (template + build.py -> index.html)
-docs/snake-report/          Snake report page (template + build.py -> index.html)
+docs/snake-report/          Snake report page (template + build.py -> index.html; build_md.py -> docs/snake-report.md)
 results/                    logs, raw adapter output, per-run JSON with every prediction, report
 ```
 

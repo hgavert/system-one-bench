@@ -201,7 +201,7 @@ class Judged(Formulation):
         cur = abs(hr - fr) + abs(hc - fc)
         best_room = max((f["reachable"] for f in facts.values() if not f["dead_end"]), default=0)
         # No heading, no board, no food coordinates: with them in the context Decider went straight on 43% of
-        # states where straight was the wrong move; with the verdicts alone, 0% (snake/probe notes in docs/5-snake.md).
+        # states where straight was the wrong move; with the verdicts alone, 0% (10_snake_probe.py, docs/5-snake.md 5.3).
         state = "Choose the best move for the snake."
         q = {"type": "choice",
              "instructions": "Snake game: pick the next move. Every listed move is safe for this step. Never take a "

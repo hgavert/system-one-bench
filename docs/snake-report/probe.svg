@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 822" width="720" height="822" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="12">
+<rect width="720" height="822" rx="8" fill="#f9faf4" stroke="#d6dbcb"/>
+<rect x="16" y="16" width="10" height="10" rx="2" fill="#2d6a3e"/><text x="31" y="25" fill="#1c2419">Decider 2B</text>
+<rect x="124" y="16" width="10" height="10" rx="2" fill="#174a26"/><text x="139" y="25" fill="#1c2419">Decider 4B</text>
+<rect x="232" y="16" width="10" height="10" rx="2" fill="#3450a1"/><text x="247" y="25" fill="#1c2419">Kev 4B</text>
+<rect x="310" y="16" width="10" height="10" rx="2" fill="#a8761b"/><text x="325" y="25" fill="#1c2419">CLM 8B</text>
+<rect x="388" y="16" width="10" height="10" rx="2" fill="#8a3f8c"/><text x="403" y="25" fill="#1c2419">GLiNER 340M</text>
+<rect x="503" y="16" width="10" height="10" rx="2" fill="#b98cba"/><text x="518" y="25" fill="#1c2419">GLiNER 1B</text>
+<rect x="603" y="16" width="10" height="10" rx="2" fill="#8b9585"/><text x="618" y="25" fill="#1c2419">Laya</text>
+<line x1="21" y1="34" x2="21" y2="48" stroke="#5d6857" stroke-dasharray="3 2"/><text x="31" y="45" fill="#5d6857">chance</text>
+<text x="16" y="80" fill="#1c2419" font-weight="600">Raw board</text>
+<rect x="250" y="70" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="70" width="21.0" height="11" rx="2" fill="#2d6a3e"/><text x="678" y="80" fill="#5d6857">5%</text>
+<rect x="250" y="84" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="84" width="42.0" height="11" rx="2" fill="#174a26"/><text x="678" y="94" fill="#5d6857">10%</text>
+<rect x="250" y="98" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="98" width="331.8" height="11" rx="2" fill="#3450a1"/><text x="678" y="108" fill="#5d6857">79%</text>
+<rect x="250" y="112" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="112" width="105.0" height="11" rx="2" fill="#a8761b"/><text x="678" y="122" fill="#5d6857">25%</text>
+<rect x="250" y="126" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="126" width="1.5" height="11" rx="2" fill="#8a3f8c"/><text x="678" y="136" fill="#5d6857">0%</text>
+<rect x="250" y="140" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="140" width="1.5" height="11" rx="2" fill="#b98cba"/><text x="678" y="150" fill="#5d6857">0%</text>
+<rect x="250" y="154" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="154" width="1.5" height="11" rx="2" fill="#8b9585"/><text x="678" y="164" fill="#5d6857">0%</text>
+<line x1="460.0" y1="67" x2="460.0" y2="168" stroke="#5d6857" stroke-dasharray="3 2"/>
+<text x="16" y="200" fill="#1c2419" font-weight="600">Relative, in words</text>
+<rect x="250" y="190" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="190" width="193.2" height="11" rx="2" fill="#2d6a3e"/><text x="678" y="200" fill="#5d6857">46%</text>
+<rect x="250" y="204" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="204" width="226.8" height="11" rx="2" fill="#174a26"/><text x="678" y="214" fill="#5d6857">54%</text>
+<rect x="250" y="218" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="218" width="390.6" height="11" rx="2" fill="#3450a1"/><text x="678" y="228" fill="#5d6857">93%</text>
+<rect x="250" y="232" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="232" width="189.0" height="11" rx="2" fill="#a8761b"/><text x="678" y="242" fill="#5d6857">45%</text>
+<rect x="250" y="246" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="246" width="247.8" height="11" rx="2" fill="#8a3f8c"/><text x="678" y="256" fill="#5d6857">59%</text>
+<rect x="250" y="260" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="260" width="252.0" height="11" rx="2" fill="#b98cba"/><text x="678" y="270" fill="#5d6857">60%</text>
+<rect x="250" y="274" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="274" width="168.0" height="11" rx="2" fill="#8b9585"/><text x="678" y="284" fill="#5d6857">40%</text>
+<line x1="460.0" y1="187" x2="460.0" y2="288" stroke="#5d6857" stroke-dasharray="3 2"/>
+<text x="16" y="320" fill="#1c2419" font-weight="600">Facts in the options (sorrycc)</text>
+<rect x="250" y="310" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="310" width="42.0" height="11" rx="2" fill="#2d6a3e"/><text x="678" y="320" fill="#5d6857">10%</text>
+<rect x="250" y="324" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="324" width="193.2" height="11" rx="2" fill="#174a26"/><text x="678" y="334" fill="#5d6857">46%</text>
+<rect x="250" y="338" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="338" width="130.2" height="11" rx="2" fill="#3450a1"/><text x="678" y="348" fill="#5d6857">31%</text>
+<rect x="250" y="352" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="352" width="79.8" height="11" rx="2" fill="#a8761b"/><text x="678" y="362" fill="#5d6857">19%</text>
+<rect x="250" y="366" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="366" width="1.5" height="11" rx="2" fill="#8a3f8c"/><text x="678" y="376" fill="#5d6857">0%</text>
+<rect x="250" y="380" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="380" width="58.8" height="11" rx="2" fill="#b98cba"/><text x="678" y="390" fill="#5d6857">14%</text>
+<rect x="250" y="394" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="394" width="75.6" height="11" rx="2" fill="#8b9585"/><text x="678" y="404" fill="#5d6857">18%</text>
+<line x1="460.0" y1="307" x2="460.0" y2="408" stroke="#5d6857" stroke-dasharray="3 2"/>
+<text x="16" y="440" fill="#1c2419" font-weight="600">Judged options + heading in state</text>
+<rect x="250" y="430" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="430" width="239.4" height="11" rx="2" fill="#2d6a3e"/><text x="678" y="440" fill="#5d6857">57%</text>
+<rect x="250" y="444" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="444" width="420.0" height="11" rx="2" fill="#174a26"/><text x="678" y="454" fill="#5d6857">100%</text>
+<rect x="250" y="458" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="458" width="420.0" height="11" rx="2" fill="#3450a1"/><text x="678" y="468" fill="#5d6857">100%</text>
+<rect x="250" y="472" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="472" width="373.8" height="11" rx="2" fill="#a8761b"/><text x="678" y="482" fill="#5d6857">89%</text>
+<rect x="250" y="486" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="486" width="117.6" height="11" rx="2" fill="#8a3f8c"/><text x="678" y="496" fill="#5d6857">28%</text>
+<rect x="250" y="500" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="500" width="1.5" height="11" rx="2" fill="#b98cba"/><text x="678" y="510" fill="#5d6857">0%</text>
+<rect x="250" y="514" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="514" width="105.0" height="11" rx="2" fill="#8b9585"/><text x="678" y="524" fill="#5d6857">25%</text>
+<line x1="460.0" y1="427" x2="460.0" y2="528" stroke="#5d6857" stroke-dasharray="3 2"/>
+<text x="16" y="560" fill="#1c2419" font-weight="600">Judged options, verdicts only</text>
+<rect x="250" y="550" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="550" width="420.0" height="11" rx="2" fill="#2d6a3e"/><text x="678" y="560" fill="#5d6857">100%</text>
+<rect x="250" y="564" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="564" width="420.0" height="11" rx="2" fill="#174a26"/><text x="678" y="574" fill="#5d6857">100%</text>
+<rect x="250" y="578" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="578" width="420.0" height="11" rx="2" fill="#3450a1"/><text x="678" y="588" fill="#5d6857">100%</text>
+<rect x="250" y="592" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="592" width="373.8" height="11" rx="2" fill="#a8761b"/><text x="678" y="602" fill="#5d6857">89%</text>
+<rect x="250" y="606" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="606" width="361.2" height="11" rx="2" fill="#8a3f8c"/><text x="678" y="616" fill="#5d6857">86%</text>
+<rect x="250" y="620" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="620" width="302.4" height="11" rx="2" fill="#b98cba"/><text x="678" y="630" fill="#5d6857">72%</text>
+<rect x="250" y="634" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="634" width="163.8" height="11" rx="2" fill="#8b9585"/><text x="678" y="644" fill="#5d6857">39%</text>
+<line x1="460.0" y1="547" x2="460.0" y2="648" stroke="#5d6857" stroke-dasharray="3 2"/>
+<text x="16" y="680" fill="#1c2419" font-weight="600">Judged, eating worded as 'closer'</text>
+<rect x="250" y="670" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="670" width="420.0" height="11" rx="2" fill="#2d6a3e"/><text x="678" y="680" fill="#5d6857">100%</text>
+<rect x="250" y="684" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="684" width="420.0" height="11" rx="2" fill="#174a26"/><text x="678" y="694" fill="#5d6857">100%</text>
+<rect x="250" y="698" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="698" width="420.0" height="11" rx="2" fill="#3450a1"/><text x="678" y="708" fill="#5d6857">100%</text>
+<rect x="250" y="712" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="712" width="420.0" height="11" rx="2" fill="#a8761b"/><text x="678" y="722" fill="#5d6857">100%</text>
+<rect x="250" y="726" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="726" width="378.0" height="11" rx="2" fill="#8a3f8c"/><text x="678" y="736" fill="#5d6857">90%</text>
+<rect x="250" y="740" width="420" height="11" rx="2" fill="#e6e9df"/><rect x="250" y="740" width="294.0" height="11" rx="2" fill="#b98cba"/><text x="678" y="750" fill="#5d6857">70%</text>
+<line x1="460.0" y1="667" x2="460.0" y2="768" stroke="#5d6857" stroke-dasharray="3 2"/>
+<text x="250" y="796" fill="#5d6857" text-anchor="middle">0%</text>
+<text x="460.0" y="796" fill="#5d6857" text-anchor="middle">50%</text>
+<text x="670" y="796" fill="#5d6857" text-anchor="middle">100%</text>
+<text x="16" y="796" fill="#5d6857">good pick, hard states</text>
+</svg>

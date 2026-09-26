@@ -1,0 +1,617 @@
+{
+ "config": {
+  "seeds": 10,
+  "size": 12,
+  "max_steps": 500
+ },
+ "rows": [
+  {
+   "engine": "clm-latest",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 144,
+   "latency_p50_ms": 0.4,
+   "latency_mean_ms": 0.4030780243378669,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   },
+   "split": {
+    "model": 0.0,
+    "low": 0.0,
+    "surv": 0.9701388888888889,
+    "code1": 0.029861111111111113
+   }
+  },
+  {
+   "engine": "clm-latest",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 1.8,
+   "score_max": 6,
+   "steps_mean": 167.1,
+   "latency_p50_ms": 0.5,
+   "latency_mean_ms": 294.75386533665835,
+   "died": 1,
+   "ended": {
+    "starved": 9,
+    "died": 1
+   }
+  },
+  {
+   "engine": "clm-latest",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 7,
+   "latency_p50_ms": 284.35,
+   "latency_mean_ms": 254.17000000000002,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "clm-latest",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 36.2,
+   "score_max": 44,
+   "steps_mean": 461.3,
+   "latency_p50_ms": 0.4,
+   "latency_mean_ms": 3.5007433217189314,
+   "died": 5,
+   "ended": {
+    "died": 5,
+    "step cap (500)": 5
+   }
+  },
+  {
+   "engine": "clm-latest",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 144,
+   "latency_p50_ms": 0.4,
+   "latency_mean_ms": 0.40973514674302075,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "clm-latest",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 144,
+   "latency_p50_ms": 0.4,
+   "latency_mean_ms": 4.948263888888889,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "code",
+   "name": "greedy-safe",
+   "games": 10,
+   "score_mean": 41.1,
+   "score_max": 44,
+   "steps_mean": 484.3,
+   "latency_p50_ms": null,
+   "latency_mean_ms": null,
+   "died": 2,
+   "ended": {
+    "died": 2,
+    "step cap (500)": 8
+   }
+  },
+  {
+   "engine": "code",
+   "name": "greedy",
+   "games": 10,
+   "score_mean": 21,
+   "score_max": 32,
+   "steps_mean": 213.4,
+   "latency_p50_ms": null,
+   "latency_mean_ms": null,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "code",
+   "name": "random",
+   "games": 10,
+   "score_mean": 0.5,
+   "score_max": 2,
+   "steps_mean": 175.2,
+   "latency_p50_ms": null,
+   "latency_mean_ms": null,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "decider-4b-v2",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 32.7,
+   "score_max": 40,
+   "steps_mean": 379.9,
+   "latency_p50_ms": 502.2,
+   "latency_mean_ms": 504.07170399773173,
+   "died": 7,
+   "ended": {
+    "step cap (500)": 3,
+    "died": 7
+   },
+   "split": {
+    "model": 0.6685969992103185,
+    "low": 0.25980521189786787,
+    "surv": 0.0,
+    "code1": 0.07159778889181363
+   }
+  },
+  {
+   "engine": "decider-4b-v2",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 3.6,
+   "score_max": 7,
+   "steps_mean": 211.2,
+   "latency_p50_ms": 813.0,
+   "latency_mean_ms": 773.2494409333982,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "decider-4b-v2",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0.1,
+   "score_max": 1,
+   "steps_mean": 8.6,
+   "latency_p50_ms": 557.1500000000001,
+   "latency_mean_ms": 555.8883720930232,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "decider-4b-v2",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 30.8,
+   "score_max": 43,
+   "steps_mean": 332.2,
+   "latency_p50_ms": 260.9,
+   "latency_mean_ms": 260.4938926390228,
+   "died": 9,
+   "ended": {
+    "died": 9,
+    "step cap (500)": 1
+   }
+  },
+  {
+   "engine": "decider-4b-v2",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 29.3,
+   "score_max": 43,
+   "steps_mean": 312.1,
+   "latency_p50_ms": 257.1,
+   "latency_mean_ms": 259.47360733695655,
+   "died": 9,
+   "ended": {
+    "died": 9,
+    "step cap (500)": 1
+   }
+  },
+  {
+   "engine": "decider-4b-v2",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 144,
+   "latency_p50_ms": 310.5,
+   "latency_mean_ms": 311.7829861111111,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "decider",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 38.3,
+   "score_max": 44,
+   "steps_mean": 486.1,
+   "latency_p50_ms": 308.2,
+   "latency_mean_ms": 310.8930099228225,
+   "died": 2,
+   "ended": {
+    "died": 2,
+    "step cap (500)": 8
+   },
+   "split": {
+    "model": 0.5013371734211067,
+    "low": 0.43159843653569224,
+    "surv": 0.0,
+    "code1": 0.06706439004320099
+   }
+  },
+  {
+   "engine": "decider",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 1.2,
+   "score_max": 4,
+   "steps_mean": 174.7,
+   "latency_p50_ms": 448.1,
+   "latency_mean_ms": 456.41216469120394,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "decider",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 7,
+   "latency_p50_ms": 357.0,
+   "latency_mean_ms": 357.96000000000004,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "decider",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 34.9,
+   "score_max": 46,
+   "steps_mean": 459.3,
+   "latency_p50_ms": 140.1,
+   "latency_mean_ms": 140.9992229809277,
+   "died": 5,
+   "ended": {
+    "died": 5,
+    "step cap (500)": 5
+   }
+  },
+  {
+   "engine": "decider",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 36.9,
+   "score_max": 46,
+   "steps_mean": 476.7,
+   "latency_p50_ms": 140.7,
+   "latency_mean_ms": 145.28909255487667,
+   "died": 2,
+   "ended": {
+    "died": 2,
+    "step cap (500)": 8
+   }
+  },
+  {
+   "engine": "decider",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0.1,
+   "score_max": 1,
+   "steps_mean": 144.6,
+   "latency_p50_ms": 184.6,
+   "latency_mean_ms": 184.85325034578145,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "gliner-decide-1b",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 3.8,
+   "score_max": 8,
+   "steps_mean": 234.8,
+   "latency_p50_ms": 196.3,
+   "latency_mean_ms": 195.65165031222122,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   },
+   "split": {
+    "model": 0.4109880749574106,
+    "low": 0.5438671209540034,
+    "surv": 0.0,
+    "code1": 0.04514480408858603
+   }
+  },
+  {
+   "engine": "gliner-decide-1b",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 0.3,
+   "score_max": 1,
+   "steps_mean": 151.3,
+   "latency_p50_ms": 316.8,
+   "latency_mean_ms": 320.4166666666667,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "gliner-decide-1b",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 7,
+   "latency_p50_ms": 267.5,
+   "latency_mean_ms": 272.78999999999996,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "gliner-decide-1b",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 13.7,
+   "score_max": 24,
+   "steps_mean": 323.6,
+   "latency_p50_ms": 80.8,
+   "latency_mean_ms": 82.17065637065637,
+   "died": 3,
+   "ended": {
+    "starved": 6,
+    "step cap (500)": 1,
+    "died": 3
+   }
+  },
+  {
+   "engine": "gliner-decide-1b",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 15.3,
+   "score_max": 25,
+   "steps_mean": 315.4,
+   "latency_p50_ms": 83.8,
+   "latency_mean_ms": 82.43694043003173,
+   "died": 4,
+   "ended": {
+    "starved": 4,
+    "died": 4,
+    "step cap (500)": 2
+   }
+  },
+  {
+   "engine": "gliner-decide-1b",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 1.7,
+   "score_max": 6,
+   "steps_mean": 121.1,
+   "latency_p50_ms": 122.7,
+   "latency_mean_ms": 122.78687035507845,
+   "died": 3,
+   "ended": {
+    "died": 3,
+    "starved": 7
+   }
+  },
+  {
+   "engine": "gliner-decide",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 39.4,
+   "score_max": 44,
+   "steps_mean": 497.4,
+   "latency_p50_ms": 169.1,
+   "latency_mean_ms": 166.33532349109856,
+   "died": 1,
+   "ended": {
+    "step cap (500)": 9,
+    "died": 1
+   },
+   "split": {
+    "model": 0.3323281061519904,
+    "low": 0.593687173301166,
+    "surv": 0.0,
+    "code1": 0.07398472054684359
+   }
+  },
+  {
+   "engine": "gliner-decide",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 0.4,
+   "score_max": 2,
+   "steps_mean": 153,
+   "latency_p50_ms": 373.2,
+   "latency_mean_ms": 374.9957142857143,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "gliner-decide",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 7,
+   "latency_p50_ms": 255.7,
+   "latency_mean_ms": 256.03285714285715,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "gliner-decide",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 26.3,
+   "score_max": 37,
+   "steps_mean": 371.3,
+   "latency_p50_ms": 71.4,
+   "latency_mean_ms": 69.9795058139535,
+   "died": 5,
+   "ended": {
+    "step cap (500)": 4,
+    "starved": 1,
+    "died": 5
+   }
+  },
+  {
+   "engine": "gliner-decide",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 2.7,
+   "score_max": 15,
+   "steps_mean": 181.4,
+   "latency_p50_ms": 71.6,
+   "latency_mean_ms": 70.64021739130435,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "gliner-decide",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 144,
+   "latency_p50_ms": 102.5,
+   "latency_mean_ms": 103.24159722222223,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "kev-4b",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 17.2,
+   "score_max": 25,
+   "steps_mean": 411.4,
+   "latency_p50_ms": 331.6,
+   "latency_mean_ms": 333.8918640576725,
+   "died": 0,
+   "ended": {
+    "step cap (500)": 6,
+    "starved": 4
+   }
+  },
+  {
+   "engine": "kev-4b",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 9,
+   "score_max": 17,
+   "steps_mean": 92,
+   "latency_p50_ms": 264.75,
+   "latency_mean_ms": 268.0214130434783,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "kev-4b",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 25.3,
+   "score_max": 34,
+   "steps_mean": 250.9,
+   "latency_p50_ms": 108.2,
+   "latency_mean_ms": 109.6521850899743,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "kev-4b",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 29.5,
+   "score_max": 41,
+   "steps_mean": 320.8,
+   "latency_p50_ms": 107.5,
+   "latency_mean_ms": 108.1048829431438,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "kev-4b",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 13.1,
+   "score_max": 22,
+   "steps_mean": 166.4,
+   "latency_p50_ms": 206.6,
+   "latency_mean_ms": 207.52433894230768,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "laya",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 0.5,
+   "score_max": 2,
+   "steps_mean": 155.3,
+   "latency_p50_ms": 99.5,
+   "latency_mean_ms": 100.26865464632455,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "laya",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 144,
+   "latency_p50_ms": 37.7,
+   "latency_mean_ms": 38.62,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  }
+ ]
+}
