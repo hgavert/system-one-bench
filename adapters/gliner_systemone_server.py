@@ -23,6 +23,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import torch
 from gliner2 import AutoExtractor
 from gliner2.classification import ClassificationSchema, Classifier
+from gliner2.classification.compiler import compile_schema
 
 
 def text_of(v):
@@ -100,7 +101,9 @@ class Handler(BaseHTTPRequestHandler):
             qs = body["questions"]
             with LOCK:
                 t0 = time.perf_counter()
-                r = CLF.classify(text_of(body["state"]), to_schema(qs))
+                # compile here: Classifier's own compile cache keys on a fingerprint that ignores label order
+                # (json.dumps(..., sort_keys=True)), so a reordered label set would reuse the first order it saw
+                r = CLF.classify(text_of(body["state"]), compile_schema(to_schema(qs)))
                 if DEV == "mps":
                     torch.mps.synchronize()
                 ms = (time.perf_counter() - t0) * 1000

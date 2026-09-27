@@ -103,7 +103,7 @@ class HTTPEngine:
     def __init__(self, url="http://127.0.0.1:8009", model="kev-latest", api_key=None):
         import httpx
         self.name = f"{model} over HTTP"
-        self.http = httpx.Client(base_url=url, timeout=60,
+        self.http = httpx.Client(base_url=url, timeout=600,
                                  headers={"authorization": f"Bearer {api_key}"} if api_key else {})
         self.model = model
 

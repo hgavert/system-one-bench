@@ -1,4 +1,4 @@
-# Open-source Jev reproductions, tested zero-shot in two situations
+# Open-source Jev reproductions, tested zero-shot in three situations
 
 [![Decider 2B playing Snake zero-shot: the board on the left, each move's options, probabilities and the exact prompt on the right](docs/snake-demo.png)](docs/snake-report.md)
 
@@ -8,15 +8,15 @@ move is one typed question, answered with a probability per option.*
 A hands-on tutorial. **Jev** (TypeSafe AI, released 15 Sept 2026) is a "System One" model: it answers typed
 questions with probabilities instead of generating text. Within a week, dozens of open reproductions appeared. This
 repo takes the best-ranked ones that run on a 32 GB Apple M5, plus the strongest ones released since, and tests them
-**zero-shot, with no training for the task**, in two very different situations:
+**zero-shot, with no training for the task**, in three very different situations:
 
-| | Tweet sentiment | Snake |
-|---|---|---|
-| **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game |
-| **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways |
-| **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) |
-| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster | asked to read the board, the models fail (so does Jev); with one verdict per option, Decider 2B eats 36.9 food per game, close to code's 41.1 |
-| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) |
+| | Tweet sentiment | Snake | Finnish |
+|---|---|---|---|
+| **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game | understand Finnish: topic, reading comprehension, intent, reviews |
+| **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways | the same `choice` questions on 4 datasets × 300 items, in English and in Finnish |
+| **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) | Qwen 3.8 27B (vLLM, another machine) |
+| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster | asked to read the board, the models fail (so does Jev); with one verdict per option, Decider 2B eats 36.9 food per game, close to code's 41.1 | Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish and are near the 27B LLM; Decider 2B loses ~7; CLM collapses |
+| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [results/finnish/REPORT.md](results/finnish/REPORT.md) |
 
 Both reports are generated from `results/`: `uv run python docs/page/build.py` and
 `uv run python docs/snake-report/build.py`.
@@ -27,13 +27,16 @@ Both reports are generated from `results/`: `uv run python docs/page/build.py` a
   [Kev](https://github.com/jaredpalmer/kev) 0.8B / 4B / 9B, [SemIf](https://github.com/TheoLeeCJ/openjev),
   [openvons](https://github.com/genai-craft/openvons), [Decider 2B](https://huggingface.co/Mapika/decider-2b),
   [Decider 4B v2](https://huggingface.co/Mapika/decider-4b/tree/v2),
-  [GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide) (340M and 1B) and
+  [GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide) (340M and 1B; for Finnish the multilingual
+  [GLiNER2.5-multi-Decide](https://huggingface.co/fastino/GLiNER2.5-multi-Decide), 287M) and
   [CLM 8B](https://github.com/Contrastive-LM/CLM) (contrastive bi-encoder).
   Chosen from the [Jev Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index), plus the
   last four, released after it; why the index's top five don't fit a 32 GB Mac: [docs/1-landscape.md](docs/1-landscape.md)
 * **Which test ran which:** all of them ran the sentiment test; seven of them also played Snake: Decider 2B,
-  Decider 4B v2, Kev 4B, CLM 8B, GLiNER2.5-Decide 340M and 1B, and Laya.
-* **LLM baselines (sentiment):** Gemma 4 26B-A4B, Gemma 4 12B and Qwen 3.8 27B in LM Studio, with JSON-schema output
+  Decider 4B v2, Kev 4B, CLM 8B, GLiNER2.5-Decide 340M and 1B, and Laya. Finnish: Decider 2B and 4B v2, Kev 0.8B / 4B /
+  9B, GLiNER2.5-multi-Decide and CLM 8B.
+* **LLM baselines (sentiment):** Gemma 4 26B-A4B, Gemma 4 12B and Qwen 3.8 27B in LM Studio, with JSON-schema output.
+  **Finnish:** Qwen 3.8 27B (FP8) on a vLLM server, thinking off; that test compares accuracy, not speed
 
 ## Test 1: tweet sentiment
 
@@ -83,9 +86,19 @@ after the Decision Index edition used here.)
   trained contrastive heads on Qwen3-8B get 0.517 (0.43–0.55 depending on how the options are worded).
 * **Label descriptions are a model-specific lever**: no effect on Gemma, +4.7 points for Qwen 27B
   without them (paired test p = 0.013).
-* **Option order**: rerunning with all 6 option orders, Laya favours whichever option is listed first
-  (accuracy 0.69 when the answer is first vs 0.59 when last), SemIf flips 19% of answers without a
-  consistent direction, and Decider is nearly order-blind (5.7% flips; its training shuffles options).
+* **Option order**: rerunning 11 models with all 6 option orders ([results/position_bias.json](results/position_bias.json)):
+
+  | Answers that flip with order alone | Models |
+  |---|---|
+  | 0% (options are embedded one by one) | CLM 8B |
+  | 5.7%, no preferred position | Decider 2B (its training shuffles options) |
+  | 10–13%, no preferred position | Decider 4B v2, GLiNER2.5-multi-Decide, Kev 0.8B / 4B / 9B |
+  | 17–19%, no significant preferred position | GLiNER2.5-Decide-1B, SemIf |
+  | 22–23%, **favours the first option** | Laya (0.69 accuracy when the answer is first vs 0.59 when last), GLiNER2.5-Decide 340M (0.72 vs 0.56) |
+
+  GLiNER needed a fix first: gliner2's `Classifier` caches compiled schemas under a key that ignores label order, so a
+  reordered label set silently reused the first order it saw; `adapters/gliner_systemone_server.py` now compiles
+  each request itself.
 * **Cascade**: accept Decider's answer at ≥ 0.5 confidence, else ask Gemma 26B → 0.753 with only 6% of tweets
   sent to the LLM.
 
@@ -147,6 +160,53 @@ Each model's best request (among those where the model decides every move), 10 g
   moves but chase the food into tight spaces and die in 9–10 games of 10.
 * **Speed varies 60-fold**, from CLM's ~4 ms per move (everything cached) to Decider 4B v2's ~260 ms.
 
+## Test 3: Finnish
+
+Can these models be used on Finnish text? Four datasets, 300 seeded items each: three **parallel** ones, where the same
+items exist in English and in human-translated Finnish, so English vs Finnish on identical items isolates the
+language from the task, and one **native** Finnish set. Every item is asked in three conditions: English text and
+question; Finnish text with the English question; everything in Finnish. Report:
+[results/finnish/REPORT.md](results/finnish/REPORT.md) (macro-F1, calibration, per-condition tables).
+
+| Dataset | What | Options |
+|---|---|---|
+| [SIB-200](https://huggingface.co/datasets/Davlan/sib200) | topic of a FLORES sentence | 7 topics |
+| [Belebele](https://huggingface.co/datasets/facebook/belebele) | reading comprehension: passage, question, answers | 4 answers |
+| [MASSIVE](https://huggingface.co/datasets/mteb/amazon_massive_intent) | what a voice-assistant user wants | 10 intents |
+| [ScandiSent-fi](https://huggingface.co/datasets/TurkuNLP/finbenchv2-scandisent-fi-mini) | native Finnish Trustpilot reviews | positive / negative |
+
+### Results
+
+Everything in Finnish, accuracy (±5 points on 300 items); last column: mean change from English to Finnish on the same
+SIB, Belebele and MASSIVE items (paired, so much less noisy).
+
+| Model | SIB topic | Belebele reading | MASSIVE intent* | ScandiSent-fi | EN → FI, same items |
+|---|--:|--:|--:|--:|--:|
+| **Decider 4B v2** | 0.833 | **0.903** | **0.963** | 0.913 | −2.1 |
+| **Kev 9B** | **0.863** | 0.803 | 0.913 | 0.947 | **−1.7** |
+| Kev 4B | 0.860 | 0.703 | 0.937 | 0.913 | −1.9 |
+| Decider 2B | 0.803 | 0.800 | 0.893 | 0.903 | −6.9 |
+| GLiNER2.5-multi-Decide | 0.730 | 0.267 | 0.670 | 0.890 | −8.0 |
+| Kev 0.8B | 0.743 | 0.493 | 0.757 | 0.830 | −12.6 |
+| CLM 8B | 0.280 | 0.267 | 0.153 | 0.500 | −23.9 |
+| *LLM Qwen 3.8 27B* | *0.857* | *0.863* | *0.957* | ***0.953*** | *−3.6* |
+
+\*Decider was trained on MASSIVE's training split (multilingual), so that column is not zero-shot for Decider.
+Chance: 0.14 / 0.25 / 0.10 / 0.50.
+
+* **Three System One models keep their English level in Finnish**: Decider 4B v2, Kev 9B and Kev 4B lose about 2
+  points on the same items, less than the 27B LLM (3.6). Decider 4B v2 is the strongest overall and beats the LLM on
+  Belebele, which its card lists as held out of training; Kev 9B ties the LLM on native Finnish reviews.
+* **Decider 2B works in Finnish but loses ~7 points** (10 on reading comprehension and intents), with its
+  probabilities still calibrated (ECE ≤ 0.06).
+* **The question language hardly matters**: a Finnish question is as good as an English one for every model except
+  CLM, whose Finnish option names break it (MASSIVE 0.363 → 0.153, ScandiSent 0.767 → 0.500).
+* **Small and encoder models fall behind**: GLiNER2.5-multi-Decide is fine on binary sentiment (0.89) but at chance
+  on reading comprehension even in English; Kev 0.8B loses 13 points.
+* **Option order in Finnish** (Belebele, accuracy by position of the right answer): level within noise for the models
+  above chance; GLiNER2.5-multi-Decide, at chance anyway, seldom picks the second answer (0.10 when it is right vs
+  0.23–0.39 for the others).
+
 ## Setup
 
 ```bash
@@ -161,6 +221,8 @@ uv run python scripts/download_models.py           # download all at the benchma
   network, `--parallel` splits large files into 32 byte ranges and `--modelscope` fetches Qwen3-4B-Instruct from
   the ModelScope mirror.
 - LLM baselines and `nomic-embed-text`: [LM Studio](https://lmstudio.ai) serving on `localhost:1234`.
+- Finnish test's LLM reference: any OpenAI-compatible server; copy `.env.example` to `.env` and set the URL, model and
+  key (`${VAR}` is expanded from the shell environment).
 
 ## The tutorial, step by step
 
@@ -204,6 +266,17 @@ uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat --prompt simple --n
 
 All three take `--engine` (`decider`, `decider:models/decider-4b-v2`, `laya`, or `http:<url>,<model>` for Kev, CLM and
 GLiNER behind their servers); [docs/5-snake.md §5.7](docs/5-snake.md) has the server commands.
+
+**Test 3, Finnish**
+
+| Step | Run | What you learn |
+|---|---|---|
+| 12a | `uv run python adapters/export_finnish.py` | The four datasets, 300 seeded items each, English and Finnish paired by id (`data/finnish/`) |
+| 12 | `uv run python 12_finnish_benchmark.py --engine decider` | Every item under the three conditions; same `--engine` specs as Snake, or `llm` for the `.env` server |
+| 13 | `uv run python 13_finnish_report.py` | All runs in one report: `results/finnish/REPORT.md` |
+
+The questions in both languages are in `finnish_questions.py`; GLiNER2.5-multi-Decide runs behind
+`adapters/gliner_systemone_server.py --model fastino/GLiNER2.5-multi-Decide`.
 
 ## Key-code docs
 
@@ -251,6 +324,13 @@ Snake
   09_snake_benchmark.py     step 9: games per request and model
   10_snake_probe.py         step 10: single-decision probe per request and model
   docs/snake-report/        report page (template + build.py -> index.html; build_md.py -> docs/snake-report.md)
+
+Finnish
+  adapters/export_finnish.py  SIB-200, Belebele, MASSIVE, ScandiSent-fi -> data/finnish/ (300 seeded items each)
+  finnish_questions.py      the questions in English and Finnish, the three conditions
+  llm_choice.py             any choice question through an OpenAI-compatible LLM (endpoint from .env)
+  12_finnish_benchmark.py   step 12: one engine over every item and condition -> results/finnish/runs/<name>.jsonl
+  13_finnish_report.py      step 13: all runs -> results/finnish/REPORT.md, summary.json
 ```
 
 ## Data and license
@@ -258,7 +338,8 @@ Snake
 The tweets come from [TweetEval](https://huggingface.co/datasets/cardiffnlp/tweet_eval) (SemEval-2017 Task 4A).
 Their text is not included in this repository: results refer to tweets by position (`t000`…) and by row in the
 TweetEval test split, and `data/` is regenerated on demand (`uv run python adapters/export_test_tweets.py`,
-`uv run python 06_export_kev_data.py`). Models and third-party engines are fetched by the scripts in `scripts/`
+`uv run python 06_export_kev_data.py`). The Finnish datasets (SIB-200, Belebele: CC-BY-SA-4.0; MASSIVE: CC-BY-4.0;
+ScandiSent-fi) are likewise not included; `adapters/export_finnish.py` fetches them. Models and third-party engines are fetched by the scripts in `scripts/`
 and keep their own licenses.
 
 Code and documentation in this repository: [MIT](LICENSE).
