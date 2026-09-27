@@ -5,7 +5,7 @@ The prose mirrors template.html; edit both when a finding changes.
 """
 from pathlib import Path
 
-from build import LABEL, MODELS, NAMES, REQS, GAMES_NOTE, best_rows, ended_text, games_intro, who
+from build import keyword_rows, LABEL, MODELS, NAMES, REQS, GAMES_NOTE, best_rows, ended_text, games_intro, who
 
 OUT_MD = Path("docs/snake-report.md")
 OUT_SVG = Path("docs/snake-report/probe.svg")
@@ -80,7 +80,7 @@ def main(data):
       "seven open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, "
       "straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are "
       "poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one needs the "
-      "wording to suit it.\n")
+      "wording to suit it. And once the options carry verdicts, seven keyword rules with no model play as well as any of them.\n")
 
     w("## What we found\n")
     w("1. **The simple way fails, for Jev and for the open models.** The only published numbers of Jev playing (nadeem4's "
@@ -103,7 +103,8 @@ def main(data):
       "per game, Decider 2B is the best model that decides every move itself, close to the best code baseline (41.1).")
     w("6. **Speed varies 60-fold.** CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, "
       "Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260 ms per move. ximing's extra questions roughly double that, "
-      "and on those rows code picks up to two moves in three.\n")
+      "and on those rows code picks up to two moves in three.")
+    w("7. **A table of phrases does as well.** " "Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, more than any model that decides every move. In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options." "\n")
 
     w("## The seven models\n")
     w("All zero-shot, as released: the same models as in the sentiment benchmark. Every one answers the same Jev request, "
@@ -294,6 +295,20 @@ def main(data):
       "room* (≥ 80%), or *leaves much less room (n of m cells)*. For CLM and GLiNER 340M, use the plain wording, which "
       "describes the eating move as \"moves closer to the food; keeps the most room\".\n")
 
+    w("## Without a model: a keyword scorer\n")
+    w("The judged options are code's facts written in a small, fixed vocabulary, so the words can be read back without a model. `KeywordEngine` (`snake/engine.py`) answers the same `{state, questions}` request: it adds up points for the phrases each option contains, then takes the top score (random tie-break) or samples from a softmax over the scores. The weights were written once and not tuned; matching ignores case." "\n")
+    w(table(["Phrase in the option", "Points"], [['`eats the food`, `moves closer to the food`', '+3'], ['`moves away from the food`', '−1'], ['`keeps the most room` / `keeps almost as much room`', '+2 / +1'], ['`leaves much less room (N of M cells)`', '−2 − 2·(1 − N/M)'], ['`dead end`', '−100']], ["---", "--:"]))
+    kw, kw_other = keyword_rows(data)
+    w(table(["Controller", "Food / game", "Best", "Died", "Probe, hard states"],
+            [[f"**{r['who']}**" if r.get("win") else f"*{r['who']}*" if r.get("ref") else r["who"],
+              r["food"], r["best"], r["died"], r["probe"]] for r in kw], ["---", "--:", "--:", "--:", "--:"]))
+    w('On the other requests there is nothing to match, so it plays at random among the offered moves, which is no worse than most models there. Food per game, top score: KEYWORD_OTHER.'.replace("KEYWORD_OTHER", kw_other) + "\n")
+    w("### What this says\n")
+    w("a) **The models don't need to be smart here.** " 'Choosing between "moves closer to the food; keeps the most room" and "moves away from the food; DEAD END" takes a few string lookups. The best billion-parameter models only match the table, and the smaller ones fall short of it for reasons that have nothing to do with Snake: the word "eats", or a heading in the state.' "\n")
+    w("b) **This is how the models worked anyway.** " 'Every request that worked is one where code had already reduced the choice to reading back its own verdicts. Every request that asked for more (read a board, compare numbers across options, ignore a heading) failed. The failures look like text matching: CLM and GLiNER 340M avoid "eats" even when eating is right, and the small models follow `heading: up` towards going straight. The published demos that play well are built the same way: the geometry is done in code before the model is called.' "\n")
+    w("c) **If code has to describe the world, it can often decide too.** " 'To write "moves closer to the food; keeps the most room", code already needs the distances, the flood fill and the dead-end test. The last step, from those facts to a move, is a few lines: exact, testable, and well under a millisecond. Greedy + dead-end check (41.1) is that step written directly. What a model adds is what the table ignores: the player\'s strategy text, and any wording nobody wrote a phrase for.' "\n")
+    w("> " "Snake is a small closed world with a handful of cases, and code writes every word of every option, so a phrase table covers them all. Where the description is open (free text from people, many interacting factors, options nobody listed in advance), a table would not keep up, and that is where a System One model could earn its place. This test doesn't cover such cases." "\n")
+
     w("## Limits of this test\n")
     w("We had no TypeSafe API key, so hosted Jev is represented only by nadeem4's published run (10 games, 10×10, relative "
       "phrasing, starvation after 60 steps without food). That setup differs from ours (12×12, 144 steps), so compare the "
@@ -301,7 +316,8 @@ def main(data):
       "distance and dead ends, not room, which is why it misses the 4B models' habit of chasing food into tight spaces. "
       "Some diagnostics were run on one model only: the instruction-rule and option-renaming tests (Decider 2B), the "
       "80-state \"eats\" test (CLM) and the tight-space replay (the three models shown). Ten seeds per row give wide "
-      "intervals, so read differences of a few food as noise, and most of the best games hit the 500-step cap.\n")
+      "intervals, so read differences of a few food as noise, and most of the best games hit the 500-step cap."
+      " The keyword scorer shows only that Snake's judged options can be read back by rules, not that the same holds for tasks whose descriptions aren't generated by code from a fixed vocabulary." "\n")
     w("---\n")
     w("Code: `snake/`, `08_snake_server.py` (live demo with the decision panel), `09_snake_benchmark.py`, "
       "`10_snake_probe.py`, `adapters/gliner_systemone_server.py`, `adapters/mlx_embed_server.py`; write-up in "

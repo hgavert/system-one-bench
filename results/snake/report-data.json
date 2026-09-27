@@ -613,5 +613,288 @@
     "starved": 10
    }
   }
+ ],
+ "keyword": [
+  {
+   "engine": "keyword",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 37.4,
+   "score_max": 44,
+   "steps_mean": 484.3,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 2,
+   "ended": {
+    "died": 2,
+    "step cap (500)": 8
+   },
+   "split": {
+    "model": 0.5271525913689862,
+    "low": 0.4088374974189552,
+    "surv": 0.0,
+    "code1": 0.06400991121205864
+   }
+  },
+  {
+   "engine": "keyword",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 1.3,
+   "score_max": 4,
+   "steps_mean": 207.1,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
+   "engine": "keyword",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0.2,
+   "score_max": 1,
+   "steps_mean": 27.5,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "keyword",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 38.3,
+   "score_max": 42,
+   "steps_mean": 477.2,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 2,
+   "ended": {
+    "step cap (500)": 8,
+    "died": 2
+   }
+  },
+  {
+   "engine": "keyword",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 39,
+   "score_max": 45,
+   "steps_mean": 499.1,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 0,
+   "ended": {
+    "step cap (500)": 9,
+    "starved": 1
+   }
+  },
+  {
+   "engine": "keyword",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0.2,
+   "score_max": 1,
+   "steps_mean": 23.2,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "keyword-sample-0.5",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 37.6,
+   "score_max": 44,
+   "steps_mean": 484.3,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 2,
+   "ended": {
+    "died": 2,
+    "step cap (500)": 8
+   },
+   "split": {
+    "model": 0.5263266570307661,
+    "low": 0.40904398100351025,
+    "surv": 0.0,
+    "code1": 0.06462936196572372
+   }
+  },
+  {
+   "engine": "keyword-sample-0.5",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 1.7,
+   "score_max": 5,
+   "steps_mean": 236.2,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 0,
+   "ended": {
+    "starved": 9,
+    "step cap (500)": 1
+   }
+  },
+  {
+   "engine": "keyword-sample-0.5",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 31.1,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "keyword-sample-0.5",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 35.3,
+   "score_max": 42,
+   "steps_mean": 455.6,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 2,
+   "ended": {
+    "step cap (500)": 8,
+    "died": 2
+   }
+  },
+  {
+   "engine": "keyword-sample-0.5",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 39.1,
+   "score_max": 44,
+   "steps_mean": 499.2,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 1,
+   "ended": {
+    "step cap (500)": 9,
+    "died": 1
+   }
+  },
+  {
+   "engine": "keyword-sample-0.5",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0.3,
+   "score_max": 1,
+   "steps_mean": 40.1,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "keyword-sample",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 39.5,
+   "score_max": 44,
+   "steps_mean": 484.3,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 2,
+   "ended": {
+    "died": 2,
+    "step cap (500)": 8
+   },
+   "split": {
+    "model": 0.5050588478215982,
+    "low": 0.4282469543671278,
+    "surv": 0.0,
+    "code1": 0.066694197811274
+   }
+  },
+  {
+   "engine": "keyword-sample",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 2.5,
+   "score_max": 7,
+   "steps_mean": 264.7,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 0,
+   "ended": {
+    "starved": 9,
+    "step cap (500)": 1
+   }
+  },
+  {
+   "engine": "keyword-sample",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 0,
+   "score_max": 0,
+   "steps_mean": 31.1,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "keyword-sample",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 33.7,
+   "score_max": 44,
+   "steps_mean": 407.3,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 5,
+   "ended": {
+    "died": 5,
+    "step cap (500)": 5
+   }
+  },
+  {
+   "engine": "keyword-sample",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 37,
+   "score_max": 42,
+   "steps_mean": 496.3,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 1,
+   "ended": {
+    "step cap (500)": 9,
+    "died": 1
+   }
+  },
+  {
+   "engine": "keyword-sample",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0.3,
+   "score_max": 1,
+   "steps_mean": 40.1,
+   "latency_p50_ms": 0.0,
+   "latency_mean_ms": 0.0,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  }
  ]
 }

@@ -26,6 +26,8 @@ NAMES = {"grid": "Raw board", "relative": "Relative, in words", "facts": "Facts 
          "judged-plain": "Judged, plain wording", "composed": "Composed questions", "random": "random safe move",
          "greedy": "greedy", "greedy-safe": "greedy + dead-end check"}
 LABEL = {m: l for m, l, _ in MODELS}
+KEYWORD = {"keyword": "Keyword scorer, top score", "keyword-sample-0.5": "Keyword scorer, sampled T=0.5",
+           "keyword-sample": "Keyword scorer, sampled T=1"}          # snake.engine.KeywordEngine: no model
 
 
 def ended_by(cause):
@@ -57,9 +59,10 @@ def load():
     probe = {m: json.load(open(R / f"probe-{m}.json"))["results"] for m, _, _ in MODELS if (R / f"probe-{m}.json").exists()}
     files = sorted((R / "games").glob("*.json"))
     if files:
-        games = [d for d in map(json.load, map(open, files))     # models and code baselines; the keyword scorer is in 5-snake.md
-                 if d["summary"]["engine"] in LABEL or d["summary"]["engine"] == "code"]
-        data = {"config": games[0]["config"], "rows": [aggregate(d) for d in games]}
+        games = [json.load(open(p)) for p in files]
+        main = [d for d in games if d["summary"]["engine"] in LABEL or d["summary"]["engine"] == "code"]
+        data = {"config": main[0]["config"], "rows": [aggregate(d) for d in main],
+                "keyword": [aggregate(d) for d in games if d["summary"]["engine"] in KEYWORD]}
         for c in ("only", "engine"):
             data["config"].pop(c, None)
         DATA.write_text(json.dumps(data, indent=1))
@@ -71,7 +74,32 @@ def load():
     fo = {k: i for i, k in enumerate(NAMES)}
     data["rows"].sort(key=lambda r: (order.get(r["engine"], 50), fo.get(r["name"], 99)))
     data["probe"] = probe
+    data["keyword_probe"] = {k: json.load(open(R / f"probe-{k}.json"))["results"] for k in KEYWORD
+                             if (R / f"probe-{k}.json").exists()}
     return data
+
+
+def keyword_rows(data):
+    """-> (judged rows for the keyword table, one line on the other requests), shared by the HTML and the markdown."""
+    kp = data["keyword_probe"]
+    order = {k: i for i, k in enumerate(KEYWORD)}
+    rows = []
+    for r in sorted((r for r in data["keyword"] if r["name"] in ("judged", "judged-plain")),
+                    key=lambda r: (order[r["engine"]], r["name"] != "judged")):
+        pr = kp.get(r["engine"], {}).get(r["name"], {}).get("hard", {}).get("good")
+        rows.append({"who": f"{KEYWORD[r['engine']]} · {NAMES[r['name']]}", "food": f"{r['score_mean']:.1f}",
+                     "best": r["score_max"], "died": f"{r['died']} of {r['games']}",
+                     "probe": f"{pr:.0%}" if pr is not None else "–", "win": r["engine"] == "keyword"})
+    ref = [r for r in data["rows"] if (r["engine"], r["name"]) in (("decider", "judged"), ("code", "greedy-safe"))]
+    for r in ref:
+        pr = data["probe"].get(r["engine"], {}).get(r["name"], {}).get("hard", {}).get("good")
+        rows.append({"who": who(r) + (" (best model)" if r["engine"] == "decider" else ""), "food": f"{r['score_mean']:.1f}",
+                     "best": r["score_max"], "died": f"{r['died']} of {r['games']}",
+                     "probe": f"{pr:.0%}" if pr is not None else "–", "ref": True})
+    other = {r["name"]: r for r in data["keyword"] if r["engine"] == "keyword"}
+    line = ", ".join(f"{NAMES[n].lower()} {other[n]['score_mean']:.1f} ({ended_text(other[n])})"
+                     for n in ("facts", "relative", "grid") if n in other)
+    return rows, line
 
 
 def best_rows(data):
@@ -131,6 +159,11 @@ def html(data):
                      f'<td class="num">{code["score_max"]}</td><td class="num">{code["died"]} of {code["games"]}</td>'
                      '<td class="num">–</td><td class="num">–</td></tr>')
 
+    kw, kw_other = keyword_rows(data)
+    krows = [f'<tr class="{"win" if r.get("win") else "base" if r.get("ref") else ""}"><td>{r["who"]}</td>'
+             f'<td class="num">{r["food"]}</td><td class="num">{r["best"]}</td><td class="num">{r["died"]}</td>'
+             f'<td class="num">{r["probe"]}</td></tr>' for r in kw]
+
     cfg = data["config"]
     jd = next((r["score_mean"] for r in data["rows"] if r["engine"] == "decider" and r["name"] == "judged"), None)
     return ((HERE / "template.html").read_text()
@@ -139,6 +172,7 @@ def html(data):
             .replace("PROBE_HEAD", "".join(f'<th class="num">{l}</th>' for m, l, c in present))
             .replace("PROBE_BARS", "\n".join(bars)).replace("PROBE_ROWS", "\n".join(prows))
             .replace("GAMES_ROWS", "\n".join(grows))
+            .replace("KEYWORD_ROWS", "\n".join(krows)).replace("KEYWORD_OTHER", kw_other)
             .replace("GAMES_JUDGED_DECIDER", f"{jd:.0f}" if jd else "–")
             .replace("GAMES_INTRO", games_intro(cfg))
             .replace("GAMES_NOTE", GAMES_NOTE))

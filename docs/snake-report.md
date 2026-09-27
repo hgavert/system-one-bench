@@ -2,7 +2,7 @@
 
 > Generated from the same data as the interactive version, [`docs/snake-report/index.html`](snake-report/index.html), by `docs/snake-report/build.py`. Key code and details: [docs/5-snake.md](5-snake.md).
 
-People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to seven open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one needs the wording to suit it.
+People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to seven open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one needs the wording to suit it. And once the options carry verdicts, seven keyword rules with no model play as well as any of them.
 
 ## What we found
 
@@ -12,6 +12,7 @@ People posted Jev playing Snake. We read how six of those demos phrase each move
 4. **The wording has to suit the model.** CLM 8B and GLiNER 340M give any option that says "eats the food" almost no probability, so they circle next to the food. Worded as "moves closer to the food", CLM goes from 0 to 36.2 food per game and GLiNER from 2.7 to 26.3. For the other models it makes little difference.
 5. **Better single moves don't mean longer games.** Decider 4B and Kev 4B are more decisive than Decider 2B and follow "closer to the food" into tight spaces: they die in 9 and 10 of 10 games, Decider 2B in 2. With 36.9 food per game, Decider 2B is the best model that decides every move itself, close to the best code baseline (41.1).
 6. **Speed varies 60-fold.** CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260 ms per move. ximing's extra questions roughly double that, and on those rows code picks up to two moves in three.
+7. **A table of phrases does as well.** Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, more than any model that decides every move. In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options.
 
 ## The seven models
 
@@ -244,9 +245,44 @@ Sent once per tick when at least two moves survive; with one safe move, code tak
 
 Verdicts come from `snake/formulations.py` (`judge()`): *eats the food* / *moves closer* / *moves away*, then *DEAD END* (flood fill smaller than the snake and no way to follow the tail), *keeps the most room*, *keeps almost as much room* (≥ 80%), or *leaves much less room (n of m cells)*. For CLM and GLiNER 340M, use the plain wording, which describes the eating move as "moves closer to the food; keeps the most room".
 
+## Without a model: a keyword scorer
+
+The judged options are code's facts written in a small, fixed vocabulary, so the words can be read back without a model. `KeywordEngine` (`snake/engine.py`) answers the same `{state, questions}` request: it adds up points for the phrases each option contains, then takes the top score (random tie-break) or samples from a softmax over the scores. The weights were written once and not tuned; matching ignores case.
+
+| Phrase in the option | Points |
+|---|--:|
+| `eats the food`, `moves closer to the food` | +3 |
+| `moves away from the food` | −1 |
+| `keeps the most room` / `keeps almost as much room` | +2 / +1 |
+| `leaves much less room (N of M cells)` | −2 − 2·(1 − N/M) |
+| `dead end` | −100 |
+
+| Controller | Food / game | Best | Died | Probe, hard states |
+|---|--:|--:|--:|--:|
+| **Keyword scorer, top score · Judged options** | 39.0 | 45 | 0 of 10 | 100% |
+| **Keyword scorer, top score · Judged, plain wording** | 38.3 | 42 | 2 of 10 | 100% |
+| Keyword scorer, sampled T=0.5 · Judged options | 39.1 | 44 | 1 of 10 | 100% |
+| Keyword scorer, sampled T=0.5 · Judged, plain wording | 35.3 | 42 | 2 of 10 | 100% |
+| Keyword scorer, sampled T=1 · Judged options | 37.0 | 42 | 1 of 10 | 96% |
+| Keyword scorer, sampled T=1 · Judged, plain wording | 33.7 | 44 | 5 of 10 | 99% |
+| *Decider 2B · Judged options (best model)* | 36.9 | 46 | 2 of 10 | 100% |
+| *code only: greedy + dead-end check* | 41.1 | 44 | 2 of 10 | – |
+
+On the other requests there is nothing to match, so it plays at random among the offered moves, which is no worse than most models there. Food per game, top score: facts in the options 1.3 (starved 10), relative, in words 0.2 (died 10), raw board 0.2 (died 10).
+
+### What this says
+
+a) **The models don't need to be smart here.** Choosing between "moves closer to the food; keeps the most room" and "moves away from the food; DEAD END" takes a few string lookups. The best billion-parameter models only match the table, and the smaller ones fall short of it for reasons that have nothing to do with Snake: the word "eats", or a heading in the state.
+
+b) **This is how the models worked anyway.** Every request that worked is one where code had already reduced the choice to reading back its own verdicts. Every request that asked for more (read a board, compare numbers across options, ignore a heading) failed. The failures look like text matching: CLM and GLiNER 340M avoid "eats" even when eating is right, and the small models follow `heading: up` towards going straight. The published demos that play well are built the same way: the geometry is done in code before the model is called.
+
+c) **If code has to describe the world, it can often decide too.** To write "moves closer to the food; keeps the most room", code already needs the distances, the flood fill and the dead-end test. The last step, from those facts to a move, is a few lines: exact, testable, and well under a millisecond. Greedy + dead-end check (41.1) is that step written directly. What a model adds is what the table ignores: the player's strategy text, and any wording nobody wrote a phrase for.
+
+> Snake is a small closed world with a handful of cases, and code writes every word of every option, so a phrase table covers them all. Where the description is open (free text from people, many interacting factors, options nobody listed in advance), a table would not keep up, and that is where a System One model could earn its place. This test doesn't cover such cases.
+
 ## Limits of this test
 
-We had no TypeSafe API key, so hosted Jev is represented only by nadeem4's published run (10 games, 10×10, relative phrasing, starvation after 60 steps without food). That setup differs from ours (12×12, 144 steps), so compare the 1.8 with our rows only loosely. Every model runs zero-shot, as released. The probe's "good move" only checks food distance and dead ends, not room, which is why it misses the 4B models' habit of chasing food into tight spaces. Some diagnostics were run on one model only: the instruction-rule and option-renaming tests (Decider 2B), the 80-state "eats" test (CLM) and the tight-space replay (the three models shown). Ten seeds per row give wide intervals, so read differences of a few food as noise, and most of the best games hit the 500-step cap.
+We had no TypeSafe API key, so hosted Jev is represented only by nadeem4's published run (10 games, 10×10, relative phrasing, starvation after 60 steps without food). That setup differs from ours (12×12, 144 steps), so compare the 1.8 with our rows only loosely. Every model runs zero-shot, as released. The probe's "good move" only checks food distance and dead ends, not room, which is why it misses the 4B models' habit of chasing food into tight spaces. Some diagnostics were run on one model only: the instruction-rule and option-renaming tests (Decider 2B), the 80-state "eats" test (CLM) and the tight-space replay (the three models shown). Ten seeds per row give wide intervals, so read differences of a few food as noise, and most of the best games hit the 500-step cap. The keyword scorer shows only that Snake's judged options can be read back by rules, not that the same holds for tasks whose descriptions aren't generated by code from a fixed vocabulary.
 
 ---
 
