@@ -2,6 +2,7 @@
 
   uv run python 10_snake_probe.py                          # Decider 2B
   uv run python 10_snake_probe.py --engine laya
+  uv run python 10_snake_probe.py --engine keyword          # phrase table, no model (snake.engine.KeywordEngine)
   ./run_kev.sh-style server on :8009, then: uv run python 10_snake_probe.py --engine http:http://127.0.0.1:8009,kev-4b
 
 Two sets of situations (snake/probe_states.py), each move labelled good or not by code:

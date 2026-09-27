@@ -147,6 +147,7 @@ Each model's best request (among those where the model decides every move), 10 g
 | GLiNER2.5-Decide-1B | Judged options | 15.3 | 25 | 4 of 10 | 82 ms | 72% |
 | Laya | Facts in the options | 0.5 | 2 | 0 of 10 | 100 ms | 18% |
 | *code only: greedy + dead-end check* | – | *41.1* | *44* | *2 of 10* | – | – |
+| *no model: keyword scorer* | *Judged options* | *39.0* | *45* | *0 of 10* | *<1 ms* | *100%* |
 
 * **The simple way fails, for Jev too.** Given the raw board, or nadeem4's or sorrycc's published phrasing, the models
   drive into walls or circle until they starve. Jev's only published result is 1.8 food per game against 17.3 for
@@ -159,6 +160,10 @@ Each model's best request (among those where the model decides every move), 10 g
 * **Better single moves don't mean longer games.** Decider 4B v2 and Kev 4B are as accurate as Decider 2B on single
   moves but chase the food into tight spaces and die in 9–10 games of 10.
 * **Speed varies 60-fold**, from CLM's ~4 ms per move (everything cached) to Decider 4B v2's ~260 ms.
+* **A phrase table matches the models.** Once each option carries a verdict, adding up points for seven phrases
+  ("moves closer to the food" +3, "DEAD END" −100, ...) picks as well as the best model and eats more per game
+  (39.0), in under a millisecond. What a model adds in Snake is reading the player's strategy text
+  ([§5.7](docs/5-snake.md)).
 
 ## Test 3: Finnish
 
@@ -266,7 +271,7 @@ uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat --prompt simple --n
 | 10 | `uv run python 10_snake_probe.py` | Single moves with a known right answer: which phrasing a model can actually use |
 
 All three take `--engine` (`decider`, `decider:models/decider-4b-v2`, `laya`, or `http:<url>,<model>` for Kev, CLM and
-GLiNER behind their servers); [docs/5-snake.md §5.7](docs/5-snake.md) has the server commands.
+GLiNER behind their servers); [docs/5-snake.md §5.8](docs/5-snake.md) has the server commands.
 
 **Test 3, Finnish**
 

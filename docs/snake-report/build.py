@@ -57,7 +57,8 @@ def load():
     probe = {m: json.load(open(R / f"probe-{m}.json"))["results"] for m, _, _ in MODELS if (R / f"probe-{m}.json").exists()}
     files = sorted((R / "games").glob("*.json"))
     if files:
-        games = [json.load(open(p)) for p in files]
+        games = [d for d in map(json.load, map(open, files))     # models and code baselines; the keyword scorer is in 5-snake.md
+                 if d["summary"]["engine"] in LABEL or d["summary"]["engine"] == "code"]
         data = {"config": games[0]["config"], "rows": [aggregate(d) for d in games]}
         for c in ("only", "engine"):
             data["config"].pop(c, None)

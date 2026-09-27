@@ -118,17 +118,82 @@ class HTTPEngine:
         return ["(served over HTTP: the model's internal prompt layout is not visible here)"]
 
 
+class KeywordEngine:
+    """No model: scores each option's text by the phrases it contains and answers the same Jev request.
+
+    The judged options are code's facts written as words, so a phrase table reads them back. It can't read a
+    board or compare numbers, and it ignores the player's strategy text. Matching is case-insensitive, so
+    sorrycc's "EATS THE FOOD" and "DEAD END" also count. Score and noul questions (composed) get neutral answers.
+    sample=False: top score (random tie-break); True: sample from softmax(score / temperature)."""
+    WEIGHTS = {
+        "eats the food": 3.0,
+        "moves closer to the food": 3.0,
+        "moves away from the food": -1.0,
+        "keeps the most room": 2.0,
+        "keeps almost as much room": 1.0,
+        "leaves much less room": -2.0,
+        "dead end": -100.0,
+    }
+    LESS_ROOM = r"\((\d+) of (\d+) cells\)"
+
+    def __init__(self, sample=False, temperature=1.0, seed=0):
+        import random
+        self.name = f"keyword scorer ({f'sampled, T={temperature}' if sample else 'top score'})"
+        self.sample, self.temperature, self.rng = sample, temperature, random.Random(seed)
+
+    def score(self, text):
+        import re
+        t = text.lower()
+        s = sum(w for phrase, w in self.WEIGHTS.items() if phrase in t)
+        if m := re.search(self.LESS_ROOM, t):                       # the less room, the bigger the penalty
+            n, best = map(int, m.groups())
+            s -= 2.0 * (1 - n / best)
+        return s
+
+    def choose(self, criteria):
+        import math
+        scores = {o: self.score(text) for o, text in criteria.items()}
+        top = max(scores.values())
+        exp = {o: math.exp((s - top) / self.temperature) for o, s in scores.items()}
+        probs = {o: e / sum(exp.values()) for o, e in exp.items()}
+        if self.sample:
+            choice = self.rng.choices(list(probs), weights=list(probs.values()))[0]
+        else:
+            choice = self.rng.choice([o for o, s in scores.items() if s == top])
+        return {"choice": choice, "probabilities": probs, "confidence": probs[choice], "scores": scores}
+
+    def ask(self, request, independent=True):
+        t0 = time.perf_counter()
+        out = {}
+        for k, q in request["questions"].items():
+            if q["type"] == "choice":
+                out[k] = self.choose(q["criteria"])
+            elif q["type"] == "score":
+                out[k] = {"score": 0.0}
+            elif q["type"] == "noul":
+                out[k] = {"noul": 0.0}
+        return out, (time.perf_counter() - t0) * 1000, 0
+
+    def rows(self, request, independent=True):
+        return [f"{o}: {self.score(t):+.2f}  {t}" for q in request["questions"].values() if q["type"] == "choice"
+                for o, t in q["criteria"].items()]
+
+
 def engine_tag(spec):
     """Short name for result files: 'decider', 'decider-4b-v2', 'kev-4b', 'clm-latest', 'gliner-decide', ..."""
     if spec.startswith("http:"):
         return spec.split(",")[-1]
     if spec.startswith("decider:"):
         return spec.rstrip("/").split("/")[-1]
-    return spec
+    return spec.replace(":", "-")
 
 
 def make_engine(spec):
-    """'decider' | 'decider:<model dir>' | 'laya' | 'http:<url>[,<model>]'"""
+    """'decider' | 'decider:<model dir>' | 'laya' | 'http:<url>[,<model>]' | 'keyword' | 'keyword-sample[:<T>]'"""
+    if spec == "keyword":
+        return KeywordEngine()
+    if spec.startswith("keyword-sample"):
+        return KeywordEngine(sample=True, temperature=float(spec.partition(":")[2] or 1.0))
     if spec == "decider":
         return DeciderEngine()
     if spec.startswith("decider:"):

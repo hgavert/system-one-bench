@@ -3,6 +3,7 @@
   uv run python 09_snake_benchmark.py                       # 4 formulations + 3 baselines, 10 seeds, 12x12
   uv run python 09_snake_benchmark.py --only facts --seeds 3
   uv run python 09_snake_benchmark.py --engine http:http://127.0.0.1:8009,kev-4b --only grid judged
+  uv run python 09_snake_benchmark.py --engine keyword --only judged judged-plain   # phrase table, no model
 
 A game ends on death, a full board, `--max-steps`, or `size*size` steps without food (starved).
 Writes results/snake/games/<engine>-<name>.json (every decision, requests excluded) and results/snake/SUMMARY.md.
@@ -86,7 +87,9 @@ if __name__ == "__main__":
     rows = [json.load(open(p))["summary"] for p in sorted(OUT.glob("*.json"))]
     order = {n: i for i, n in enumerate([*FORMULATIONS, *BASELINES])}
     MODEL = {"decider": "Decider 2B", "decider-4b-v2": "Decider 4B", "kev-4b": "Kev 4B", "clm-latest": "CLM 8B",
-             "gliner-decide": "GLiNER2.5-Decide", "gliner-decide-1b": "GLiNER2.5-Decide-1B", "laya": "Laya"}
+             "gliner-decide": "GLiNER2.5-Decide", "gliner-decide-1b": "GLiNER2.5-Decide-1B", "laya": "Laya",
+             "keyword": "Keyword scorer (no model)", "keyword-sample-0.5": "Keyword scorer, sampled T=0.5",
+             "keyword-sample": "Keyword scorer, sampled T=1"}
     rank = {m: i for i, m in enumerate(MODEL)} | {"code": 99}
     rows.sort(key=lambda r: (rank.get(r["engine"], 50), order.get(r["name"], 99)))
     lines = ["| Controller | Food eaten (mean / best) | Steps | Died | Starved | Model calls | Code-only ticks | Latency p50 / mean | Tokens/call |",

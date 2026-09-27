@@ -1,0 +1,101 @@
+{
+ "engine": "keyword scorer (sampled, T=1.0)",
+ "results": {
+  "grid": {
+   "all": {
+    "n": 150,
+    "good": 0.467,
+    "mass": 0.462,
+    "straight": 0.327,
+    "p50_ms": 0.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.4,
+    "mass": 0.333,
+    "straight": 0.27,
+    "p50_ms": 0.0
+   }
+  },
+  "relative": {
+   "all": {
+    "n": 150,
+    "good": 0.487,
+    "mass": 0.462,
+    "straight": 0.34,
+    "p50_ms": 0.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.39,
+    "mass": 0.333,
+    "straight": 0.33,
+    "p50_ms": 0.0
+   }
+  },
+  "facts": {
+   "all": {
+    "n": 150,
+    "good": 0.593,
+    "mass": 0.56,
+    "straight": 0.333,
+    "p50_ms": 0.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.43,
+    "mass": 0.436,
+    "straight": 0.35,
+    "p50_ms": 0.0
+   }
+  },
+  "judged+state": {
+   "all": {
+    "n": 150,
+    "good": 0.973,
+    "mass": 0.971,
+    "straight": 0.367,
+    "p50_ms": 0.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.94,
+    "mass": 0.963,
+    "straight": 0.03,
+    "p50_ms": 0.0
+   }
+  },
+  "judged": {
+   "all": {
+    "n": 150,
+    "good": 0.967,
+    "mass": 0.971,
+    "straight": 0.413,
+    "p50_ms": 0.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.96,
+    "mass": 0.963,
+    "straight": 0.02,
+    "p50_ms": 0.0
+   }
+  },
+  "judged-plain": {
+   "all": {
+    "n": 150,
+    "good": 0.96,
+    "mass": 0.974,
+    "straight": 0.393,
+    "p50_ms": 0.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.99,
+    "mass": 0.969,
+    "straight": 0.01,
+    "p50_ms": 0.0
+   }
+  }
+ }
+}

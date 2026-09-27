@@ -39,6 +39,24 @@
 | GLiNER2.5-Decide-1B · Composed questions | 3.8 / 8 | 235 | 0% | 10 | 2242 | 106 | 196 / 196 ms | – |
 | Laya · Facts in the options | 0.5 / 2 | 155 | 0% | 10 | 1442 | 111 | 100 / 100 ms | 336 |
 | Laya · Judged options | 0.0 / 0 | 144 | 0% | 10 | 1305 | 135 | 38 / 39 ms | 99 |
+| Keyword scorer (no model) · Raw board | 0.2 / 1 | 28 | 100% | 0 | 275 | 0 | 0 / 0 ms | – |
+| Keyword scorer (no model) · Relative, in words | 0.2 / 1 | 23 | 100% | 0 | 232 | 0 | 0 / 0 ms | – |
+| Keyword scorer (no model) · Facts in the options | 1.3 / 4 | 207 | 0% | 10 | 2012 | 59 | 0 / 0 ms | – |
+| Keyword scorer (no model) · Judged options | 39.0 / 45 | 499 | 0% | 1 | 4533 | 458 | 0 / 0 ms | – |
+| Keyword scorer (no model) · Judged, plain wording | 38.3 / 42 | 477 | 20% | 0 | 4329 | 443 | 0 / 0 ms | – |
+| Keyword scorer (no model) · Composed questions | 37.4 / 44 | 484 | 20% | 0 | 4533 | 310 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=0.5 · Raw board | 0.0 / 0 | 31 | 100% | 0 | 311 | 0 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=0.5 · Relative, in words | 0.3 / 1 | 40 | 100% | 0 | 401 | 0 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=0.5 · Facts in the options | 1.7 / 5 | 236 | 0% | 9 | 2315 | 47 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=0.5 · Judged options | 39.1 / 44 | 499 | 10% | 0 | 4499 | 493 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=0.5 · Judged, plain wording | 35.3 / 42 | 456 | 20% | 0 | 4131 | 425 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=0.5 · Composed questions | 37.6 / 44 | 484 | 20% | 0 | 4530 | 313 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=1 · Raw board | 0.0 / 0 | 31 | 100% | 0 | 311 | 0 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=1 · Relative, in words | 0.3 / 1 | 40 | 100% | 0 | 401 | 0 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=1 · Facts in the options | 2.5 / 7 | 265 | 0% | 9 | 2556 | 91 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=1 · Judged options | 37.0 / 42 | 496 | 10% | 0 | 4474 | 489 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=1 · Judged, plain wording | 33.7 / 44 | 407 | 50% | 0 | 3738 | 335 | 0 / 0 ms | – |
+| Keyword scorer, sampled T=1 · Composed questions | 39.5 / 44 | 484 | 20% | 0 | 4520 | 323 | 0 / 0 ms | – |
 | *random (code only)* | 0.5 / 2 | 175 | 0% | 10 | 0 | 0 | – | – |
 | *greedy (code only)* | 21.0 / 32 | 213 | 100% | 0 | 0 | 0 | – | – |
 | *greedy-safe (code only)* | 41.1 / 44 | 484 | 20% | 0 | 0 | 0 | – | – |
