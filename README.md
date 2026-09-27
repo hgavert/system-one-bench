@@ -16,10 +16,10 @@ repo takes the best-ranked ones that run on a 32 GB Apple M5, plus the strongest
 | **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways | the same `choice` questions on 4 datasets × 300 items, in English and in Finnish |
 | **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) | Qwen 3.8 27B (vLLM, another machine) |
 | **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster | asked to read the board, the models fail (so does Jev); with one verdict per option, Decider 2B eats 36.9 food per game, close to code's 41.1 | Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish and are near the 27B LLM; Decider 2B loses ~7; CLM collapses |
-| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [results/finnish/REPORT.md](results/finnish/REPORT.md) |
+| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [docs/finnish-report.md](docs/finnish-report.md) · [interactive](docs/finnish-report/index.html) |
 
-Both reports are generated from `results/`: `uv run python docs/page/build.py` and
-`uv run python docs/snake-report/build.py`.
+The reports are generated from `results/`: `uv run python docs/page/build.py`,
+`uv run python docs/snake-report/build.py` and `uv run python docs/finnish-report/build.py`.
 
 ## The models
 
@@ -165,8 +165,9 @@ Each model's best request (among those where the model decides every move), 10 g
 Can these models be used on Finnish text? Four datasets, 300 seeded items each: three **parallel** ones, where the same
 items exist in English and in human-translated Finnish, so English vs Finnish on identical items isolates the
 language from the task, and one **native** Finnish set. Every item is asked in three conditions: English text and
-question; Finnish text with the English question; everything in Finnish. Report:
-[results/finnish/REPORT.md](results/finnish/REPORT.md) (macro-F1, calibration, per-condition tables).
+question; Finnish text with the English question; everything in Finnish. Report: [docs/finnish-report.md](docs/finnish-report.md) ·
+[interactive](docs/finnish-report/index.html); every number per dataset and condition:
+[results/finnish/REPORT.md](results/finnish/REPORT.md).
 
 | Dataset | What | Options |
 |---|---|---|
@@ -274,6 +275,7 @@ GLiNER behind their servers); [docs/5-snake.md §5.7](docs/5-snake.md) has the s
 | 12a | `uv run python adapters/export_finnish.py` | The four datasets, 300 seeded items each, English and Finnish paired by id (`data/finnish/`) |
 | 12 | `uv run python 12_finnish_benchmark.py --engine decider` | Every item under the three conditions; same `--engine` specs as Snake, or `llm` for the `.env` server |
 | 13 | `uv run python 13_finnish_report.py` | All runs in one report: `results/finnish/REPORT.md` |
+| 13b | `uv run python docs/finnish-report/build.py` | The written report: `docs/finnish-report.md` and its interactive page |
 
 The questions in both languages are in `finnish_questions.py`; GLiNER2.5-multi-Decide runs behind
 `adapters/gliner_systemone_server.py --model fastino/GLiNER2.5-multi-Decide`.
@@ -331,6 +333,7 @@ Finnish
   llm_choice.py             any choice question through an OpenAI-compatible LLM (endpoint from .env)
   12_finnish_benchmark.py   step 12: one engine over every item and condition -> results/finnish/runs/<name>.jsonl
   13_finnish_report.py      step 13: all runs -> results/finnish/REPORT.md, summary.json
+  docs/finnish-report/      report page (template + build.py -> index.html; build_md.py -> docs/finnish-report.md)
 ```
 
 ## Data and license

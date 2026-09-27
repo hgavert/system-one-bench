@@ -1,0 +1,171 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TITLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Silkscreen&display=swap">
+<style>
+:root {
+  --ground: #eef0e6; --surface: #f9faf4; --ink: #1c2419; --muted: #5d6857; --line: #d6dbcb;
+  --accent: #2d6a3e; --accent-soft: #d3e3cf; --code: #3450a1; --code-soft: #dbe1f3; --warn: #a8472a; --warn-soft: #f2dcd3; --clm: #a8761b; --d4: #174a26; --gl: #8a3f8c;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --pixel: "Silkscreen", "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #12160f; --surface: #1a2016; --ink: #e2e8da; --muted: #9aa590; --line: #2f3829;
+    --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #12160f; --surface: #1a2016; --ink: #e2e8da; --muted: #9aa590; --line: #2f3829;
+  --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8;
+}
+body { background: var(--ground); color: var(--ink); font: 16px/1.6 var(--sans); padding-inline: 20px; padding-block: 40px 80px; }
+main { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+h1 { font: 400 clamp(30px, 6vw, 46px)/1.1 var(--pixel); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+h2 { font-size: 22px; line-height: 1.25; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { font-size: 16px; margin: 6px 0 0; font-weight: 600; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 18px; color: var(--ink); }
+.muted { color: var(--muted); }
+a { color: var(--accent); text-underline-offset: 2px; }
+code { font: 0.88em var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+pre { margin: 0; font: 12.5px/1.55 var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; white-space: pre; }
+pre .hl { background: var(--accent-soft); }
+.findings { display: grid; gap: 12px; padding: 0; margin: 0; list-style: none; }
+.findings li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+.findings .n { font: 400 20px var(--pixel); color: var(--accent); }
+/* tables */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px var(--mono); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.win td { background: var(--accent-soft); }
+tr.base td { color: var(--muted); font-style: italic; }
+tr.bad td { background: var(--warn-soft); }
+.pill { display: inline-block; font: 500 11px var(--mono); padding: 1px 7px; border-radius: 99px; white-space: nowrap; }
+.pill.model { background: var(--accent-soft); color: var(--accent); }
+.pill.code { background: var(--code-soft); color: var(--code); }
+.pill.bad { background: var(--warn-soft); color: var(--warn); }
+/* probe chart */
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 16px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+.grp { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 6px 14px; align-items: center; }
+.grp .name { font-size: 13px; line-height: 1.3; }
+.bars { display: grid; gap: 3px; position: relative; }
+.bar { display: grid; grid-template-columns: 1fr 40px; gap: 8px; align-items: center; }
+.track { height: 12px; background: color-mix(in srgb, var(--line) 55%, transparent); border-radius: 2px; position: relative; }
+.fill { height: 100%; border-radius: 2px; background: var(--c); }
+.chance { position: absolute; top: -3px; bottom: -3px; border-left: 1px dashed var(--muted); }
+.en { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; border-radius: 1px; background: var(--ink); }
+.legend .tick::before { background: var(--ink); width: 3px; height: 14px; vertical-align: -3px; }
+.legend .dash::before { background: none; border-left: 1px dashed var(--muted); width: 0; height: 14px; vertical-align: -3px; }
+.val { font: 12px var(--mono); font-variant-numeric: tabular-nums; text-align: right; color: var(--muted); }
+.axis { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 14px; font: 11px var(--mono); color: var(--muted); }
+.axis div:last-child { display: flex; justify-content: space-between; padding-right: 48px; }
+@media (max-width: 680px) { .grp, .axis { grid-template-columns: 1fr; } .axis div:first-child { display: none; } }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.note { border-left: 3px solid var(--line); padding-left: 14px; color: var(--muted); font-size: 14px; }
+footer { font-size: 13px; color: var(--muted); }
+</style>
+
+<main>
+<header style="display:flex;flex-direction:column;gap:14px">
+  <div class="eyebrow">EYEBROW</div>
+  <h1>TITLE</h1>
+  <p class="lede">LEDE</p>
+</header>
+
+<section>
+  <h2>What we found</h2>
+  <ul class="findings">
+FINDINGS
+  </ul>
+</section>
+
+<section>
+  <h2>Results at a glance</h2>
+  <p>Everything in Finnish, accuracy on 300 items per dataset; the last column is the mean change from English to Finnish
+  on the same SIB, Belebele and MASSIVE items, in points. Green: the three models that keep their English level.</p>
+HEADLINE_TABLE
+  <p class="muted" style="font-size:14px">Decider was trained on MASSIVE's training split, so that column isn't zero-shot
+  for Decider (see <a href="#training">training data</a>). Chance: 0.14 / 0.25 / 0.10 / 0.50.</p>
+</section>
+
+<section>
+  <h2>First filter: option order</h2>
+  <p>WHY_TEXT</p>
+BIAS_TABLE
+  <p class="note">WHY_NOTE</p>
+</section>
+
+<section>
+  <h2>The test</h2>
+  <p>DATA_TEXT</p>
+DATA_TABLE
+  <p>COND_TEXT</p>
+COND_TABLE
+  <p>Every engine gets the same Jev request. A SIB-200 item in the all-Finnish condition:</p>
+<pre>EXAMPLE</pre>
+  <p class="muted" style="font-size:14px">Belebele sends the passage as the state, its question inside the instructions, and
+  the four answers as options A–D. The reference LLM gets the same instructions and options in its system prompt, the text
+  as the user message, and must answer with one option name (JSON-schema enum, thinking off).</p>
+</section>
+
+<section>
+  <h2>Finnish, dataset by dataset</h2>
+  <p>RESULT_TEXT</p>
+CHART
+</section>
+
+<section>
+  <h2>How much Finnish costs</h2>
+  <p>DELTA_TEXT</p>
+DELTA_TABLE
+</section>
+
+<section>
+  <h2>Does the question have to be in Finnish?</h2>
+  <p>LANG_TEXT</p>
+LANG_TABLE
+</section>
+
+<section>
+  <h2>Calibration in Finnish</h2>
+  <p>CAL_TEXT</p>
+CAL_TABLE
+</section>
+
+<section>
+  <h2>Option order in Finnish</h2>
+  <p>ORDER_TEXT</p>
+ORDER_TABLE
+</section>
+
+<section id="training">
+  <h2>Training data</h2>
+TRAINING
+</section>
+
+<section>
+  <h2>All conditions</h2>
+  <p>Accuracy per dataset and condition: <b>en</b> = English text and question; <b>fi-en</b> = Finnish text, English
+  question; <b>fi</b> = everything in Finnish. Macro-F1 per cell: <code>results/finnish/REPORT.md</code>.</p>
+FULL_TABLE
+</section>
+
+<section>
+  <h2>Limits of this test</h2>
+  <p>LIMITS</p>
+</section>
+
+<footer>FOOTER</footer>
+</main>
