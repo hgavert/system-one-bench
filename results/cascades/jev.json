@@ -1,0 +1,48 @@
+{
+ "fast": "jev",
+ "slow": "llm-google_gemma-4-26b-a4b-qat",
+ "rows": [
+  {
+   "threshold": 0.0,
+   "accuracy": 0.7366666666666667,
+   "llm_share": 0.0,
+   "avg_ms": 275.2430000000002
+  },
+  {
+   "threshold": 0.5,
+   "accuracy": 0.7433333333333333,
+   "llm_share": 0.023333333333333334,
+   "avg_ms": 291.75433333333365
+  },
+  {
+   "threshold": 0.6,
+   "accuracy": 0.7466666666666667,
+   "llm_share": 0.12,
+   "avg_ms": 354.5983333333336
+  },
+  {
+   "threshold": 0.7,
+   "accuracy": 0.7366666666666667,
+   "llm_share": 0.2,
+   "avg_ms": 410.47666666666714
+  },
+  {
+   "threshold": 0.8,
+   "accuracy": 0.7333333333333333,
+   "llm_share": 0.29333333333333333,
+   "avg_ms": 472.26533333333356
+  },
+  {
+   "threshold": 0.9,
+   "accuracy": 0.7266666666666667,
+   "llm_share": 0.39,
+   "avg_ms": 533.8376666666666
+  },
+  {
+   "threshold": 1.01,
+   "accuracy": 0.74,
+   "llm_share": 1.0,
+   "avg_ms": 668.5273333333333
+  }
+ ]
+}

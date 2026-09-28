@@ -240,6 +240,66 @@
   ]
  },
  {
+  "name": "jev",
+  "system": "jev",
+  "n": 300,
+  "accuracy": 0.7366666666666667,
+  "macro_f1": 0.7233497515705377,
+  "latency_ms_p50": 260.1256249981816,
+  "latency_ms_p95": 354.9907909909962,
+  "throughput_msgs_per_s": 3.632962475257209,
+  "ece": 0.15380000000000005,
+  "confusion_matrix": [
+   [
+    93,
+    5,
+    2
+   ],
+   [
+    34,
+    47,
+    19
+   ],
+   [
+    4,
+    15,
+    81
+   ]
+  ],
+  "selective_accuracy": [
+   {
+    "threshold": 0.0,
+    "coverage": 1.0,
+    "accuracy": 0.7366666666666667
+   },
+   {
+    "threshold": 0.5,
+    "coverage": 0.9766666666666667,
+    "accuracy": 0.7406143344709898
+   },
+   {
+    "threshold": 0.6,
+    "coverage": 0.88,
+    "accuracy": 0.7651515151515151
+   },
+   {
+    "threshold": 0.7,
+    "coverage": 0.8,
+    "accuracy": 0.7791666666666667
+   },
+   {
+    "threshold": 0.8,
+    "coverage": 0.7066666666666667,
+    "accuracy": 0.8113207547169812
+   },
+   {
+    "threshold": 0.9,
+    "coverage": 0.61,
+    "accuracy": 0.819672131147541
+   }
+  ]
+ },
+ {
   "name": "semif-9b",
   "system": "import:results/raw/semif-9b.jsonl",
   "n": 300,
