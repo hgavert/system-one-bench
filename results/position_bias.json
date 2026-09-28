@@ -161,6 +161,33 @@
   "tweets_whose_answer_flips": 0.11666666666666667,
   "mean_max_probability_swing": 0.07211569646114722
  },
+ "jev": {
+  "accuracy_per_order": {
+   "negative / neutral / positive": 0.7333333333333333,
+   "negative / positive / neutral": 0.74,
+   "neutral / negative / positive": 0.7366666666666667,
+   "neutral / positive / negative": 0.7266666666666667,
+   "positive / negative / neutral": 0.7333333333333333,
+   "positive / neutral / negative": 0.74
+  },
+  "accuracy_min_max": [
+   0.7266666666666667,
+   0.74
+  ],
+  "accuracy_by_correct_position": {
+   "1": 0.73,
+   "2": 0.7466666666666667,
+   "3": 0.7283333333333334
+  },
+  "pick_share_by_position": {
+   "1": 0.32722222222222225,
+   "2": 0.3433333333333333,
+   "3": 0.32944444444444443
+  },
+  "pick_chi2_p": 0.6625450876106881,
+  "tweets_whose_answer_flips": 0.05,
+  "mean_max_probability_swing": 0.04833333333333334
+ },
  "kev-0.8b": {
   "accuracy_per_order": {
    "negative / neutral / positive": 0.55,
