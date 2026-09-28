@@ -8,6 +8,7 @@ Conditions: **en** = EN text, EN question; **fi-en** = FI text, EN question; **f
 
 | Model | SIB-200 topic en | SIB-200 topic fi-en | SIB-200 topic fi | Belebele reading en | Belebele reading fi-en | Belebele reading fi | MASSIVE intent en | MASSIVE intent fi-en | MASSIVE intent fi | ScandiSent-fi fi-en | ScandiSent-fi fi |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| Jev (hosted, jev-1.13.0) | 0.873 | 0.887 | 0.873 | 0.967 | 0.947 | 0.950 | 0.977 | 0.940 | 0.953 | 0.950 | 0.947 |
 | Decider 4B v2 | 0.827 | 0.837 | 0.833 | 0.950 | 0.913 | 0.903 | 0.987 | 0.947 | 0.963 | 0.917 | 0.913 |
 | Decider 2B | 0.837 | 0.817 | 0.803 | 0.890 | 0.790 | 0.800 | 0.977 | 0.873 | 0.893 | 0.907 | 0.903 |
 | Kev 9B | 0.847 | 0.843 | 0.863 | 0.830 | 0.820 | 0.803 | 0.953 | 0.933 | 0.913 | 0.953 | 0.947 |
@@ -27,6 +28,9 @@ Accuracy change from the English condition, paired by item, with a bootstrap 95%
 
 | Model | Dataset | FI text, EN question | FI text, FI question |
 |---|---|--:|--:|
+| Jev (hosted, jev-1.13.0) | SIB-200 topic (7) | +0.013 [-0.010, +0.037] | +0.000 [-0.027, +0.027] |
+| Jev (hosted, jev-1.13.0) | Belebele reading (4) | -0.020 [-0.040, +0.000] | -0.017 [-0.037, +0.003] |
+| Jev (hosted, jev-1.13.0) | MASSIVE intent (10) | -0.037 [-0.060, -0.013] | -0.023 [-0.050, +0.003] |
 | Decider 4B v2 | SIB-200 topic (7) | +0.010 [-0.023, +0.043] | +0.007 [-0.030, +0.043] |
 | Decider 4B v2 | Belebele reading (4) | -0.037 [-0.063, -0.013] | -0.047 [-0.073, -0.020] |
 | Decider 4B v2 | MASSIVE intent (10) | -0.040 [-0.067, -0.017] | -0.023 [-0.043, -0.003] |
@@ -58,6 +62,17 @@ ECE is not meaningful for the LLM (one label, all probability on it).
 
 | Model | Dataset | Condition | Accuracy | Macro-F1 | ECE |
 |---|---|---|--:|--:|--:|
+| Jev (hosted, jev-1.13.0) | SIB-200 topic (7) | en | 0.873 | 0.866 | 0.075 |
+| Jev (hosted, jev-1.13.0) | SIB-200 topic (7) | fi-en | 0.887 | 0.887 | 0.070 |
+| Jev (hosted, jev-1.13.0) | SIB-200 topic (7) | fi | 0.873 | 0.876 | 0.069 |
+| Jev (hosted, jev-1.13.0) | Belebele reading (4) | en | 0.967 | 0.966 | 0.020 |
+| Jev (hosted, jev-1.13.0) | Belebele reading (4) | fi-en | 0.947 | 0.947 | 0.030 |
+| Jev (hosted, jev-1.13.0) | Belebele reading (4) | fi | 0.950 | 0.950 | 0.035 |
+| Jev (hosted, jev-1.13.0) | MASSIVE intent (10) | en | 0.977 | 0.976 | 0.017 |
+| Jev (hosted, jev-1.13.0) | MASSIVE intent (10) | fi-en | 0.940 | 0.940 | 0.026 |
+| Jev (hosted, jev-1.13.0) | MASSIVE intent (10) | fi | 0.953 | 0.954 | 0.014 |
+| Jev (hosted, jev-1.13.0) | ScandiSent-fi (2) | fi-en | 0.950 | 0.950 | 0.033 |
+| Jev (hosted, jev-1.13.0) | ScandiSent-fi (2) | fi | 0.947 | 0.947 | 0.032 |
 | Decider 4B v2 | SIB-200 topic (7) | en | 0.827 | 0.815 | 0.064 |
 | Decider 4B v2 | SIB-200 topic (7) | fi-en | 0.837 | 0.822 | 0.087 |
 | Decider 4B v2 | SIB-200 topic (7) | fi | 0.833 | 0.819 | 0.079 |
@@ -153,6 +168,9 @@ Accuracy by where the correct answer is listed. An order-blind model is level ac
 
 | Model | Condition | A | B | C | D |
 |---|---|--:|--:|--:|--:|
+| Jev (hosted, jev-1.13.0) | en | 0.93 | 0.97 | 0.98 | 0.99 |
+| Jev (hosted, jev-1.13.0) | fi-en | 0.93 | 0.94 | 0.96 | 0.96 |
+| Jev (hosted, jev-1.13.0) | fi | 0.93 | 0.94 | 0.96 | 0.97 |
 | Decider 4B v2 | en | 0.93 | 0.95 | 0.94 | 0.99 |
 | Decider 4B v2 | fi-en | 0.88 | 0.90 | 0.93 | 0.94 |
 | Decider 4B v2 | fi | 0.88 | 0.87 | 0.91 | 0.94 |
