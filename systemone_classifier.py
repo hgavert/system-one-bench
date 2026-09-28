@@ -7,6 +7,7 @@ import time
 
 import httpx
 
+from jev_client import post_systemone
 from laya_classifier import SENTIMENT_QUESTION, Prediction
 
 
@@ -19,11 +20,10 @@ class SystemOneSentiment:
 
     def classify(self, text: str) -> Prediction:
         t0 = time.perf_counter()
-        r = self.http.post("/v1/systemone", json={
+        out = post_systemone(self.http, {
             "model": self.model,
             "state": text,
             "questions": {"sentiment": SENTIMENT_QUESTION},
         })
-        r.raise_for_status()
-        ans = r.json()["answers"]["sentiment"]
+        ans = out["answers"]["sentiment"]
         return Prediction(ans["choice"], ans["probabilities"], time.perf_counter() - t0)

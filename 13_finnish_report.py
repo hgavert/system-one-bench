@@ -15,7 +15,7 @@ DATASETS = {"sib": "SIB-200 topic (7)", "belebele": "Belebele reading (4)", "mas
             "scandisent": "ScandiSent-fi (2)"}
 CONDS = ["en", "fi-en", "fi"]
 COND_NAME = {"en": "EN text, EN question", "fi-en": "FI text, EN question", "fi": "FI text, FI question"}
-NAMES = {"decider-4b-v2": "Decider 4B v2", "decider": "Decider 2B", "kev-9b": "Kev 9B", "kev-4b": "Kev 4B",
+NAMES = {"jev": "Jev (hosted, jev-1.13.0)", "decider-4b-v2": "Decider 4B v2", "decider": "Decider 2B", "kev-9b": "Kev 9B", "kev-4b": "Kev 4B",
          "kev-0.8b": "Kev 0.8B", "gliner-multi-decide": "GLiNER2.5-multi-Decide", "gliner-decide": "GLiNER2.5-Decide (340M)",
          "gliner-decide-1b": "GLiNER2.5-Decide-1B", "laya": "Laya", "clm-8b": "CLM 8B",
          "llm-qwen3.8-27b": "LLM Qwen 3.8 27B (Leviathan)"}

@@ -1,0 +1,101 @@
+{
+ "engine": "Jev (jev-latest, hosted)",
+ "results": {
+  "grid": {
+   "all": {
+    "n": 150,
+    "good": 0.967,
+    "mass": 0.884,
+    "straight": 0.493,
+    "p50_ms": 277.4
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.97,
+    "mass": 0.759,
+    "straight": 0.02,
+    "p50_ms": 276.3
+   }
+  },
+  "relative": {
+   "all": {
+    "n": 150,
+    "good": 0.64,
+    "mass": 0.632,
+    "straight": 0.32,
+    "p50_ms": 274.6
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.69,
+    "mass": 0.572,
+    "straight": 0.17,
+    "p50_ms": 273.4
+   }
+  },
+  "facts": {
+   "all": {
+    "n": 150,
+    "good": 1.0,
+    "mass": 0.881,
+    "straight": 0.513,
+    "p50_ms": 270.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.96,
+    "mass": 0.755,
+    "straight": 0.04,
+    "p50_ms": 278.1
+   }
+  },
+  "judged+state": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.935,
+    "straight": 0.353,
+    "p50_ms": 288.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.885,
+    "straight": 0.0,
+    "p50_ms": 285.8
+   }
+  },
+  "judged": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.954,
+    "straight": 0.373,
+    "p50_ms": 292.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.965,
+    "straight": 0.0,
+    "p50_ms": 291.0
+   }
+  },
+  "judged-plain": {
+   "all": {
+    "n": 150,
+    "good": 0.993,
+    "mass": 0.955,
+    "straight": 0.367,
+    "p50_ms": 291.6
+   },
+   "hard": {
+    "n": 100,
+    "good": 1.0,
+    "mass": 0.966,
+    "straight": 0.0,
+    "p50_ms": 263.2
+   }
+  }
+ }
+}

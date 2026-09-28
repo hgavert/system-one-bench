@@ -108,14 +108,21 @@ class HTTPEngine:
         self.model = model
 
     def ask(self, request, independent=True):
+        from jev_client import post_systemone
         t0 = time.perf_counter()
-        r = self.http.post("/v1/systemone", json={"model": self.model, **request})
-        r.raise_for_status()
-        out = r.json()
+        out = post_systemone(self.http, {"model": self.model, **request})
         return out["answers"], (time.perf_counter() - t0) * 1000, out.get("usage", {}).get("input_tokens", 0)
 
     def rows(self, request, independent=True):
         return ["(served over HTTP: the model's internal prompt layout is not visible here)"]
+
+
+def jev_engine(model=None):
+    """Hosted Jev (TypeSafe AI), key from JEV_API_KEY. Latency includes the network round trip."""
+    from jev_client import JEV_MODEL, JEV_URL, jev_key
+    e = HTTPEngine(JEV_URL, model or JEV_MODEL, api_key=jev_key())
+    e.name = f"Jev ({e.model}, hosted)"
+    return e
 
 
 class KeywordEngine:
@@ -183,13 +190,18 @@ def engine_tag(spec):
     """Short name for result files: 'decider', 'decider-4b-v2', 'kev-4b', 'clm-latest', 'gliner-decide', ..."""
     if spec.startswith("http:"):
         return spec.split(",")[-1]
+    if spec.startswith("jev:"):
+        return spec.split(":", 1)[1]
     if spec.startswith("decider:"):
         return spec.rstrip("/").split("/")[-1]
     return spec.replace(":", "-")
 
 
 def make_engine(spec):
-    """'decider' | 'decider:<model dir>' | 'laya' | 'http:<url>[,<model>]' | 'keyword' | 'keyword-sample[:<T>]'"""
+    """'decider' | 'decider:<model dir>' | 'laya' | 'http:<url>[,<model>]' | 'jev[:<model>]' | 'keyword' |
+    'keyword-sample[:<T>]'"""
+    if spec == "jev" or spec.startswith("jev:"):
+        return jev_engine(spec.partition(":")[2] or None)
     if spec == "keyword":
         return KeywordEngine()
     if spec.startswith("keyword-sample"):

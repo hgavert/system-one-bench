@@ -4,6 +4,7 @@
   uv run python 12_finnish_benchmark.py --engine decider
   uv run python 12_finnish_benchmark.py --engine decider:models/decider-4b-v2
   uv run python 12_finnish_benchmark.py --engine http:http://127.0.0.1:8712,gliner-multi-decide
+  uv run python 12_finnish_benchmark.py --engine jev --workers 6                  # hosted Jev, JEV_API_KEY in .env
   zsh -ic 'uv run python 12_finnish_benchmark.py --engine llm --workers 8'        # Leviathan, key from the shell env
   uv run python 13_finnish_report.py
 
@@ -24,7 +25,7 @@ from snake.engine import engine_tag, make_engine
 DATASETS = ["sib", "belebele", "massive", "scandisent"]
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--engine", required=True, help="decider | decider:<dir> | laya | http:<url>,<model> | llm")
+ap.add_argument("--engine", required=True, help="decider | decider:<dir> | laya | http:<url>,<model> | jev[:<model>] | llm")
 ap.add_argument("--name", help="result name (default: from the engine)")
 ap.add_argument("--only", help="comma-separated datasets")
 ap.add_argument("--conditions", default=",".join(CONDITIONS), help="comma-separated: en,fi-en,fi")
@@ -59,8 +60,10 @@ def run(job):
     q_lang = CONDITIONS[cond][1]
     answers, ms, _ = engine.ask(req, lang=q_lang) if args.engine == "llm" else engine.ask(req)
     probs = {back[k]: float(v) for k, v in answers["q"]["probabilities"].items()}
+    # the engine's own choice when it gives one: Jev rounds probabilities to 2 decimals, so max() could hit a tie
+    pred = back[answers["q"]["choice"]] if answers["q"].get("choice") in back else max(probs, key=probs.get)
     return {"dataset": ds, "condition": cond, "id": item["id"], "gold": item["gold"],
-            "pred": max(probs, key=probs.get), "probs": probs, "latency_ms": round(ms, 1)}
+            "pred": pred, "probs": probs, "latency_ms": round(ms, 1)}
 
 
 with out_path.open("a") as out, ThreadPoolExecutor(args.workers) as pool:

@@ -7,6 +7,7 @@ Each run writes results/runs/<name>.json; 04_report.py combines them into one ta
   uv run python 02_benchmark.py laya-finetuned                # after 03_finetune_laya.py
   uv run python 02_benchmark.py kev-4b --url http://127.0.0.1:8009   # a running Kev server
   uv run python 02_benchmark.py s1:clm-latest --url http://127.0.0.1:8700 --name clm-8b   # CLM
+  uv run python 02_benchmark.py jev                           # hosted Jev (JEV_API_KEY in .env); jev:<model> for another
   uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat       # a model in LM Studio
   uv run python 02_benchmark.py llm:google/gemma-4-26b-a4b-qat --prompt simple --name llm-gemma-26b-simple
 
@@ -46,6 +47,10 @@ def make_classifier(system: str, args):
     if system.startswith("kev"):
         from systemone_classifier import SystemOneSentiment
         return SystemOneSentiment(args.url)
+    if system == "jev" or system.startswith("jev:"):   # hosted Jev; latency includes the network round trip
+        from jev_client import JEV_MODEL, JEV_URL, jev_key
+        from systemone_classifier import SystemOneSentiment
+        return SystemOneSentiment(JEV_URL, model=system.partition(":")[2] or JEV_MODEL, api_key=jev_key())
     if system.startswith("s1:"):          # any TypeSafe System One server, by model name (e.g. CLM)
         from systemone_classifier import SystemOneSentiment
         return SystemOneSentiment(args.url, model=system.removeprefix("s1:"))
@@ -92,7 +97,7 @@ def main():
                     help="LLM prompt: class descriptions in a system prompt, or the bare instruction")
     ap.add_argument("--name", help="result name (default: derived from system)")
     args = ap.parse_args()
-    name = args.name or args.system.replace("llm:", "llm-").replace("s1:", "").replace("/", "_")
+    name = args.name or args.system.replace("llm:", "llm-").replace("s1:", "").replace(":", "-").replace("/", "_")
 
     data = load_sample(n_per_class=args.n_per_class)
     texts, gold = [e.text for e in data], [e.label for e in data]
