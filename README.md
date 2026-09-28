@@ -213,6 +213,32 @@ Chance: 0.14 / 0.25 / 0.10 / 0.50.
   above chance; GLiNER2.5-multi-Decide, at chance anyway, seldom picks the second answer (0.10 when it is right vs
   0.23–0.39 for the others).
 
+## Hosted Jev on the same tests
+
+With a TypeSafe API key, `jev-1.13.0` answered exactly the requests above, zero-shot, about 26,600 requests
+(~$0.55). Details and paired tests: [docs/6-jev.md](docs/6-jev.md).
+
+| Test | Jev | Best open model | Reference |
+|---|--:|--:|--:|
+| Sentiment, accuracy | 0.737 (ECE 0.154) | Decider 4B v2 0.750, Decider 2B 0.740 | Gemma 4 26B 0.740 |
+| Sentiment, answers that flip with option order | 5.0% | Decider 2B 5.7% | – |
+| Finnish, Belebele reading, all in Finnish | **0.950** | Decider 4B v2 0.903 | Qwen 3.8 27B 0.863 |
+| Finnish, EN → FI drop on the same items | **−1.3** | Kev 9B −1.7 | Qwen 3.8 27B −3.6 |
+| Snake, judged options, food / game | **40.6**, died 0 of 10 | Decider 2B 36.9 | greedy-safe code 41.1 |
+| Snake, facts in the options (sorrycc), food / game | **37.3** | Kev 4B 17.2 | – |
+| Snake, relative in words (nadeem4), food / game | 0.2, starved 10 of 10 | Kev 4B 13.1 | – |
+
+* **Sentiment: tied with the best open models** (paired p = 1.0 vs Decider 2B and Gemma 26B), weakest on neutral
+  tweets (47/100) and less calibrated than Decider.
+* **Finnish: Jev leads**: best or tied-best on all four datasets, clearly ahead on reading comprehension (p < 0.01
+  vs Decider 4B v2 and the 27B LLM), and the smallest drop from English.
+* **Snake: Jev reads the raw board on single moves** (97% good on hard states; open models 0–79%) but still dies
+  in every game from it. The published relative request reproduces nadeem4's result: 82% right turns, circling
+  until it starves. With code's facts or verdicts in the options it plays as well as the best code.
+
+Run: `uv run python 02_benchmark.py jev`, `adapters/position_bias.py jev`, `--engine jev` for Snake and Finnish
+(`JEV_API_KEY` in `.env`).
+
 ## Setup
 
 ```bash
@@ -302,12 +328,17 @@ Snake:
 
 * [docs/5-snake.md](docs/5-snake.md): how six published Jev demos ask for a move, how each model plugs in, the probe, what breaks the models, the request that works, all game results
 
+Hosted Jev:
+
+* [docs/6-jev.md](docs/6-jev.md): Jev itself on all three tests, with paired comparisons against the open models
+
 ## Files
 
 ```
 Both tests
   scripts/                  setup_engines.sh, download_models.py (pinned revisions + SHA-256 check), fetch helpers
   01_hello_laya.py          step 1: hello world
+  jev_client.py             hosted Jev: endpoint, JEV_API_KEY from .env, POST /v1/systemone with backoff
   adapters/                 one adapter per engine: sentiment runs, /v1/systemone servers (GLiNER, CLM's MLX encoder)
   results/                  every run, per test (results/snake/ for Snake)
 
