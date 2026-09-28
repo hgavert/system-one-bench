@@ -10,6 +10,7 @@ per (tweet, order): {"id", "order", "pred", "probs"} to results/raw/posbias_<eng
   uv run python adapters/position_bias.py http:http://127.0.0.1:8009,kev-latest kev-4b   # any /v1/systemone server:
   uv run python adapters/position_bias.py http:http://127.0.0.1:8700,clm-latest clm-8b   #   Kev, CLM, GLiNER (commands
   uv run python adapters/position_bias.py http:http://127.0.0.1:8710,gliner-decide gliner-decide   # in docs/5-snake.md §5.7)
+  uv run python adapters/position_bias.py jev                               # hosted Jev, JEV_API_KEY in .env
   uv run python 11_position_bias.py                                          # analysis
 """
 import itertools
@@ -57,6 +58,15 @@ elif engine.startswith("http:"):                                      # http:<ba
         r = http.post("/v1/systemone", json={"model": model, "state": text, "questions": {"s": question(order)}})
         r.raise_for_status()
         return r.json()["answers"]["s"]["probabilities"]
+elif engine == "jev" or engine.startswith("jev:"):                    # hosted Jev (TypeSafe AI)
+    sys.path.insert(0, ".")
+    from jev_client import JEV_MODEL, jev_client, post_systemone
+    http, model = jev_client(), engine.partition(":")[2] or JEV_MODEL
+
+    def ask(text, order):
+        a = post_systemone(http, {"model": model, "state": text, "questions": {"s": question(order)}})["answers"]["s"]
+        # probabilities come rounded to 2 decimals: list Jev's own choice first so max() below breaks ties its way
+        return {a["choice"]: a["probabilities"][a["choice"]]} | a["probabilities"]
 else:
     sys.exit(f"unknown engine {engine}")
 

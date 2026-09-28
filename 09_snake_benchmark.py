@@ -4,9 +4,11 @@
   uv run python 09_snake_benchmark.py --only facts --seeds 3
   uv run python 09_snake_benchmark.py --engine http:http://127.0.0.1:8009,kev-4b --only grid judged
   uv run python 09_snake_benchmark.py --engine keyword --only judged judged-plain   # phrase table, no model
+  uv run python 09_snake_benchmark.py --engine jev --summary results/snake/SUMMARY-jev.md   # hosted Jev
 
 A game ends on death, a full board, `--max-steps`, or `size*size` steps without food (starved).
-Writes results/snake/games/<engine>-<name>.json (every decision, requests excluded) and results/snake/SUMMARY.md.
+Writes results/snake/games/<engine>-<name>.json (every decision, requests excluded) and results/snake/SUMMARY.md, a
+table of every game file present (games/ is gitignored: on a fresh checkout, pass --summary to keep SUMMARY.md).
 """
 import argparse
 import json
@@ -62,7 +64,8 @@ if __name__ == "__main__":
     ap.add_argument("--size", type=int, default=12)
     ap.add_argument("--max-steps", type=int, default=500)
     ap.add_argument("--only", nargs="*", help="formulations / baselines to run")
-    ap.add_argument("--engine", default="decider", help="decider | laya | http:<url>,<model>")
+    ap.add_argument("--engine", default="decider", help="decider | laya | http:<url>,<model> | jev[:<model>]")
+    ap.add_argument("--summary", default="results/snake/SUMMARY.md", help="where to write the table")
     a = ap.parse_args()
     names = a.only or [*FORMULATIONS, *BASELINES]
     seeds = list(range(a.seeds))
@@ -89,7 +92,7 @@ if __name__ == "__main__":
     MODEL = {"decider": "Decider 2B", "decider-4b-v2": "Decider 4B", "kev-4b": "Kev 4B", "clm-latest": "CLM 8B",
              "gliner-decide": "GLiNER2.5-Decide", "gliner-decide-1b": "GLiNER2.5-Decide-1B", "laya": "Laya",
              "keyword": "Keyword scorer (no model)", "keyword-sample-0.5": "Keyword scorer, sampled T=0.5",
-             "keyword-sample": "Keyword scorer, sampled T=1"}
+             "keyword-sample": "Keyword scorer, sampled T=1", "jev": "Jev (hosted)"}
     rank = {m: i for i, m in enumerate(MODEL)} | {"code": 99}
     rows.sort(key=lambda r: (rank.get(r["engine"], 50), order.get(r["name"], 99)))
     lines = ["| Controller | Food eaten (mean / best) | Steps | Died | Starved | Model calls | Code-only ticks | Latency p50 / mean | Tokens/call |",
@@ -103,6 +106,6 @@ if __name__ == "__main__":
         tok = f"{r['tokens_p50']:.0f}" if r["tokens_p50"] else "–"
         lines.append(f"| {who} | {r['score_mean']:.1f} / {r['score_max']} | {r['steps_mean']:.0f} | "
                      f"{r['death_rate']:.0%} | {r['starved']} | {r['model_calls']} | {r['code_ticks']} | {lat} | {tok} |")
-    (OUT.parent / "SUMMARY.md").write_text(f"{rows[0]['games']} seeds, {a.size}x{a.size} board, max {a.max_steps} steps.\n\n"
+    Path(a.summary).write_text(f"{rows[0]['games']} seeds, {a.size}x{a.size} board, max {a.max_steps} steps.\n\n"
                                     + "\n".join(lines) + "\n")
     print("\n".join(lines))
