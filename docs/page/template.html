@@ -6,7 +6,7 @@
   --ground:#F4F6F8; --surface:#FFFFFF; --ink:#141A21; --muted:#5A6573; --rule:#D9DEE5;
   --accent:#1D5E8C; --accent-soft:#E3EEF6; --code-bg:#EEF1F5;
   --neg:#B5443A; --neu:#6F7C8C; --pos:#2E8753;
-  --laya:#1D5E8C; --kev:#B7791F; --llm:#7A4E9E; --tech:#2E8C82; --dec:#B5536B; --clm:#8A6D3B;
+  --laya:#1D5E8C; --kev:#B7791F; --llm:#7A4E9E; --tech:#2E8C82; --dec:#B5536B; --clm:#8A6D3B; --clef:#C2570C;
   --sans:"Schibsted Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
@@ -16,7 +16,7 @@
     --ground:#0E1115; --surface:#161A20; --ink:#E5E9EE; --muted:#98A3B1; --rule:#2A313B;
     --accent:#6FB2E2; --accent-soft:#16283A; --code-bg:#1B2028;
     --neg:#E07A70; --neu:#9AA6B5; --pos:#5FC08A;
-    --laya:#6FB2E2; --kev:#E3AA52; --llm:#B38BD6; --tech:#5CC4B8; --dec:#E68AA0; --clm:#C9A66B;
+    --laya:#6FB2E2; --kev:#E3AA52; --llm:#B38BD6; --tech:#5CC4B8; --dec:#E68AA0; --clm:#C9A66B; --clef:#F2A267;
   }
 }
 :root[data-theme="dark"]{
@@ -24,7 +24,7 @@
   --ground:#0E1115; --surface:#161A20; --ink:#E5E9EE; --muted:#98A3B1; --rule:#2A313B;
   --accent:#6FB2E2; --accent-soft:#16283A; --code-bg:#1B2028;
   --neg:#E07A70; --neu:#9AA6B5; --pos:#5FC08A;
-  --laya:#6FB2E2; --kev:#E3AA52; --llm:#B38BD6; --tech:#5CC4B8; --dec:#E68AA0; --clm:#C9A66B;
+  --laya:#6FB2E2; --kev:#E3AA52; --llm:#B38BD6; --tech:#5CC4B8; --dec:#E68AA0; --clm:#C9A66B; --clef:#F2A267;
 }
 *{box-sizing:border-box}
 body{background:var(--ground);color:var(--ink);font:16px/1.6 var(--sans);padding-inline:16px;padding-block:0 64px}
@@ -99,7 +99,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--rule);font-si
 <header>
   <div class="eyebrow">Tutorial · Open-source Jev reproductions · Sentiment</div>
   <h1>Open-source Jev reproductions, zero-shot on real sentiment</h1>
-  <p class="lede">Jev answers typed questions with probabilities instead of generating text. Within a week of its release, dozens of open reproductions appeared. We take every well-ranked one that runs on a 32 GB Apple M5, plus the newly released Decider 4B v2, GLiNER2.5-Decide and CLM, ask each the same sentiment question about 300 human-labelled tweets, and race them against local LLMs in LM Studio. The main comparison is zero-shot, with no training for the task. A reference section documents three models we also trained on tweets.</p>
+  <p class="lede">Jev answers typed questions with probabilities instead of generating text. Within a week of its release, dozens of open reproductions appeared. We take every well-ranked one that runs on a 32 GB Apple M5, plus the newly released Decider 4B v2, GLiNER2.5-Decide, CLM and Cloudflare's Clef-flash, ask each the same sentiment question about 300 human-labelled tweets, and race them against local LLMs in LM Studio. The main comparison is zero-shot, with no training for the task. A reference section documents three models we also trained on tweets.</p>
   <div class="facts" id="facts"></div>
 </header>
 
@@ -118,7 +118,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--rule);font-si
 {<span class="k">"choice"</span>: <span class="k">"positive"</span>, <span class="k">"probabilities"</span>: {<span class="k">"negative"</span>: 0.01, <span class="k">"neutral"</span>: 0.04, <span class="k">"positive"</span>: 0.95}}</code></pre>
 
 <h2>The reproductions</h2>
-<p>They differ mainly in <em>how</em> they turn a language model into a chooser. There are five families, and at least one of each ran here:</p>
+<p>They differ mainly in <em>how</em> they turn a language model into a chooser. There are six families, and at least one of each ran here:</p>
 <div class="tbl"><table>
 <tr><th>Family</th><th>How it answers</th><th>Trains weights?</th><th>Run here</th></tr>
 <tr><td><span class="fam" style="background:var(--laya)">Encoder + head</span></td><td>BERT-style encoder; one marker token per option is scored</td><td>whole model</td><td>Laya, Laya-multilingual, GLiNER2.5-Decide (340M, 1B)</td></tr>
@@ -126,6 +126,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--rule);font-si
 <tr><td><span class="fam" style="background:var(--dec)">Full fine-tune</span></td><td>causal LLM trained to answer in an option letter</td><td>whole model</td><td>Decider 2B, Decider 4B v2</td></tr>
 <tr><td><span class="fam" style="background:var(--tech)">Inference technique</span></td><td><b>stock</b> LLM; prompt lists lettered options, answer read from letter logits</td><td>nothing</td><td>SemIf, openvons</td></tr>
 <tr><td><span class="fam" style="background:var(--clm)">Contrastive bi-encoder</span></td><td>frozen LLM embeds tweet+question and each option <b>separately</b>; trained heads align them, answer = softmax of cosine</td><td>small projection heads</td><td>CLM 8B</td></tr>
+<tr><td><span class="fam" style="background:var(--clef)">Backbone + joint head</span></td><td>post-trained LLM; a small transformer head reads its final hidden states and scores the options of all questions <b>jointly</b></td><td>whole model + head</td><td>Clef-flash (Cloudflare)</td></tr>
 </table></div>
 <p>Which ones? The <a href="https://huggingface.co/spaces/multimodalart/jev-decision-index">Jev Decision Index</a> scores 31 reproductions against real Jev on 37 benchmarks, run on a 96 GB NVIDIA card. We ran the best-ranked ones that fit this laptop:</p>
 <div class="tbl"><table>
@@ -142,6 +143,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--rule);font-si
 <tr class="hl"><td class="num">new</td><td><b>Decider 4B v2</b> <small>(24 Sept)</small></td><td>Qwen3.5-4B</td><td>✓ PyTorch MPS</td></tr>
 <tr class="hl"><td class="num">new</td><td><b>GLiNER2.5-Decide</b>, 340M and 1B <small>(the index ran older GLiNER 2.5)</small></td><td>DeBERTa-v3-large / 1B encoder</td><td>✓ PyTorch MPS</td></tr>
 <tr class="hl"><td class="num">new</td><td><b>CLM 8B</b> <small>(released 24 Sept, after index 0.1)</small></td><td>Qwen3-8B</td><td>✓ its vLLM encoder replaced by an MLX one (parity 0.9998)</td></tr>
+<tr class="hl"><td class="num">new</td><td><b>Clef-flash</b> 9B <small>(Cloudflare, 1 Oct; the 27B Clef needs ~55 GB)</small></td><td>Qwen3.5-9B</td><td>✓ PyTorch MPS, via Cloudflare's own inference code</td></tr>
 </table></div>
 
 <h2>The dataset</h2>
@@ -257,6 +259,7 @@ p = softmax(logprob[<span class="k">"A"</span>], logprob[<span class="k">"B"</sp
 <tr><td>Decider 2B / 4B v2</td><td>label letter in the prompt</td><td>LM output rows for the letters, fine-tuned</td><td>fixed 255, masked</td></tr>
 <tr><td>SemIf, openvons</td><td>label letter in the prompt</td><td>same letter logits, untrained</td><td>16 / top-5</td></tr>
 <tr><td>CLM</td><td>option text embedded <b>alone</b></td><td>projection MLPs → cosine</td><td>any</td></tr>
+<tr><td>Clef-flash</td><td>options listed in the prompt, <b>sorted alphabetically</b> first</td><td>joint schema head over all options of all questions</td><td>up to 64 questions</td></tr>
 </table></div>
 
 <h3>One adapter per engine, one harness</h3>
@@ -308,22 +311,22 @@ python scripts/calibrate_checkpoint.py --run models/kev-4b-tweets --rows val/row
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const FAMILY = {laya:"--laya","laya-multilingual":"--laya","kev-0.8b":"--kev","kev-4b":"--kev","kev-9b":"--kev",
   semif:"--tech","semif-9b":"--tech",openvons:"--tech","decider-2b":"--dec","decider-4b-v2":"--dec","gliner-decide":"--laya","gliner-decide-1b":"--laya",
-  "embed-nomic":"--neu","clm-8b":"--clm","clm-raw":"--neu"};
-const FAMNAME = {"--laya":"Encoder + head","--kev":"LoRA + pointer","--dec":"Full fine-tune","--tech":"Inference technique","--llm":"LLM (LM Studio)","--clm":"Contrastive bi-encoder","--neu":"Embedding baseline"};
+  "embed-nomic":"--neu","clm-8b":"--clm","clm-raw":"--neu","clef-flash":"--clef"};
+const FAMNAME = {"--laya":"Encoder + head","--kev":"LoRA + pointer","--dec":"Full fine-tune","--tech":"Inference technique","--llm":"LLM (LM Studio)","--clm":"Contrastive bi-encoder","--clef":"Backbone + joint head","--neu":"Embedding baseline"};
 const fam = n => FAMILY[n] || (n.startsWith("llm-") ? "--llm" : n.startsWith("kev") ? "--kev" : n.startsWith("laya") ? "--laya" : "--llm");
 const PRETTY = {"laya":"Laya","laya-multilingual":"Laya multilingual","laya-finetuned":"Laya fine-tuned",
   "kev-0.8b":"Kev 0.8B","kev-4b":"Kev 4B","kev-9b":"Kev 9B","kev-0.8b-tweets":"Kev 0.8B fine-tuned","kev-4b-tweets":"Kev 4B fine-tuned",
   "semif":"SemIf · Qwen3.5-4B","semif-9b":"SemIf · Qwen3.5-9B","openvons":"openvons · Qwen3-4B","decider-2b":"Decider 2B",
   "llm-google_gemma-4-26b-a4b-qat":"Gemma 4 26B-A4B","llm-google_gemma-4-12b-qat":"Gemma 4 12B","llm-qwen_qwen3.8-27b":"Qwen 3.8 27B",
   "llm-google_gemma-4-26b-a4b-qat-simple":"Gemma 4 26B · bare prompt","llm-google_gemma-4-12b-qat-simple":"Gemma 4 12B · bare prompt",
-  "llm-qwen_qwen3.8-27b-simple":"Qwen 3.8 27B · bare prompt","embed-nomic":"Embeddings (nomic)","clm-8b":"CLM 8B","clm-raw":"Qwen3-8B raw embeddings",
+  "llm-qwen_qwen3.8-27b-simple":"Qwen 3.8 27B · bare prompt","embed-nomic":"Embeddings (nomic)","clm-8b":"CLM 8B","clef-flash":"Clef-flash","clm-raw":"Qwen3-8B raw embeddings",
   "decider-4b-v2":"Decider 4B v2","gliner-decide":"GLiNER2.5-Decide","gliner-decide-1b":"GLiNER2.5-Decide-1B"};
 const NOTE = {"semif-9b":"variant"};
 const pretty = n => PRETTY[n] || n;
 const isFT = n => n==="laya-finetuned" || n.endsWith("-tweets");
 const S = Object.fromEntries(SUMMARY.map(s => [s.name, s]));
 const ZS = SUMMARY.filter(s => !isFT(s.name)).sort((a,b)=>b.accuracy-a.accuracy);
-const S1 = ZS.filter(s => ["--laya","--kev","--tech","--dec","--clm"].includes(fam(s.name)));
+const S1 = ZS.filter(s => ["--laya","--kev","--tech","--dec","--clm","--clef"].includes(fam(s.name)));
 const LLMS = ZS.filter(s => fam(s.name)==="--llm");
 const NS = "http://www.w3.org/2000/svg";
 function el(tag, attrs, parent, text){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; parent.appendChild(e); return e; }
@@ -432,6 +435,7 @@ function takeaways(){
   const dc=CASCADES[best.name]||[]; const cb=dc.filter(r=>r.threshold>0&&r.threshold<=1).sort((a,b)=>a.llm_share-b.llm_share).find(r=>r.accuracy>=llm.accuracy);
   const items=[
    `<b>Zero-shot, the Decider models match the best local LLM.</b> ${pretty(best.name)} scores ${pct(best.accuracy)} (macro-F1 ${best.macro_f1.toFixed(3)}, the highest here) and Decider 2B ${pct(S["decider-2b"].accuracy)}, against ${pct(llm.accuracy)} for ${pretty(llm.name)}: a statistical tie (paired p ≈ 0.8), at ${(llm.latency_ms_p50/best.latency_ms_p50).toFixed(1)}× and ${(llm.latency_ms_p50/S["decider-2b"].latency_ms_p50).toFixed(1)}× lower latency and with honest probabilities (ECE ${best.ece.toFixed(3)} and ${S["decider-2b"].ece.toFixed(3)} vs ${llm.ece.toFixed(3)}). On this task the 2B is the better deal: as accurate, twice as fast.`,
+   S["clef-flash"] ? `<b>One task is not enough to rank these models.</b> Cloudflare's Clef-flash is the best model in our Finnish and Snake tests, but here scores ${pct(S["clef-flash"].accuracy)}: it calls about two thirds of the tweets neutral, whatever the question ID or label wording (0.60–0.62). Its option order never matters, because its code sorts the options before encoding.` : ``,
    `<b>Letter logits are the strongest readout on this task.</b> Decider is trained to answer in an option letter, and even a <em>stock</em> base model read that way gets ${pct(semif.accuracy)} (SemIf, 4B) and ${pct(semif9.accuracy)} (9B). The pointer and marker heads trail (Kev 9B ${pct(k9.accuracy)}, Laya ${pct(laya.accuracy)}).`,
    `<b>The base model matters as much as the technique.</b> The same letter-logit idea on an instruct model (openvons) reaches ${pct(ov.accuracy)} but almost never says "neutral" (macro-F1 ${ov.macro_f1.toFixed(3)}) and puts ~100% on one letter for most tweets (ECE ${ov.ece.toFixed(3)}).`,
    `<b>Bigger isn't automatically better within a family.</b> GLiNER2.5-Decide-1B (${pct(S["gliner-decide-1b"].accuracy)}) is no better than the 340M model (${pct(S["gliner-decide"].accuracy)}), even though review sentiment is one of its training domains, and Decider 4B v2 only ties the 2B.`,
@@ -450,7 +454,7 @@ function embacc(){
   document.getElementById("embtable").innerHTML=h;
 }
 function postable(){
-  const eng=[["laya","Laya"],["semif","SemIf · 4B"],["decider","Decider 2B"]].filter(e=>POSBIAS[e[0]]);
+  const eng=[["laya","Laya"],["semif","SemIf · 4B"],["decider","Decider 2B"],["clef-flash","Clef-flash"]].filter(e=>POSBIAS[e[0]]);
   if(!eng.length){document.getElementById("postable").innerHTML="";return;}
   const f=v=>(v*100).toFixed(1)+"%";
   const row=(label,fn)=>`<tr><td>${label}</td>${eng.map(([k])=>`<td class="num">${fn(POSBIAS[k])}</td>`).join("")}</tr>`;

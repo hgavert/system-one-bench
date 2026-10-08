@@ -1266,6 +1266,66 @@
   "batched_agrees_with_single": 1.0
  },
  {
+  "name": "clef-flash",
+  "system": "s1:clef-flash",
+  "n": 300,
+  "accuracy": 0.5966666666666667,
+  "macro_f1": 0.5938603951848985,
+  "latency_ms_p50": 476.99337499943795,
+  "latency_ms_p95": 526.4975839963881,
+  "throughput_msgs_per_s": 1.848745608789112,
+  "ece": 0.20537833333333336,
+  "confusion_matrix": [
+   [
+    40,
+    60,
+    0
+   ],
+   [
+    3,
+    91,
+    6
+   ],
+   [
+    1,
+    51,
+    48
+   ]
+  ],
+  "selective_accuracy": [
+   {
+    "threshold": 0.0,
+    "coverage": 1.0,
+    "accuracy": 0.5966666666666667
+   },
+   {
+    "threshold": 0.5,
+    "coverage": 0.9833333333333333,
+    "accuracy": 0.6
+   },
+   {
+    "threshold": 0.6,
+    "coverage": 0.86,
+    "accuracy": 0.6124031007751938
+   },
+   {
+    "threshold": 0.7,
+    "coverage": 0.7733333333333333,
+    "accuracy": 0.6379310344827587
+   },
+   {
+    "threshold": 0.8,
+    "coverage": 0.5866666666666667,
+    "accuracy": 0.6931818181818182
+   },
+   {
+    "threshold": 0.9,
+    "coverage": 0.34,
+    "accuracy": 0.803921568627451
+   }
+  ]
+ },
+ {
   "name": "kev-0.8b",
   "system": "kev-0.8b",
   "n": 300,

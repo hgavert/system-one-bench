@@ -72,7 +72,7 @@ them with the same `summarize()`. See [doc 4](4-zero-shot-reproductions.md).
 ## 3.5 Results
 
 All zero-shot results (System One reproductions, LLMs with both prompts, the embedding baseline)
-and how to read them are in [doc 4, section 4.7](4-zero-shot-reproductions.md#47-results) and
+and how to read them are in [doc 4, section 4.8](4-zero-shot-reproductions.md#48-results) and
 [`results/REPORT.md`](../results/REPORT.md). The fine-tuned runs are listed separately there, as
 reference only ([Laya](reference/finetune-laya.md), [Kev](reference/finetune-kev.md)).
 

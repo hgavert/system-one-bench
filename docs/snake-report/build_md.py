@@ -10,7 +10,7 @@ from build import keyword_rows, LABEL, MODELS, NAMES, REQS, GAMES_NOTE, best_row
 OUT_MD = Path("docs/snake-report.md")
 OUT_SVG = Path("docs/snake-report/probe.svg")
 # fixed colours on a light card: GitHub shows an SVG image as-is in both of its themes
-COLOR = {"decider": "#2d6a3e", "decider-4b-v2": "#174a26", "kev-4b": "#3450a1", "clm-latest": "#a8761b",
+COLOR = {"clef-flash": "#0f7b8a", "decider": "#2d6a3e", "decider-4b-v2": "#174a26", "kev-4b": "#3450a1", "clm-latest": "#a8761b",
          "gliner-decide": "#8a3f8c", "gliner-decide-1b": "#b98cba", "laya": "#8b9585"}
 
 
@@ -77,17 +77,17 @@ def main(data):
     w("> Generated from the same data as the interactive version, [`docs/snake-report/index.html`](snake-report/index.html), "
       "by `docs/snake-report/build.py`. Key code and details: [docs/5-snake.md](5-snake.md).\n")
     w("People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to "
-      "seven open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, "
+      "eight open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, "
       "straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are "
-      "poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one needs the "
+      "poor at it, and so is Jev. Given one verdict per option, six of the eight play well, but each one needs the "
       "wording to suit it. And once the options carry verdicts, seven keyword rules with no model play as well as any of them.\n")
 
     w("## What we found\n")
     w("1. **The simple way fails, for Jev and for the open models.** The only published numbers of Jev playing (nadeem4's "
       "arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it circled until it starved. On the raw "
-      "board, five of the six models tried died within about 9 steps in every game; with nadeem4's phrasing or sorrycc's "
-      "facts they circled and starved. Only Kev 4B partly reads the board (13.1 food with nadeem4's phrasing), and it "
-      "still dies every game.")
+      "board, five of the seven models tried died within about 9 steps in every game; with nadeem4's phrasing or sorrycc's "
+      "facts they circled and starved. Two models partly read the board: Kev 4B (13.1 food with nadeem4's phrasing) and "
+      "Clef-flash, which picks a good move on 85% of the hard raw-board states, but both still die or starve every game.")
     w("2. **The demos that look good move the spatial work into code**: filtering out fatal moves, flood-fill facts, "
       "confidence gates, or a waypoint pathfinder that steers every tick while Jev only picks a target every 2.6 seconds. "
       "CLM's own game demo does the same.")
@@ -100,17 +100,19 @@ def main(data):
       "food per game and GLiNER from 2.7 to 26.3. For the other models it makes little difference.")
     w("5. **Better single moves don't mean longer games.** Decider 4B and Kev 4B are more decisive than Decider 2B and "
       "follow \"closer to the food\" into tight spaces: they die in 9 and 10 of 10 games, Decider 2B in 2. With 36.9 food "
-      "per game, Decider 2B is the best model that decides every move itself, close to the best code baseline (41.1).")
+      "per game, Decider 2B was the best model until Cloudflare's Clef-flash: 39.3 food per game with judged options and no "
+      "death in 10 games, close to the best code baseline (41.1).")
     w("6. **Speed varies 60-fold.** CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, "
-      "Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260 ms per move. ximing's extra questions roughly double that, "
+      "Kev in ~110, Decider 2B in ~145, Decider 4B in ~260 and Clef-flash in ~520 ms per move. ximing's extra questions roughly double that, "
       "and on those rows code picks up to two moves in three.")
-    w("7. **A table of phrases does as well.** " "Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, more than any model that decides every move. In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options." "\n")
+    w("7. **A table of phrases does as well.** " "Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, level with the best model (Clef-flash, 39.3). In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options." "\n")
 
-    w("## The seven models\n")
+    w("## The eight models\n")
     w("All zero-shot, as released: the same models as in the sentiment benchmark. Every one answers the same Jev request, "
       "`{state, questions}`, and returns a probability per option. They differ in how they read it, which turns out to "
       "matter here.\n")
     w(table(["Model", "How it reads the request", "Runs here as", "Sentiment"], [
+        ["Clef-flash", "Cloudflare's post-trained Qwen3.5-9B: a joint schema head reads the final hidden states and scores the options of all questions together; options are sorted before encoding", "own environment, `/v1/systemone` adapter (PyTorch MPS)", "59.7%"],
         ["Decider 2B", "Qwen3.5-2B fine-tune: state, question and lettered options in one sequence; answer from the letter logits",
          "in-process, PyTorch MPS", "74.0%"],
         ["Decider 4B v2", "the same, on Qwen3.5-4B", "in-process, PyTorch MPS", "75.0%"],

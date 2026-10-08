@@ -2,6 +2,12 @@
 
 | Controller | Food eaten (mean / best) | Steps | Died | Starved | Model calls | Code-only ticks | Latency p50 / mean | Tokens/call |
 |---|---|---|---|---|---|---|---|---|
+| Clef-flash · Raw board | 6.5 / 15 | 64 | 100% | 0 | 637 | 0 | 750 / 756 ms | 310 |
+| Clef-flash · Relative, in words | 0.5 / 3 | 147 | 0% | 10 | 1467 | 0 | 528 / 531 ms | 252 |
+| Clef-flash · Facts in the options | 3.8 / 13 | 177 | 10% | 9 | 1663 | 108 | 960 / 944 ms | 475 |
+| Clef-flash · Judged options | 39.3 / 45 | 500 | 0% | 0 | 4575 | 425 | 516 / 516 ms | 208 |
+| Clef-flash · Judged, plain wording | 35.9 / 45 | 444 | 20% | 0 | 4080 | 359 | 516 / 517 ms | 225 |
+| Clef-flash · Composed questions | 40.0 / 44 | 481 | 30% | 0 | 4429 | 379 | 953 / 941 ms | 472 |
 | Decider 2B · Raw board | 0.0 / 0 | 7 | 100% | 0 | 70 | 0 | 357 / 358 ms | 361 |
 | Decider 2B · Relative, in words | 0.1 / 1 | 145 | 0% | 10 | 1446 | 0 | 185 / 185 ms | 160 |
 | Decider 2B · Facts in the options | 1.2 / 4 | 175 | 0% | 10 | 1603 | 144 | 448 / 456 ms | 477 |

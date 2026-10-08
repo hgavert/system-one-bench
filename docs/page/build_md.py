@@ -17,15 +17,16 @@ CAS = {n: json.loads(Path(f"results/cascades/{n}.json").read_text())["rows"]
 
 FAMILY = {"laya": "enc", "laya-multilingual": "enc", "gliner-decide": "enc", "gliner-decide-1b": "enc",
           "kev-0.8b": "kev", "kev-4b": "kev", "kev-9b": "kev", "semif": "tech", "semif-9b": "tech", "openvons": "tech",
-          "decider-2b": "dec", "decider-4b-v2": "dec", "clm-8b": "clm", "embed-nomic": "emb", "clm-raw": "emb"}
+          "decider-2b": "dec", "decider-4b-v2": "dec", "clm-8b": "clm", "embed-nomic": "emb", "clm-raw": "emb",
+          "clef-flash": "clef"}
 FAMNAME = {"enc": "Encoder + head", "kev": "LoRA + pointer", "dec": "Full fine-tune", "tech": "Inference technique",
-           "clm": "Contrastive bi-encoder", "emb": "Embedding baseline", "llm": "LLM (LM Studio)"}
-COLOR = {"enc": "#1D5E8C", "kev": "#B7791F", "dec": "#B5536B", "tech": "#2E8C82", "clm": "#8A6D3B",
+           "clm": "Contrastive bi-encoder", "clef": "Backbone + joint head", "emb": "Embedding baseline", "llm": "LLM (LM Studio)"}
+COLOR = {"enc": "#1D5E8C", "kev": "#B7791F", "dec": "#B5536B", "tech": "#2E8C82", "clm": "#8A6D3B", "clef": "#C2570C",
          "emb": "#6F7C8C", "llm": "#7A4E9E"}
 PRETTY = {"laya": "Laya", "laya-multilingual": "Laya multilingual", "kev-0.8b": "Kev 0.8B", "kev-4b": "Kev 4B",
           "kev-9b": "Kev 9B", "semif": "SemIf · Qwen3.5-4B", "semif-9b": "SemIf · Qwen3.5-9B (variant)",
           "openvons": "openvons · Qwen3-4B", "decider-2b": "Decider 2B", "decider-4b-v2": "Decider 4B v2",
-          "gliner-decide": "GLiNER2.5-Decide", "gliner-decide-1b": "GLiNER2.5-Decide-1B", "clm-8b": "CLM 8B",
+          "gliner-decide": "GLiNER2.5-Decide", "gliner-decide-1b": "GLiNER2.5-Decide-1B", "clm-8b": "CLM 8B", "clef-flash": "Clef-flash",
           "clm-raw": "Qwen3-8B raw embeddings", "embed-nomic": "Embeddings (nomic)",
           "llm-google_gemma-4-26b-a4b-qat": "Gemma 4 26B-A4B", "llm-google_gemma-4-12b-qat": "Gemma 4 12B",
           "llm-qwen_qwen3.8-27b": "Qwen 3.8 27B", "llm-google_gemma-4-26b-a4b-qat-simple": "Gemma 4 26B · bare prompt",
@@ -38,7 +39,7 @@ pct = lambda x: f"{x * 100:.1f}%"
 ms = lambda x: f"{x / 1000:.1f} s" if x >= 1000 else f"{x:.0f} ms"
 
 ZS = sorted((s for n, s in S.items() if not fine_tuned(n)), key=lambda s: -s["accuracy"])
-S1 = [s for s in ZS if fam(s["name"]) in ("enc", "kev", "dec", "tech", "clm")]
+S1 = [s for s in ZS if fam(s["name"]) in ("enc", "kev", "dec", "tech", "clm", "clef")]
 LLM = [s for s in ZS if fam(s["name"]) == "llm"]
 best, llm = S1[0], LLM[0]
 
@@ -76,7 +77,7 @@ def svg_chart(rows) -> str:
     out.append(f'<line x1="{xr:.1f}" x2="{xr:.1f}" y1="{top - 4}" y2="{top + rh * len(rows)}" stroke="#5a6573" '
                f'stroke-dasharray="4 3" stroke-opacity="0.7"/>')
     lx, ly = 24, top + rh * len(rows) + 38
-    for f in ("dec", "tech", "kev", "enc", "clm", "emb", "llm"):
+    for f in ("dec", "tech", "kev", "enc", "clm", "clef", "emb", "llm"):
         item_w = 14 + int(6.2 * len(FAMNAME[f])) + 18
         if lx + item_w > W - 16:                      # wrap to a second row
             lx, ly = 24, ly + 18
@@ -108,7 +109,7 @@ def main():
       "by `docs/page/build.py`.\n")
     w("Jev (TypeSafe AI, 15 Sept 2026) answers typed questions with probabilities instead of generating text. "
       "Within a week, dozens of open reproductions appeared. We take every well-ranked one that runs on a 32 GB "
-      "Apple M5, plus newly released ones, ask each the **same sentiment question** about **300 human-labelled "
+      "Apple M5, plus newly released ones (Decider 4B v2, GLiNER2.5-Decide, CLM, Cloudflare's Clef-flash), ask each the **same sentiment question** about **300 human-labelled "
       "tweets**, and race them against local LLMs in LM Studio. The main comparison is **zero-shot**; a reference "
       "section documents three models we also trained on tweets.\n")
     w(table(["", ""], [
@@ -128,13 +129,14 @@ def main():
       '{"choice": "positive", "probabilities": {"negative": 0.01, "neutral": 0.04, "positive": 0.95}}\n```\n')
 
     w("## The reproductions\n")
-    w("They differ mainly in *how* they turn a language model into a chooser. Five families, at least one of each run here:\n")
+    w("They differ mainly in *how* they turn a language model into a chooser. Six families, at least one of each run here:\n")
     w(table(["Family", "How it answers", "Trains weights?", "Run here"], [
         ["Encoder + head", "encoder reads question + options + text; one marker per option is scored", "whole model", "Laya, Laya multilingual, GLiNER2.5-Decide (340M, 1B)"],
         ["LoRA + pointer", "causal LLM + LoRA; a decide token points at an option", "adapter + head", "Kev 0.8B / 4B / 9B"],
         ["Full fine-tune", "causal LLM trained to answer in an option letter", "whole model", "Decider 2B, Decider 4B v2"],
         ["Inference technique", "**stock** LLM; lettered options, answer read from letter logits", "nothing", "SemIf, openvons"],
-        ["Contrastive bi-encoder", "frozen LLM embeds text and each option **separately**; heads align them; softmax of cosine", "projection heads", "CLM 8B"]]) + "\n")
+        ["Contrastive bi-encoder", "frozen LLM embeds text and each option **separately**; heads align them; softmax of cosine", "projection heads", "CLM 8B"],
+        ["Backbone + joint head", "post-trained LLM; a small transformer head reads its final hidden states and scores all options of all questions **jointly**", "whole model + head", "Clef-flash (Cloudflare)"]]) + "\n")
     w("Chosen from the [Jev Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index) (31 "
       "reproductions, 37 benchmarks, run on a 96 GB NVIDIA card): the best-ranked ones that fit this laptop.\n")
     w(table(["Index #", "Reproduction", "Base model", "On a 32 GB Mac"], [
@@ -149,7 +151,8 @@ def main():
         ["30", "**Laya**", "ModernBERT-large", "✓ PyTorch MPS"],
         ["new", "**Decider 4B v2** (24 Sept)", "Qwen3.5-4B", "✓ PyTorch MPS"],
         ["new", "**GLiNER2.5-Decide** 340M / 1B (the index ran older GLiNER 2.5)", "DeBERTa-v3-large / 1B", "✓ PyTorch MPS"],
-        ["new", "**CLM 8B** (24 Sept)", "Qwen3-8B", "✓ vLLM encoder replaced by MLX (parity 0.9998)"]]) + "\n")
+        ["new", "**CLM 8B** (24 Sept)", "Qwen3-8B", "✓ vLLM encoder replaced by MLX (parity 0.9998)"],
+        ["new", "**Clef-flash** 9B (Cloudflare, 1 Oct; the 27B Clef needs ~55 GB)", "Qwen3.5-9B", "✓ PyTorch MPS, Cloudflare's own inference code"]]) + "\n")
 
     w("## The dataset\n")
     w("[TweetEval sentiment](https://huggingface.co/datasets/cardiffnlp/tweet_eval) (SemEval-2017 Task 4A): short, "
@@ -179,7 +182,7 @@ def main():
     if POS:
         w("### Does option order change the answer?\n")
         w("The same 300 tweets with the three options in all 6 orders (1,800 decisions per model):\n")
-        eng = [(k, lab) for k, lab in (("laya", "Laya"), ("semif", "SemIf · 4B"), ("decider", "Decider 2B")) if k in POS]
+        eng = [(k, lab) for k, lab in (("laya", "Laya"), ("semif", "SemIf · 4B"), ("decider", "Decider 2B"), ("clef-flash", "Clef-flash")) if k in POS]
         rows = [["Accuracy, correct answer listed 1st / 2nd / 3rd",
                  *[" / ".join(f"{POS[k]['accuracy_by_correct_position'][str(p)] * 100:.0f}" for p in (1, 2, 3)) + "%" for k, _ in eng]],
                 ["Picks by position 1st / 2nd / 3rd (order-blind = 33/33/33)",
@@ -242,7 +245,8 @@ def main():
         ["Kev", "each option's `</opt>` token", "pointer: dot product with `<decide>`", "any (≤ 255 by API)"],
         ["Decider 2B / 4B v2", "label letter in the prompt", "LM output rows for the letters, fine-tuned", "fixed 255, masked"],
         ["SemIf, openvons", "label letter in the prompt", "same letter logits, untrained", "16 / top-5"],
-        ["CLM", "option text embedded **alone**", "projection MLPs → cosine", "any"]]) + "\n")
+        ["CLM", "option text embedded **alone**", "projection MLPs → cosine", "any"],
+        ["Clef-flash", "options listed in the prompt, **sorted alphabetically** first", "joint schema head over all options of all questions", "up to 64 questions"]]) + "\n")
     w("**One adapter per engine, one harness.** Engines that speak TypeSafe's `/v1/systemone` (Kev, CLM) get the question "
       "over HTTP; the others get a small adapter that reads the same `data/test_tweets.jsonl` and writes "
       "`{pred, probs, latency_ms}` per tweet, scored by the same code as everything else.\n")
@@ -274,6 +278,9 @@ def main():
         f"{pct(d2['accuracy'])} vs {pretty(llm['name'])} {pct(llm['accuracy'])}: a statistical tie (paired p ≈ 0.8), at "
         f"{llm['latency_ms_p50'] / best['latency_ms_p50']:.1f}× and {llm['latency_ms_p50'] / d2['latency_ms_p50']:.1f}× lower latency, "
         f"with honest probabilities. On this task the 2B is the better deal.",
+        (f"**One task is not enough to rank these models.** Cloudflare's Clef-flash is the best model in our Finnish and Snake "
+         f"tests, but here scores {pct(S['clef-flash']['accuracy'])}: it calls about two thirds of the tweets neutral, whatever the "
+         f"question ID or label wording (0.60–0.62). Its option order never matters: its code sorts the options first."),
         f"**Letter logits are the strongest readout here.** Even a *stock* base model read that way gets {pct(sf['accuracy'])} "
         f"(SemIf 4B) and {pct(sf9['accuracy'])} (9B); pointer and marker heads trail (Kev 9B {pct(k9['accuracy'])}, Laya {pct(laya['accuracy'])}).",
         f"**The base model matters as much as the technique.** The same idea on an instruct model (openvons) reaches "

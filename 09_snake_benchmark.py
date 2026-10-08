@@ -66,8 +66,9 @@ if __name__ == "__main__":
     ap.add_argument("--only", nargs="*", help="formulations / baselines to run")
     ap.add_argument("--engine", default="decider", help="decider | laya | http:<url>,<model> | jev[:<model>]")
     ap.add_argument("--summary", default="results/snake/SUMMARY.md", help="where to write the table")
+    ap.add_argument("--summary-only", action="store_true", help="rebuild the summary from saved games; play nothing")
     a = ap.parse_args()
-    names = a.only or [*FORMULATIONS, *BASELINES]
+    names = [] if a.summary_only else (a.only or [*FORMULATIONS, *BASELINES])
     seeds = list(range(a.seeds))
     engine = None
     if any(n in FORMULATIONS for n in names):
@@ -89,7 +90,7 @@ if __name__ == "__main__":
 
     rows = [json.load(open(p))["summary"] for p in sorted(OUT.glob("*.json"))]
     order = {n: i for i, n in enumerate([*FORMULATIONS, *BASELINES])}
-    MODEL = {"decider": "Decider 2B", "decider-4b-v2": "Decider 4B", "kev-4b": "Kev 4B", "clm-latest": "CLM 8B",
+    MODEL = {"clef-flash": "Clef-flash", "decider": "Decider 2B", "decider-4b-v2": "Decider 4B", "kev-4b": "Kev 4B", "clm-latest": "CLM 8B",
              "gliner-decide": "GLiNER2.5-Decide", "gliner-decide-1b": "GLiNER2.5-Decide-1B", "laya": "Laya",
              "keyword": "Keyword scorer (no model)", "keyword-sample-0.5": "Keyword scorer, sampled T=0.5",
              "keyword-sample": "Keyword scorer, sampled T=1", "jev": "Jev (hosted)"}

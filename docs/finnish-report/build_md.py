@@ -87,7 +87,7 @@ def main(data):
     rows = []
     for r in headline_rows(data):
         c = list(r["cells"])
-        if r["model"] in ("decider-4b-v2", "kev-9b", "kev-4b"):
+        if r["model"] in ("clef-flash", "decider-4b-v2", "kev-9b", "kev-4b"):
             c[0] = f"**{c[0]}**"
         elif r["model"].startswith("llm"):
             c = [f"*{x}*" for x in c]

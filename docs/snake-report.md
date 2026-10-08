@@ -2,24 +2,25 @@
 
 > Generated from the same data as the interactive version, [`docs/snake-report/index.html`](snake-report/index.html), by `docs/snake-report/build.py`. Key code and details: [docs/5-snake.md](5-snake.md).
 
-People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to seven open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are poor at it, and so is Jev. Given one verdict per option, five of the seven play well, but each one needs the wording to suit it. And once the options carry verdicts, seven keyword rules with no model play as well as any of them.
+People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to eight open System One models on one laptop, zero-shot, 10 games per model and request. **The fast, straight-to-the-food videos rely on code for the geometry.** Asked to read the board themselves, the models are poor at it, and so is Jev. Given one verdict per option, six of the eight play well, but each one needs the wording to suit it. And once the options carry verdicts, seven keyword rules with no model play as well as any of them.
 
 ## What we found
 
-1. **The simple way fails, for Jev and for the open models.** The only published numbers of Jev playing (nadeem4's arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it circled until it starved. On the raw board, five of the six models tried died within about 9 steps in every game; with nadeem4's phrasing or sorrycc's facts they circled and starved. Only Kev 4B partly reads the board (13.1 food with nadeem4's phrasing), and it still dies every game.
+1. **The simple way fails, for Jev and for the open models.** The only published numbers of Jev playing (nadeem4's arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it circled until it starved. On the raw board, five of the seven models tried died within about 9 steps in every game; with nadeem4's phrasing or sorrycc's facts they circled and starved. Two models partly read the board: Kev 4B (13.1 food with nadeem4's phrasing) and Clef-flash, which picks a good move on 85% of the hard raw-board states, but both still die or starve every game.
 2. **The demos that look good move the spatial work into code**: filtering out fatal moves, flood-fill facts, confidence gates, or a waypoint pathfinder that steers every tick while Jev only picks a target every 2.6 seconds. CLM's own game demo does the same.
 3. **What works: one verdict per option, and nothing else in the state.** Code writes "moves closer to the food; keeps the most room" into each option. For five models the best such request picks a good single move 95–99% of the time (90–100% on the hard states). Three things had broken them: numbers to compare across options, direction words in the state, and, for two models, the word "eats".
 4. **The wording has to suit the model.** CLM 8B and GLiNER 340M give any option that says "eats the food" almost no probability, so they circle next to the food. Worded as "moves closer to the food", CLM goes from 0 to 36.2 food per game and GLiNER from 2.7 to 26.3. For the other models it makes little difference.
-5. **Better single moves don't mean longer games.** Decider 4B and Kev 4B are more decisive than Decider 2B and follow "closer to the food" into tight spaces: they die in 9 and 10 of 10 games, Decider 2B in 2. With 36.9 food per game, Decider 2B is the best model that decides every move itself, close to the best code baseline (41.1).
-6. **Speed varies 60-fold.** CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, Kev in ~110, Decider 2B in ~145 and Decider 4B in ~260 ms per move. ximing's extra questions roughly double that, and on those rows code picks up to two moves in three.
-7. **A table of phrases does as well.** Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, more than any model that decides every move. In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options.
+5. **Better single moves don't mean longer games.** Decider 4B and Kev 4B are more decisive than Decider 2B and follow "closer to the food" into tight spaces: they die in 9 and 10 of 10 games, Decider 2B in 2. With 36.9 food per game, Decider 2B was the best model until Cloudflare's Clef-flash: 39.3 food per game with judged options and no death in 10 games, close to the best code baseline (41.1).
+6. **Speed varies 60-fold.** CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, Kev in ~110, Decider 2B in ~145, Decider 4B in ~260 and Clef-flash in ~520 ms per move. ximing's extra questions roughly double that, and on those rows code picks up to two moves in three.
+7. **A table of phrases does as well.** Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, level with the best model (Clef-flash, 39.3). In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options.
 
-## The seven models
+## The eight models
 
 All zero-shot, as released: the same models as in the sentiment benchmark. Every one answers the same Jev request, `{state, questions}`, and returns a probability per option. They differ in how they read it, which turns out to matter here.
 
 | Model | How it reads the request | Runs here as | Sentiment |
 |---|---|---|--:|
+| Clef-flash | Cloudflare's post-trained Qwen3.5-9B: a joint schema head reads the final hidden states and scores the options of all questions together; options are sorted before encoding | own environment, `/v1/systemone` adapter (PyTorch MPS) | 59.7% |
 | Decider 2B | Qwen3.5-2B fine-tune: state, question and lettered options in one sequence; answer from the letter logits | in-process, PyTorch MPS | 74.0% |
 | Decider 4B v2 | the same, on Qwen3.5-4B | in-process, PyTorch MPS | 75.0% |
 | Kev 4B | LoRA on Qwen3.5-4B-Base; a pointer head scores each option's end token | its own `/v1/systemone` server (MLX) | 63.7% |
@@ -36,6 +37,7 @@ Each model's best request among those where the model decides every move (so not
 
 | Model | Best request | Food / game | Best game | Died | Per move | Probe, hard states |
 |---|---|--:|--:|--:|--:|--:|
+| **Clef-flash** | Judged options | 39.3 | 45 | 0 of 10 | 516 ms | 100% |
 | **Decider 2B** | Judged options | 36.9 | 46 | 2 of 10 | 145 ms | 100% |
 | **CLM 8B** | Judged, plain wording | 36.2 | 44 | 5 of 10 | 4 ms | 100% |
 | **Decider 4B** | Judged, plain wording | 30.8 | 43 | 9 of 10 | 260 ms | 100% |
@@ -77,14 +79,14 @@ Games mix many effects, so we first asked for single moves on fixed situations w
 
 ![Good picks on hard states, per request and model](snake-report/probe.svg)
 
-| Request | Decider 2B | Decider 4B | Kev 4B | CLM 8B | GLiNER 340M | GLiNER 1B | Laya | Decider 2B latency |
-|---|--:|--:|--:|--:|--:|--:|--:|--:|
-| Raw board | 0.59 / 0.05 | 0.63 / 0.10 | 0.93 / 0.79 | 0.45 / 0.25 | 0.58 / 0.00 | 0.58 / 0.00 | 0.58 / 0.00 | 353 ms |
-| Relative, in words | 0.69 / 0.46 | 0.69 / 0.54 | 0.84 / 0.93 | 0.35 / 0.45 | 0.38 / 0.59 | 0.65 / 0.60 | 0.47 / 0.40 | 184 ms |
-| Facts in the options (sorrycc) | 0.68 / 0.10 | 0.74 / 0.46 | 0.74 / 0.31 | 0.64 / 0.19 | 0.65 / 0.00 | 0.60 / 0.14 | 0.52 / 0.18 | 532 ms |
-| Judged options + heading in state | 0.73 / 0.57 | 0.99 / 1.00 | 0.99 / 1.00 | 0.93 / 0.89 | 0.80 / 0.28 | 0.69 / 0.00 | 0.73 / 0.25 | 185 ms |
-| **Judged options, verdicts only** | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.93 / 0.89 | 0.93 / 0.86 | 0.81 / 0.72 | 0.61 / 0.39 | 142 ms |
-| **Judged, eating worded as 'closer'** | 0.98 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.95 / 0.90 | 0.79 / 0.70 | – | 140 ms |
+| Request | Clef-flash | Decider 2B | Decider 4B | Kev 4B | CLM 8B | GLiNER 340M | GLiNER 1B | Laya | Decider 2B latency |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| Raw board | 0.87 / 0.85 | 0.59 / 0.05 | 0.63 / 0.10 | 0.93 / 0.79 | 0.45 / 0.25 | 0.58 / 0.00 | 0.58 / 0.00 | 0.58 / 0.00 | 353 ms |
+| Relative, in words | 0.80 / 0.70 | 0.69 / 0.46 | 0.69 / 0.54 | 0.84 / 0.93 | 0.35 / 0.45 | 0.38 / 0.59 | 0.65 / 0.60 | 0.47 / 0.40 | 184 ms |
+| Facts in the options (sorrycc) | 0.83 / 0.75 | 0.68 / 0.10 | 0.74 / 0.46 | 0.74 / 0.31 | 0.64 / 0.19 | 0.65 / 0.00 | 0.60 / 0.14 | 0.52 / 0.18 | 532 ms |
+| Judged options + heading in state | 1.00 / 1.00 | 0.73 / 0.57 | 0.99 / 1.00 | 0.99 / 1.00 | 0.93 / 0.89 | 0.80 / 0.28 | 0.69 / 0.00 | 0.73 / 0.25 | 185 ms |
+| **Judged options, verdicts only** | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.93 / 0.89 | 0.93 / 0.86 | 0.81 / 0.72 | 0.61 / 0.39 | 142 ms |
+| **Judged, eating worded as 'closer'** | 0.99 / 1.00 | 0.98 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.99 / 1.00 | 0.95 / 0.90 | 0.79 / 0.70 | – | 140 ms |
 
 Cells: good pick on all 150 states / on the 100 hard states. Kev 4B is the only model that reads the raw board (93%). Laya stays below chance on the hard states with every request.
 
@@ -154,6 +156,12 @@ Same 10 seeds for every row, 12×12 board. A game ends on death, after 144 steps
 
 | Controller | Food / game | Best | Steps | Ended by | Per move, p50 / mean |
 |---|--:|--:|--:|---|--:|
+| Clef-flash · Raw board | 6.5 | 15 | 64 | died 10 | 750 / 756 ms |
+| Clef-flash · Relative, in words | 0.5 | 3 | 147 | starved 10 | 528 / 531 ms |
+| Clef-flash · Facts in the options | 3.8 | 13 | 177 | starved 9, died 1 | 960 / 944 ms |
+| **Clef-flash · Judged options** | 39.3 | 45 | 500 | step cap (500) 10 | 516 / 516 ms |
+| **Clef-flash · Judged, plain wording** | 35.9 | 45 | 444 | step cap (500) 8, died 2 | 516 / 517 ms |
+| Clef-flash · Composed questions | 40.0 | 44 | 481 | step cap (500) 7, died 3 | 953 / 941 ms |
 | Decider 2B · Raw board | 0.0 | 0 | 7 | died 10 | 357 / 358 ms |
 | Decider 2B · Relative, in words | 0.1 | 1 | 145 | starved 10 | 185 / 185 ms |
 | Decider 2B · Facts in the options | 1.2 | 4 | 175 | starved 10 | 448 / 456 ms |
@@ -217,6 +225,7 @@ ximing's gate hands the move to code when the model is under 0.55 confident, and
 
 | Composed questions | Food / game | Model's choice | Code: model unsure | Code: survival mode | Code: one safe move |
 |---|--:|--:|--:|--:|--:|
+| Clef-flash | 40.0 | 59% | 33% | 0% | 8% |
 | GLiNER 340M | 39.4 | 33% | 59% | 0% | 7% |
 | Decider 2B | 38.3 | 50% | 43% | 0% | 7% |
 | Decider 4B | 32.7 | 67% | 26% | 0% | 7% |

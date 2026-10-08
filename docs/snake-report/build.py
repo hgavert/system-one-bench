@@ -15,7 +15,7 @@ from pathlib import Path
 R = Path("results/snake")
 HERE = Path(__file__).parent
 DATA = R / "report-data.json"
-MODELS = [("decider", "Decider 2B", "var(--accent)"), ("decider-4b-v2", "Decider 4B", "var(--d4)"),
+MODELS = [("clef-flash", "Clef-flash", "var(--clef)"), ("decider", "Decider 2B", "var(--accent)"), ("decider-4b-v2", "Decider 4B", "var(--d4)"),
           ("kev-4b", "Kev 4B", "var(--code)"), ("clm-latest", "CLM 8B", "var(--clm)"),
           ("gliner-decide", "GLiNER 340M", "var(--gl)"), ("gliner-decide-1b", "GLiNER 1B", "color-mix(in srgb, var(--gl) 55%, var(--muted))"),
           ("laya", "Laya", "var(--muted)")]

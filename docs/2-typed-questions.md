@@ -114,7 +114,7 @@ option's vector is computed while reading the whole sequence, so order leaks in 
 4. **training shortcuts**, if correct answers were often first or last.
 
 Only the bi-encoder (CLM) is order-blind by construction, at the price of never letting the tweet
-and the options interact. Measured on our tweets: [doc 4, position bias](4-zero-shot-reproductions.md#48-position-bias).
+and the options interact. Measured on our tweets: [doc 4, position bias](4-zero-shot-reproductions.md#49-position-bias).
 
 ## 2.7 Calibration
 

@@ -6,6 +6,99 @@
  },
  "rows": [
   {
+   "engine": "clef-flash",
+   "name": "composed",
+   "games": 10,
+   "score_mean": 40,
+   "score_max": 44,
+   "steps_mean": 480.8,
+   "latency_p50_ms": 952.7,
+   "latency_mean_ms": 940.9917137051252,
+   "died": 3,
+   "ended": {
+    "died": 3,
+    "step cap (500)": 7
+   },
+   "split": {
+    "model": 0.591514143094842,
+    "low": 0.32965890183028285,
+    "surv": 0.0,
+    "code1": 0.07882695507487521
+   }
+  },
+  {
+   "engine": "clef-flash",
+   "name": "facts",
+   "games": 10,
+   "score_mean": 3.8,
+   "score_max": 13,
+   "steps_mean": 177.1,
+   "latency_p50_ms": 960.2,
+   "latency_mean_ms": 944.3324113048708,
+   "died": 1,
+   "ended": {
+    "starved": 9,
+    "died": 1
+   }
+  },
+  {
+   "engine": "clef-flash",
+   "name": "grid",
+   "games": 10,
+   "score_mean": 6.5,
+   "score_max": 15,
+   "steps_mean": 63.7,
+   "latency_p50_ms": 750.2,
+   "latency_mean_ms": 756.138147566719,
+   "died": 10,
+   "ended": {
+    "died": 10
+   }
+  },
+  {
+   "engine": "clef-flash",
+   "name": "judged-plain",
+   "games": 10,
+   "score_mean": 35.9,
+   "score_max": 45,
+   "steps_mean": 443.9,
+   "latency_p50_ms": 516.4,
+   "latency_mean_ms": 516.7907352941177,
+   "died": 2,
+   "ended": {
+    "step cap (500)": 8,
+    "died": 2
+   }
+  },
+  {
+   "engine": "clef-flash",
+   "name": "judged",
+   "games": 10,
+   "score_mean": 39.3,
+   "score_max": 45,
+   "steps_mean": 500,
+   "latency_p50_ms": 516.1,
+   "latency_mean_ms": 516.212349726776,
+   "died": 0,
+   "ended": {
+    "step cap (500)": 10
+   }
+  },
+  {
+   "engine": "clef-flash",
+   "name": "relative",
+   "games": 10,
+   "score_mean": 0.5,
+   "score_max": 3,
+   "steps_mean": 146.7,
+   "latency_p50_ms": 528.3,
+   "latency_mean_ms": 530.6770279481935,
+   "died": 0,
+   "ended": {
+    "starved": 10
+   }
+  },
+  {
    "engine": "clm-latest",
    "name": "composed",
    "games": 10,

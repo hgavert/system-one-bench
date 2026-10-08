@@ -1,4 +1,31 @@
 {
+ "clef-flash": {
+  "accuracy_per_order": {
+   "negative / neutral / positive": 0.62,
+   "negative / positive / neutral": 0.62,
+   "neutral / negative / positive": 0.62,
+   "neutral / positive / negative": 0.62,
+   "positive / negative / neutral": 0.62,
+   "positive / neutral / negative": 0.62
+  },
+  "accuracy_min_max": [
+   0.62,
+   0.62
+  ],
+  "accuracy_by_correct_position": {
+   "1": 0.62,
+   "2": 0.62,
+   "3": 0.62
+  },
+  "pick_share_by_position": {
+   "1": 0.3333333333333333,
+   "2": 0.3333333333333333,
+   "3": 0.3333333333333333
+  },
+  "pick_chi2_p": 1.0,
+  "tweets_whose_answer_flips": 0.0,
+  "mean_max_probability_swing": 0.0
+ },
  "clm-8b": {
   "accuracy_per_order": {
    "negative / neutral / positive": 0.5166666666666667,

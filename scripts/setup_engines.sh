@@ -5,7 +5,7 @@
 #   ./scripts/setup_engines.sh              # main env + every engine
 #   ./scripts/setup_engines.sh kev clm      # only these
 #
-# Engines: main kev semif openvons clm gliner
+# Engines: main kev semif openvons clm gliner clef
 # Needs git and uv (https://docs.astral.sh/uv/). Models are fetched separately:
 #   uv run python scripts/download_models.py
 # An existing checkout is left alone; the script only warns if it is on a different commit.
@@ -67,12 +67,20 @@ setup_gliner() {
                peft==0.21.0 sentencepiece protobuf)
 }
 
-ALL=(main kev semif openvons clm gliner)
+setup_clef() {
+    echo "== Clef-flash (Cloudflare): its joint_schema_model.py ships with the weights; own venv, Cloudflare's tested transformers"
+    mkdir -p "$TP/clef-env"
+    (cd "$TP/clef-env" && { [ -d .venv ] || uv venv -q --python 3.12 .venv; } \
+        && uv pip install -q --python .venv/bin/python transformers==5.10.2 torch==2.14.1 torchvision==0.29.1 \
+               accelerate pillow safetensors huggingface_hub)   # accelerate: the loader uses device_map
+}
+
+ALL=(main kev semif openvons clm gliner clef)
 TARGETS=("$@")
 [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ALL[@]}")
 for t in "${TARGETS[@]}"; do
     case "$t" in
-        main|kev|semif|openvons|clm|gliner) "setup_$t" ;;
+        main|kev|semif|openvons|clm|gliner|clef) "setup_$t" ;;
         *) echo "unknown engine '$t'; choose from: ${ALL[*]}"; exit 1 ;;
     esac
 done

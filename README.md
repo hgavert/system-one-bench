@@ -15,7 +15,7 @@ repo takes the best-ranked ones that run on a 32 GB Apple M5, plus the strongest
 | **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game | understand Finnish: topic, reading comprehension, intent, reviews |
 | **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways | the same `choice` questions on 4 datasets × 300 items, in English and in Finnish |
 | **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) | Qwen 3.8 27B (vLLM, another machine) |
-| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster | asked to read the board, the models fail (so does Jev); with one verdict per option, Decider 2B eats 36.9 food per game, close to code's 41.1 | Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish and are near the 27B LLM; Decider 2B loses ~7; CLM collapses |
+| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster; Clef-flash, best in the other two tests, scores 59.7% | asked to read the board, the models fail (so does Jev); with one verdict per option, Clef-flash eats 39.3 food per game without dying, Decider 2B 36.9, close to code's 41.1 | Clef-flash is best, ahead of the 27B LLM (0.928 vs 0.907 in Finnish); Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish; Decider 2B loses ~7; CLM collapses |
 | **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [docs/finnish-report.md](docs/finnish-report.md) · [interactive](docs/finnish-report/index.html) |
 
 The reports are generated from `results/`: `uv run python docs/page/build.py`,
@@ -29,12 +29,13 @@ The reports are generated from `results/`: `uv run python docs/page/build.py`,
   [Decider 4B v2](https://huggingface.co/Mapika/decider-4b/tree/v2),
   [GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide) (340M and 1B; for Finnish the multilingual
   [GLiNER2.5-multi-Decide](https://huggingface.co/fastino/GLiNER2.5-multi-Decide), 287M) and
-  [CLM 8B](https://github.com/Contrastive-LM/CLM) (contrastive bi-encoder).
+  [CLM 8B](https://github.com/Contrastive-LM/CLM) (contrastive bi-encoder) and Cloudflare's
+  [Clef-flash](https://huggingface.co/Cloudflare/clef-flash) (9B, post-trained Qwen3.5-9B with a joint schema head).
   Chosen from the [Jev Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index), plus the
-  last four, released after it; why the index's top five don't fit a 32 GB Mac: [docs/1-landscape.md](docs/1-landscape.md)
-* **Which test ran which:** all of them ran the sentiment test; seven of them also played Snake: Decider 2B,
-  Decider 4B v2, Kev 4B, CLM 8B, GLiNER2.5-Decide 340M and 1B, and Laya. Finnish: Decider 2B and 4B v2, Kev 0.8B / 4B /
-  9B, GLiNER2.5-multi-Decide and CLM 8B.
+  last five, released after it; why the index's top five don't fit a 32 GB Mac: [docs/1-landscape.md](docs/1-landscape.md)
+* **Which test ran which:** all of them ran the sentiment test; eight of them also played Snake: Clef-flash, Decider 2B,
+  Decider 4B v2, Kev 4B, CLM 8B, GLiNER2.5-Decide 340M and 1B, and Laya. Finnish: Clef-flash, Decider 2B and 4B v2,
+  Kev 0.8B / 4B / 9B, GLiNER2.5-multi-Decide and CLM 8B.
 * **LLM baselines (sentiment):** Gemma 4 26B-A4B, Gemma 4 12B and Qwen 3.8 27B in LM Studio, with JSON-schema output.
   **Finnish:** Qwen 3.8 27B (FP8) on a vLLM server, thinking off; that test compares accuracy, not speed
 
@@ -66,6 +67,7 @@ gets the same question dict. Report: [docs/sentiment-report.md](docs/sentiment-r
 | Laya | encoder + head | 30 | 0.633 | 0.639 | 49 ms | 0.071 |
 | **GLiNER2.5-Decide-1B** | encoder + head | new | 0.630 | 0.632 | 73 ms | 0.081 |
 | Laya multilingual | encoder + head | – | 0.630 | 0.634 | 20 ms | 0.112 |
+| **Clef-flash** (Cloudflare) | backbone + joint head | new | 0.597 | 0.594 | 477 ms | 0.205 |
 | Kev 0.8B | LoRA + pointer | – | 0.587 | 0.597 | 45 ms | 0.128 |
 | *Nearest description by embedding* | *bi-encoder baseline* | – | *0.567* | *0.537* | *13 ms* | *0.071* |
 | **CLM 8B** | contrastive bi-encoder | new | 0.517 | 0.451 | 167 ms | 0.271 |
@@ -77,6 +79,9 @@ after the Decision Index edition used here.)
 * **The Decider models tie the best local LLM zero-shot**: Decider 4B v2 0.750 and Decider 2B 0.740 vs
   Gemma 26B 0.740 (paired p ≈ 0.8), with honest probabilities. The 2B is the better deal: as accurate, 4.6× faster
   than the LLM and 1.8× faster than the 4B.
+* **One task is not enough to rank these models**: Cloudflare's Clef-flash, best in the Snake and Finnish tests,
+  scores 0.597 here. It calls about two thirds of the tweets neutral, whatever the question ID or label wording
+  (0.60–0.62, [adapters/clef_question_variants.py](adapters/clef_question_variants.py)).
 * **Bigger isn't automatically better within a family**: GLiNER2.5-Decide-1B (0.630) doesn't beat the 340M
   model (0.637).
 * **Letter-logit readouts lead**; even a stock base model read that way (SemIf) beats Kev's and
@@ -86,11 +91,12 @@ after the Decision Index edition used here.)
   trained contrastive heads on Qwen3-8B get 0.517 (0.43–0.55 depending on how the options are worded).
 * **Label descriptions are a model-specific lever**: no effect on Gemma, +4.7 points for Qwen 27B
   without them (paired test p = 0.013).
-* **Option order**: rerunning 11 models with all 6 option orders ([results/position_bias.json](results/position_bias.json)):
+* **Option order**: rerunning 12 models with all 6 option orders ([results/position_bias.json](results/position_bias.json)):
 
   | Answers that flip with order alone | Models |
   |---|---|
   | 0% (options are embedded one by one) | CLM 8B |
+  | 0% (its code sorts the options before encoding) | Clef-flash |
   | 5.7%, no preferred position | Decider 2B (its training shuffles options) |
   | 10–13%, no preferred position | Decider 4B v2, GLiNER2.5-multi-Decide, Kev 0.8B / 4B / 9B |
   | 17–19%, no significant preferred position | GLiNER2.5-Decide-1B, SemIf |
@@ -139,7 +145,8 @@ Each model's best request (among those where the model decides every move), 10 g
 
 | Model | Best request | Food / game | Best game | Died | Per move | Probe, hard states |
 |---|---|--:|--:|--:|--:|--:|
-| **Decider 2B** | Judged options | **36.9** | 46 | 2 of 10 | 145 ms | 100% |
+| **Clef-flash** | Judged options | **39.3** | 45 | **0 of 10** | 516 ms | 100% |
+| **Decider 2B** | Judged options | 36.9 | 46 | 2 of 10 | 145 ms | 100% |
 | **CLM 8B** | Judged, plain wording | 36.2 | 44 | 5 of 10 | **4 ms** | 100% |
 | Decider 4B v2 | Judged, plain wording | 30.8 | 43 | 9 of 10 | 260 ms | 100% |
 | Kev 4B | Judged options | 29.5 | 41 | 10 of 10 | 108 ms | 100% |
@@ -151,7 +158,8 @@ Each model's best request (among those where the model decides every move), 10 g
 
 * **The simple way fails, for Jev too.** Given the raw board, or nadeem4's or sorrycc's published phrasing, the models
   drive into walls or circle until they starve. Jev's only published result is 1.8 food per game against 17.3 for
-  greedy code. The demos that look good let code do the geometry.
+  greedy code. The demos that look good let code do the geometry. Clef-flash reads the raw board best (a good move on
+  85% of the hard probe states) but still dies in every raw-board game.
 * **What works: one verdict per option, and nothing else in the state.** Code writes "moves closer to the food; keeps
   the most room" into each option. Numbers to compare across options and direction words in the state (`heading: up`)
   are what break the small models.
@@ -159,10 +167,11 @@ Each model's best request (among those where the model decides every move), 10 g
   worded "moves closer to the food", CLM goes from 0 to 36.2 food per game.
 * **Better single moves don't mean longer games.** Decider 4B v2 and Kev 4B are as accurate as Decider 2B on single
   moves but chase the food into tight spaces and die in 9–10 games of 10.
-* **Speed varies 60-fold**, from CLM's ~4 ms per move (everything cached) to Decider 4B v2's ~260 ms.
+* **Speed varies over 100-fold**, from CLM's ~4 ms per move (everything cached) to Decider 4B v2's ~260 ms and
+  Clef-flash's ~520 ms. Clef-flash is also the best player: 39.3 food per game with judged options, never dying.
 * **A phrase table matches the models.** Once each option carries a verdict, adding up points for seven phrases
-  ("moves closer to the food" +3, "DEAD END" −100, ...) picks as well as the best model and eats more per game
-  (39.0), in under a millisecond. What a model adds in Snake is reading the player's strategy text
+  ("moves closer to the food" +3, "DEAD END" −100, ...) picks as well as the best model and eats as much per game
+  (39.0, Clef-flash 39.3), in under a millisecond. What a model adds in Snake is reading the player's strategy text
   ([§5.7](docs/5-snake.md)).
 
 ## Test 3: Finnish
@@ -188,7 +197,8 @@ SIB, Belebele and MASSIVE items (paired, so much less noisy).
 
 | Model | SIB topic | Belebele reading | MASSIVE intent* | ScandiSent-fi | EN → FI, same items |
 |---|--:|--:|--:|--:|--:|
-| **Decider 4B v2** | 0.833 | **0.903** | **0.963** | 0.913 | −2.1 |
+| **Clef-flash** | 0.860 | **0.927** | **0.973** | ***0.953*** | −1.8 |
+| **Decider 4B v2** | 0.833 | 0.903 | 0.963 | 0.913 | −2.1 |
 | **Kev 9B** | **0.863** | 0.803 | 0.913 | 0.947 | **−1.7** |
 | Kev 4B | 0.860 | 0.703 | 0.937 | 0.913 | −1.9 |
 | Decider 2B | 0.803 | 0.800 | 0.893 | 0.903 | −6.9 |
@@ -200,8 +210,10 @@ SIB, Belebele and MASSIVE items (paired, so much less noisy).
 \*Decider was trained on MASSIVE's training split (multilingual), so that column is not zero-shot for Decider.
 Chance: 0.14 / 0.25 / 0.10 / 0.50.
 
-* **Three System One models keep their English level in Finnish**: Decider 4B v2, Kev 9B and Kev 4B lose about 2
-  points on the same items, less than the 27B LLM (3.6). Decider 4B v2 is the strongest overall and beats the LLM on
+* **Clef-flash is the best model in Finnish**: 0.928 averaged over the four datasets in Finnish, ahead of the 27B
+  LLM (0.907); −1.8 points from English, best on reading comprehension (Belebele 0.927 vs the LLM's 0.863), ECE ≈ 0.03.
+* **Three more System One models keep their English level in Finnish**: Decider 4B v2, Kev 9B and Kev 4B lose about 2
+  points on the same items, less than the 27B LLM (3.6). Decider 4B v2 is the strongest of these and beats the LLM on
   Belebele, which its card lists as held out of training; Kev 9B ties the LLM on native Finnish reviews.
 * **Decider 2B works in Finnish but loses ~7 points** (10 on reading comprehension and intents), with its
   probabilities still calibrated (ECE ≤ 0.06).
@@ -247,7 +259,7 @@ uv run python scripts/download_models.py --list    # the models, where they go, 
 uv run python scripts/download_models.py           # download all at the benchmarked revisions and SHA-256-verify
 ```
 
-- `setup_engines.sh` takes engine names to set up only some: `main kev semif openvons clm gliner`.
+- `setup_engines.sh` takes engine names to set up only some: `main kev semif openvons clm gliner clef`.
 - `download_models.py --only decider-2b,gliner-decide` fetches a subset (Kev's Qwen3.5 bases are added
   automatically); `--verify` checks what is on disk without downloading. If huggingface.co is slow from your
   network, `--parallel` splits large files into 32 byte ranges and `--modelscope` fetches Qwen3-4B-Instruct from
@@ -281,6 +293,9 @@ uv run python adapters/openvons_adapter.py > results/raw/openvons.jsonl
 uv run python adapters/decider_adapter.py > results/raw/decider-2b.jsonl
 uv run python adapters/decider_adapter.py models/decider-4b-v2 > results/raw/decider-4b-v2.jsonl
 third_party/gliner2-env/.venv/bin/python adapters/gliner_adapter.py fastino/GLiNER2.5-Decide > results/raw/gliner-decide.jsonl
+third_party/clef-env/.venv/bin/python adapters/clef_server.py --port 8720 &   # Clef-flash: one /v1/systemone server for all tests
+uv run python 02_benchmark.py s1:clef-flash --url http://127.0.0.1:8720 --name clef-flash
+uv run python scripts/smoke_systemone.py --url http://127.0.0.1:8720 --model clef-flash   # quick check + run-time estimates
 third_party/kev/.venv/bin/python adapters/mlx_embed_server.py --model Qwen/Qwen3-8B --port 8090 &   # CLM's encoder
 (cd third_party/clm && CLM_DEVICE=cpu .venv/bin/clm-serve --port 8700 --emb-url http://127.0.0.1:8090/v1/embeddings --ckpt checkpoints/CLM_v0.1-8B.pt) &
 uv run python 02_benchmark.py s1:clm-latest --url http://127.0.0.1:8700 --name clm-8b

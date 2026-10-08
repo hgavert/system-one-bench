@@ -24,7 +24,7 @@ is the textbook `choice` question.
 
 ## How the reproductions differ
 
-Dozens of open reproductions appeared within days. They fall into five families, and this tutorial
+Dozens of open reproductions appeared within days. They fall into six families, and this tutorial
 runs at least one of each:
 
 | Family | How it answers | Trains weights? | Examples run here |
@@ -34,6 +34,7 @@ runs at least one of each:
 | **Full fine-tune, letter logits** | A causal LLM fine-tuned to put its answer in the logit of an option letter | whole model | Decider 2B, Decider 4B v2 |
 | **Inference technique** | A *stock* LLM; the prompt lists lettered options and the answer is read from the next-token logits of the letters | **nothing** | SemIf, openvons |
 | **Contrastive bi-encoder** | A frozen LLM embeds state+question and each option *separately*; small trained heads align the two spaces; answer = softmax of cosine | projection heads | CLM 8B |
+| **Backbone + joint head** | A post-trained LLM; a small transformer head reads its final hidden states and scores the options of all questions *jointly* (options sorted before encoding) | whole model + head | Clef-flash |
 
 The last family is the purest zero-shot baseline: it shows how much of "Jev" is just careful
 prompting plus reading logits instead of sampling text.
@@ -66,6 +67,7 @@ each entrant could run on this tutorial's Apple M5 with 32 GB:
 | – | **Decider 4B v2** (24 Sept, after index 0.1) | full fine-tune + LoRA stage | Qwen3.5-4B-Base | – | ✅ PyTorch MPS |
 | (21, 27) | **GLiNER2.5-Decide** 340M / 1B (the index ran the older GLiNER 2.5 base/small) | encoder + head | DeBERTa-v3-large / ~1B encoder | – | ✅ PyTorch MPS |
 | – | **CLM 8B** (released 24 Sept, after index 0.1) | contrastive bi-encoder | Qwen3-8B | – | ✅ vLLM encoder replaced by an MLX one |
+| – | **Clef-flash** 9B (Cloudflare, 1 Oct; the 27B **Clef** needs ~55 GB and does not fit) | backbone + joint head | Qwen3.5-9B | – | ✅ PyTorch MPS, Cloudflare's own inference code |
 
 The index is a broad test: knowledge, retrieval, tool use, agent games. A model near the bottom of
 it, such as Laya, can still be perfectly usable for one narrow task like sentiment, and vice versa.
@@ -84,5 +86,6 @@ engine then receives the *same* question dict.
 * [Jev (AI model), Wikipedia](https://en.wikipedia.org/wiki/Jev_(AI_model)) · [TechCrunch](https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/)
 * [Laya](https://huggingface.co/convaiinnovations/laya) · [Kev](https://github.com/jaredpalmer/kev) · [SemIf](https://github.com/TheoLeeCJ/openjev) · [openvons](https://github.com/genai-craft/openvons) · [Decider 2B](https://huggingface.co/Mapika/decider-2b)
 * [Decider 4B v2](https://huggingface.co/Mapika/decider-4b/tree/v2) · [GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide) · [GLiNER2.5-Decide-1B](https://huggingface.co/fastino/GLiNER2.5-Decide-1B)
+* [Clef-flash](https://huggingface.co/Cloudflare/clef-flash) · [Clef](https://huggingface.co/Cloudflare/clef) · [announcement](https://developers.cloudflare.com/changelog/post/2026-10-01-clef-workers-ai/)
 * [CLM](https://github.com/Contrastive-LM/CLM) · [CLM-v0.1-8B](https://huggingface.co/Contrastive-LM/CLM-v0.1-8B)
 * [Jevfire](https://github.com/kikoncuo/jevfire) · [JoshuaSP open-jev](https://github.com/JoshuaSP/open-jev) · [Decider 35B-A3B](https://huggingface.co/Mapika/decider-35b-a3b-nvfp4) · [Solomon](https://huggingface.co/DoccyHealth/Solomon) · [Decision-1.0-Nox](https://huggingface.co/llm-semantic-router/Decision-1.0-Nox-4B) · [mini-jev](https://github.com/r-ms/mini-jev)

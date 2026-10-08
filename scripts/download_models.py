@@ -65,6 +65,8 @@ MODELS = {
     "clm-head": dict(repo="Contrastive-LM/CLM-v0.1-8B", rev="e939398d4556fcd9400c76fa8c5a513202f42b0a",
                      dest="third_party/clm/checkpoints", patterns=["CLM_v0.1-8B.pt"], gb=0.08,
                      used="CLM projection heads"),
+    "clef-flash": dict(repo="Cloudflare/clef-flash", rev="17f0b0ad64efb65d273590632833508766b2aae6", dest="cache",
+                       gb=19.1, used="Clef-flash 9B (adapters/clef_server.py, clef env)"),
 }
 
 

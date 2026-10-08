@@ -217,7 +217,34 @@ worded ([`adapters/clm_phrasing.py`](../adapters/clm_phrasing.py), still zero-sh
 everything positive. Raw last-token embeddings sit in a narrow cone (two unrelated tweets have
 cosine 0.95), which is why CLM trains heads at all.
 
-## 4.7 Results
+## 4.7 Clef-flash: Cloudflare's decision model, with its own inference code
+
+[Clef-flash](https://huggingface.co/Cloudflare/clef-flash) (Cloudflare, 1 October 2026, Apache-2.0) is post-trained
+from Qwen3.5-9B. A **joint schema head**, a small transformer, reads the backbone's final hidden states and scores the
+options of all questions together. The release ships the weights plus `joint_schema_model.py`, whose `systemone()`
+turns a `/v1/systemone` request into a response, in plain PyTorch. [`adapters/clef_server.py`](../adapters/clef_server.py)
+serves it on this Mac (bf16, MPS, 19 GB), so every test calls it like Kev or CLM:
+
+```bash
+third_party/clef-env/.venv/bin/python adapters/clef_server.py --port 8720      # own venv: scripts/setup_engines.sh clef
+uv run python 02_benchmark.py s1:clef-flash --url http://127.0.0.1:8720 --name clef-flash
+```
+
+Two details of its input code matter for the results:
+
+* **Options are sorted alphabetically** before encoding (`sorted(criteria.items())`), so the six option orders are the
+  same input: 0% of answers flip in the position test. That is order-invariance by preprocessing, not by the head.
+* **The question ID is part of the prompt** (`FIELD 1 / ID: <id> / TYPE: choice / INSTRUCTION: ...`). On the tweets,
+  [`adapters/clef_question_variants.py`](../adapters/clef_question_variants.py) measured 0.597 with ID `sentiment`,
+  0.620 / 0.623 with `s` / `q`, and 0.600 with label words only: within noise, and every variant calls about two
+  thirds of the tweets neutral.
+
+Results: **0.597 on the tweets** (macro-F1 0.594, ECE 0.205, 477 ms per tweet), but the **best model in the Finnish
+test** (0.928 in Finnish, ECE ≈ 0.03) and the **best player in Snake** (39.3 food per game with judged options, no
+death in 10 games; 85% good moves on the hard raw-board probe states). The 27B Clef (55 GB bf16) does not fit a
+32 GB Mac. Its probabilities are the head's raw softmax; the release applies no temperature.
+
+## 4.8 Results
 
 Same 300 test tweets, same question, nothing trained on tweets. From `results/REPORT.md`:
 
@@ -237,6 +264,7 @@ Same 300 test tweets, same question, nothing trained on tweets. From `results/RE
 | Laya multilingual | encoder + head | – | 0.630 | 0.634 | 20 ms | 0.112 |
 | Kev 0.8B | LoRA + pointer | (17)* | 0.587 | 0.597 | 45 ms | 0.128 |
 | *Nearest description by embedding (nomic-embed)* | *bi-encoder baseline* | – | *0.567* | *0.537* | *13 ms* | *0.071* |
+| **Clef-flash** | backbone + joint head | new | 0.597 | 0.594 | 477 ms | 0.205 |
 | **CLM 8B** | contrastive bi-encoder | new | 0.517 | 0.451 | 167 ms | 0.271 |
 | *Qwen3-8B raw embeddings (`clm-raw`)* | *bi-encoder baseline* | – | *0.343* | *0.193* | *166 ms* | *0.213* |
 
@@ -288,7 +316,7 @@ Zero-shot Decider 2B (0.740) already matches the best trained model here.
 ask Gemma 26B otherwise. That gives 0.753 with only 6% of tweets sent to the LLM (188 ms average),
 versus 0.740 for Gemma alone (669 ms).
 
-## 4.8 Position bias
+## 4.9 Position bias
 
 Does the order of the options change the answer? [`adapters/position_bias.py`](../adapters/position_bias.py)
 reruns the same 300 tweets with the three options in **all 6 orders** (each label in each position
@@ -317,7 +345,7 @@ In practice, averaging a sensitive model over two or three orderings removes mos
 at 2-3x the cost. Kev's benchmark has this built in (`--rotations`). Single-order results for Laya
 and SemIf can be off by a point or two overall and up to ~5 points on a class.
 
-## 4.9 Isn't this just embeddings?
+## 4.10 Isn't this just embeddings?
 
 A natural simplification of the question dict: embed each `"label: description"` string, embed the
 tweet, pick the nearest by cosine. [`adapters/embedding_baseline.py`](../adapters/embedding_baseline.py)
@@ -346,7 +374,7 @@ one pass per tweet per question.
 The approach that *would* compete is embeddings plus a classifier trained on labelled tweets. But
 that is trained for one fixed question, which is the thing a System One model is meant to avoid.
 
-## 4.10 Practical notes
+## 4.11 Practical notes
 
 * **Getting the models.** `scripts/download_models.py` fetches every model above at the revision that was
   measured, into the place its adapter expects, and checks each file's SHA-256 against the Hub.

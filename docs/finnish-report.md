@@ -2,16 +2,17 @@
 
 > Generated from the same data as the interactive version, [`docs/finnish-report/index.html`](finnish-report/index.html), by `docs/finnish-report/build.py`. Every number per dataset and condition: [results/finnish/REPORT.md](../results/finnish/REPORT.md).
 
-Can the open System One models be used on Finnish text? We asked seven of them, plus Qwen 3.8 27B as a reference, the same typed questions on four datasets, 300 items each: three where the same items exist in English and Finnish, and one written in Finnish. **Three order-blind models keep their English level in Finnish, close to the 27B LLM.** The worst case, that none of them understands Finnish, did not happen.
+Can the open System One models be used on Finnish text? We asked eight of them, plus Qwen 3.8 27B as a reference, the same typed questions on four datasets, 300 items each: three where the same items exist in English and Finnish, and one written in Finnish. **Cloudflare's Clef-flash (9B) is the best model in Finnish, ahead of the 27B LLM, and three more order-blind models keep their English level close to the LLM.** The worst case, that none of them understands Finnish, did not happen.
 
 ## What we found
 
-1. **Decider 4B v2, Kev 9B and Kev 4B lose about 2 points from English to Finnish** on the same items, less than the 27B LLM (3.6). Averaged over the four datasets in Finnish, Decider 4B v2 (0.903) is level with the LLM (0.907).
-2. **Decider 4B v2 is the strongest overall** and the only small model that also reads well: 0.903 on Belebele reading comprehension in Finnish, against the LLM's 0.863. Its model card lists Belebele as held out of training.
-3. **Kev 9B is the most language-neutral**: −1.7 points from English, and it ties the LLM on native Finnish reviews (0.947 vs 0.953). It is weaker than Decider 4B v2 on reading comprehension (0.803).
-4. **Decider 2B works in Finnish but loses ~7 points** (10 on reading comprehension and intents). It stays the most order-blind of the models that read the options together, with calibrated probabilities (ECE ≤ 0.06 in Finnish), so it still suits a confidence cascade.
-5. **The question language hardly matters.** A Finnish question is as good as an English one for every model except CLM, whose accuracy falls 11 points on average with Finnish option names (to chance on the reviews).
-6. **Small and encoder models fall behind.** GLiNER2.5-multi-Decide is fine on binary sentiment (0.89) but at chance on reading comprehension even in English; Kev 0.8B loses 13 points; CLM is not usable in Finnish.
+1. **Clef-flash is the best model in Finnish.** Averaged over the four datasets in Finnish it scores 0.928, ahead of the 27B LLM (0.907) and Decider 4B v2 (0.903); it loses only 1.8 points from English to Finnish on the same items, reads best (0.927 on Belebele in Finnish, LLM 0.863) and is well calibrated (ECE ≈ 0.03). Its option order never matters: Cloudflare's code sorts the options before building the input.
+2. **Decider 4B v2, Kev 9B and Kev 4B lose about 2 points from English to Finnish** on the same items, less than the 27B LLM (3.6). Averaged over the four datasets in Finnish, Decider 4B v2 (0.903) is level with the LLM (0.907).
+3. **Decider 4B v2 is the strongest of the other models**, and reads well too: 0.903 on Belebele reading comprehension in Finnish, against the LLM's 0.863. Its model card lists Belebele as held out of training.
+4. **Kev 9B is the most language-neutral**: −1.7 points from English, and it ties the LLM on native Finnish reviews (0.947 vs 0.953). It is weaker than Decider 4B v2 on reading comprehension (0.803).
+5. **Decider 2B works in Finnish but loses ~7 points** (10 on reading comprehension and intents). It stays the most order-blind of the models that read the options together, with calibrated probabilities (ECE ≤ 0.06 in Finnish), so it still suits a confidence cascade.
+6. **The question language hardly matters.** A Finnish question is as good as an English one for every model except CLM, whose accuracy falls 11 points on average with Finnish option names (to chance on the reviews).
+7. **Small and encoder models fall behind.** GLiNER2.5-multi-Decide is fine on binary sentiment (0.89) but at chance on reading comprehension even in English; Kev 0.8B loses 13 points; CLM is not usable in Finnish.
 
 ## Results at a glance
 
@@ -19,6 +20,7 @@ Everything in Finnish, accuracy on 300 items per dataset; the last column is the
 
 | Model | SIB-200 topic | Belebele reading | MASSIVE intent | ScandiSent-fi reviews | EN → FI, same items |
 |---|--:|--:|--:|--:|--:|
+| **Clef-flash** | 0.860 | 0.927 | 0.973 | 0.953 | -1.8 |
 | **Decider 4B v2** | 0.833 | 0.903 | 0.963 | 0.913 | -2.1 |
 | Decider 2B | 0.803 | 0.800 | 0.893 | 0.903 | -6.9 |
 | **Kev 9B** | 0.863 | 0.803 | 0.913 | 0.947 | -1.7 |
@@ -36,7 +38,9 @@ We only consider models whose answer doesn't depend on the order the options are
 
 | Model | Answers that flip | Picks 1st / 2nd / 3rd | Accuracy when right answer is 1st / 2nd / 3rd | χ² p | Prefers a position? |
 |---|--:|--:|--:|--:|---|
+| Clef-flash | 0.0% | 33% / 33% / 33% | 0.62 / 0.62 / 0.62 | 1 | no |
 | CLM 8B | 0.0% | 33% / 33% / 33% | 0.52 / 0.52 / 0.52 | 1 | no |
+| jev | 5.0% | 33% / 34% / 33% | 0.73 / 0.75 / 0.73 | 0.66 | no |
 | Decider 2B | 5.7% | 34% / 33% / 34% | 0.75 / 0.73 / 0.74 | 0.84 | no |
 | Decider 4B v2 | 10.0% | 34% / 33% / 33% | 0.77 / 0.74 / 0.75 | 0.88 | no |
 | GLiNER multi | 11.7% | 32% / 33% / 35% | 0.54 / 0.56 / 0.58 | 0.21 | no |
@@ -103,6 +107,7 @@ Accuracy change from English to Finnish on the same items, with a paired bootstr
 
 | Model | SIB-200 topic | Belebele reading | MASSIVE intent |
 |---|--:|--:|--:|
+| Clef-flash | -2.0 [-5.0, +1.0] | -1.7 [-4.3, +1.0] | -1.7 [-3.7, +0.3] |
 | Decider 4B v2 | +0.7 [-3.0, +4.3] | -4.7 [-7.3, -2.0] | -2.3 [-4.3, -0.3] |
 | Decider 2B | -3.3 [-7.3, +0.7] | -9.0 [-13.0, -4.7] | -8.3 [-12.0, -5.0] |
 | Kev 9B | +1.7 [-1.3, +4.7] | -2.7 [-6.7, +1.3] | -4.0 [-7.3, -0.3] |
@@ -118,6 +123,7 @@ Finnish text either way; the question (instructions, option names, descriptions)
 
 | Model | EN question | FI question | Mean change | Largest change |
 |---|--:|--:|--:|--:|
+| Clef-flash | 0.926 | 0.928 | +0.3 | +1.0 (SIB-200 topic) |
 | Decider 4B v2 | 0.903 | 0.903 | +0.0 | +1.7 (MASSIVE intent) |
 | Decider 2B | 0.847 | 0.850 | +0.3 | +2.0 (MASSIVE intent) |
 | Kev 9B | 0.887 | 0.882 | -0.6 | -2.0 (MASSIVE intent) |
@@ -133,6 +139,7 @@ Expected calibration error in Finnish (lower is better): does a 0.8 answer turn 
 
 | Model | SIB-200 topic | Belebele reading | MASSIVE intent | ScandiSent-fi reviews |
 |---|--:|--:|--:|--:|
+| Clef-flash | 0.031 | 0.036 | 0.038 | 0.023 |
 | Decider 4B v2 | 0.079 | 0.018 | 0.066 | 0.050 |
 | Decider 2B | 0.061 | 0.053 | 0.026 | 0.060 |
 | Kev 9B | 0.095 | 0.073 | 0.103 | 0.016 |
@@ -148,6 +155,7 @@ Belebele's correct answers are spread over A–D, which gives a free option-orde
 
 | Model | A | B | C | D |
 |---|--:|--:|--:|--:|
+| Clef-flash | 0.88 | 0.91 | 0.95 | 0.96 |
 | Decider 4B v2 | 0.88 | 0.87 | 0.91 | 0.94 |
 | Decider 2B | 0.83 | 0.75 | 0.79 | 0.84 |
 | Kev 9B | 0.77 | 0.77 | 0.87 | 0.80 |
@@ -169,6 +177,7 @@ Accuracy per dataset and condition: **en** = English text and question; **fi-en*
 
 | Model | SIB-200 en | SIB-200 fi-en | SIB-200 fi | Belebele en | Belebele fi-en | Belebele fi | MASSIVE en | MASSIVE fi-en | MASSIVE fi | ScandiSent-fi fi-en | ScandiSent-fi fi |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| Clef-flash | 0.880 | 0.850 | 0.860 | 0.943 | 0.933 | 0.927 | 0.990 | 0.963 | 0.973 | 0.957 | 0.953 |
 | Decider 4B v2 | 0.827 | 0.837 | 0.833 | 0.950 | 0.913 | 0.903 | 0.987 | 0.947 | 0.963 | 0.917 | 0.913 |
 | Decider 2B | 0.837 | 0.817 | 0.803 | 0.890 | 0.790 | 0.800 | 0.977 | 0.873 | 0.893 | 0.907 | 0.903 |
 | Kev 9B | 0.847 | 0.843 | 0.863 | 0.830 | 0.820 | 0.803 | 0.953 | 0.933 | 0.913 | 0.953 | 0.947 |

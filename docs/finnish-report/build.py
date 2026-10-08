@@ -18,7 +18,8 @@ SUMMARY = Path("results/finnish/summary.json")
 POSBIAS = Path("results/position_bias.json")
 
 # run name, label, page colour (CSS), SVG colour (fixed, light card)
-MODELS = [("decider-4b-v2", "Decider 4B v2", "var(--d4)", "#174a26"),
+MODELS = [("clef-flash", "Clef-flash", "var(--clef)", "#0f7b8a"),
+          ("decider-4b-v2", "Decider 4B v2", "var(--d4)", "#174a26"),
           ("decider", "Decider 2B", "var(--accent)", "#2d6a3e"),
           ("kev-9b", "Kev 9B", "var(--code)", "#3450a1"),
           ("kev-4b", "Kev 4B", "color-mix(in srgb, var(--code) 60%, var(--surface))", "#7f93cf"),
@@ -30,21 +31,26 @@ LABEL = {m: l for m, l, _, _ in MODELS}
 DATASETS = [("sib", "SIB-200 topic", "7 topics", 1 / 7), ("belebele", "Belebele reading", "4 answers", 0.25),
             ("massive", "MASSIVE intent", "10 intents", 0.10), ("scandisent", "ScandiSent-fi reviews", "positive / negative", 0.5)]
 PARALLEL = ["sib", "belebele", "massive"]
-BIAS_LABEL = {"decider": "Decider 2B", "decider-4b-v2": "Decider 4B v2", "kev-0.8b": "Kev 0.8B", "kev-4b": "Kev 4B",
+BIAS_LABEL = {"clef-flash": "Clef-flash", "decider": "Decider 2B", "decider-4b-v2": "Decider 4B v2", "kev-0.8b": "Kev 0.8B", "kev-4b": "Kev 4B",
               "kev-9b": "Kev 9B", "gliner-decide": "GLiNER 340M", "gliner-decide-1b": "GLiNER 1B",
               "gliner-multi-decide": "GLiNER multi", "clm-8b": "CLM 8B", "laya": "Laya", "semif": "SemIf"}
 
 # ---- prose (markdown-lite: **bold**, *italic*, `code`, [text](url)); rendered to both versions -------------------
 TITLE = "Reading Finnish"
 EYEBROW = "Jev reproductions · third test · September 2026"
-LEDE = ("Can the open System One models be used on Finnish text? We asked seven of them, plus Qwen 3.8 27B as a "
+LEDE = ("Can the open System One models be used on Finnish text? We asked eight of them, plus Qwen 3.8 27B as a "
         "reference, the same typed questions on four datasets, 300 items each: three where the same items exist in "
-        "English and Finnish, and one written in Finnish. **Three order-blind models keep their English level in "
-        "Finnish, close to the 27B LLM.** The worst case, that none of them understands Finnish, did not happen.")
+        "English and Finnish, and one written in Finnish. **Cloudflare's Clef-flash (9B) is the best model in "
+        "Finnish, ahead of the 27B LLM, and three more order-blind models keep their English level close to the "
+        "LLM.** The worst case, that none of them understands Finnish, did not happen.")
 FINDINGS = [
+    "**Clef-flash is the best model in Finnish.** Averaged over the four datasets in Finnish it scores 0.928, ahead "
+    "of the 27B LLM (0.907) and Decider 4B v2 (0.903); it loses only 1.8 points from English to Finnish on the same "
+    "items, reads best (0.927 on Belebele in Finnish, LLM 0.863) and is well calibrated (ECE ≈ 0.03). Its option "
+    "order never matters: Cloudflare's code sorts the options before building the input.",
     "**Decider 4B v2, Kev 9B and Kev 4B lose about 2 points from English to Finnish** on the same items, less than the "
     "27B LLM (3.6). Averaged over the four datasets in Finnish, Decider 4B v2 (0.903) is level with the LLM (0.907).",
-    "**Decider 4B v2 is the strongest overall** and the only small model that also reads well: 0.903 on Belebele "
+    "**Decider 4B v2 is the strongest of the other models**, and reads well too: 0.903 on Belebele "
     "reading comprehension in Finnish, against the LLM's 0.863. Its model card lists Belebele as held out of training.",
     "**Kev 9B is the most language-neutral**: −1.7 points from English, and it ties the LLM on native Finnish "
     "reviews (0.947 vs 0.953). It is weaker than Decider 4B v2 on reading comprehension (0.803).",
@@ -257,7 +263,7 @@ def chart(data):
 
 def html(data):
     head_rows = headline_rows(data)
-    best = {"decider-4b-v2", "kev-9b", "kev-4b"}
+    best = {"clef-flash", "decider-4b-v2", "kev-9b", "kev-4b"}
     fr = [f'<li><span class="n">{i}</span><p>{inline_html(f)}</p></li>' for i, f in enumerate(FINDINGS, 1)]
     ds_head = ["Model"] + [n for _, n, *_ in DATASETS]
     full_head = ["Model"] + [f"{n.split()[0]} {c}" for d, n, *_ in DATASETS for c in ("en", "fi-en", "fi")
