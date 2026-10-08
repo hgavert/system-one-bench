@@ -6,7 +6,7 @@
 <style>
 :root {
   --ground: #eef0e6; --surface: #f9faf4; --ink: #1c2419; --muted: #5d6857; --line: #d6dbcb;
-  --accent: #2d6a3e; --accent-soft: #d3e3cf; --code: #3450a1; --code-soft: #dbe1f3; --warn: #a8472a; --warn-soft: #f2dcd3; --clm: #a8761b; --d4: #174a26; --gl: #8a3f8c; --clef: #0f7b8a;
+  --accent: #2d6a3e; --accent-soft: #d3e3cf; --code: #3450a1; --code-soft: #dbe1f3; --warn: #a8472a; --warn-soft: #f2dcd3; --clm: #a8761b; --d4: #174a26; --gl: #8a3f8c; --clef: #0f7b8a; --jev: #1f2937;
   --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
   --pixel: "Silkscreen", "IBM Plex Mono", ui-monospace, monospace;
@@ -15,13 +15,13 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --ground: #12160f; --surface: #1a2016; --ink: #e2e8da; --muted: #9aa590; --line: #2f3829;
-    --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8; --clef: #6fd0dc;
+    --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8; --clef: #6fd0dc; --jev: #e5e7eb;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
   --ground: #12160f; --surface: #1a2016; --ink: #e2e8da; --muted: #9aa590; --line: #2f3829;
-  --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8; --clef: #6fd0dc;
+  --accent: #86c48f; --accent-soft: #243a28; --code: #97aaf0; --code-soft: #232b45; --warn: #ee9570; --warn-soft: #43261c; --clm: #e2b454; --d4: #c3ecc6; --gl: #d79ad8; --clef: #6fd0dc; --jev: #e5e7eb;
 }
 body { background: var(--ground); color: var(--ink); font: 16px/1.6 var(--sans); padding-inline: 20px; padding-block: 40px 80px; }
 main { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
@@ -88,46 +88,24 @@ footer { font-size: 13px; color: var(--muted); }
 <header style="display:flex;flex-direction:column;gap:14px">
   <div class="eyebrow">Jev reproductions · follow-up to the sentiment benchmark · September 2026</div>
   <h1>Asking for a Snake Move</h1>
-  <p class="lede">People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same
-  requests to eight open System One models on one laptop, zero-shot, 10 games per model and request.
-  <b>The fast, straight-to-the-food videos rely on code for the geometry.</b> Asked to read the board themselves,
-  the models are poor at it, and so is Jev. Given one verdict per option, six of the eight play well, but each one
-  needs the wording to suit it. And once the options carry verdicts, seven keyword rules with no model play as well as any of them.</p>
+  <p class="lede">People posted Jev playing Snake. We read how six of those demos phrase each move, then put the same requests to eight open System One models on one laptop and to hosted Jev, zero-shot, 10 games per model and request. <b>The fast, straight-to-the-food videos rely on code for the geometry.</b> Asked to play from the board itself, every model fails, Jev included, although Jev and Clef-flash read single positions well. Given one verdict per option, Jev, Clef-flash and five other models play well, each with wording that suits it. And once the options carry verdicts, seven keyword rules with no model play about as well as any of them.</p>
 </header>
 
 <section>
   <h2>What we found</h2>
   <ul class="findings">
-    <li><span class="n">1</span><p><b>The simple way fails, for Jev and for the open models.</b> The only published
-      numbers of Jev playing (nadeem4's arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it
-      circled until it starved. On the raw board, five of the seven models tried died within about 9 steps in every
-      game; with nadeem4's phrasing or sorrycc's facts they circled and starved. Two models partly read the board:
-      Kev 4B (13.1 food with nadeem4's phrasing) and Clef-flash, which picks a good move on 85% of the hard raw-board
-      states, but both still die or starve every game.</p></li>
-    <li><span class="n">2</span><p><b>The demos that look good move the spatial work into code</b>: filtering out fatal
-      moves, flood-fill facts, confidence gates, or a waypoint pathfinder that steers every tick while Jev only picks a
-      target every 2.6 seconds. CLM's own game demo does the same.</p></li>
-    <li><span class="n">3</span><p><b>What works: one verdict per option, and nothing else in the state.</b> Code writes
-      "moves closer to the food; keeps the most room" into each option. For five models the best such request picks a
-      good single move 95–99% of the time (90–100% on the hard states). Three things had broken them: numbers to compare
-      across options, direction words in the state, and, for two models, the word "eats".</p></li>
-    <li><span class="n">4</span><p><b>The wording has to suit the model.</b> CLM 8B and GLiNER 340M give any option that
-      says "eats the food" almost no probability, so they circle next to the food. Worded as "moves closer to the
-      food", CLM goes from 0 to 36.2 food per game and GLiNER from 2.7 to 26.3. For the other models it makes little
-      difference.</p></li>
-    <li><span class="n">5</span><p><b>Better single moves don't mean longer games.</b> Decider 4B and Kev 4B are more
-      decisive than Decider 2B and follow "closer to the food" into tight spaces: they die in 9 and 10 of 10 games,
-      Decider 2B in 2. With 36.9 food per game, Decider 2B was the best model until Cloudflare's Clef-flash: 39.3
-      food per game with judged options and no death in 10 games, close to the best code baseline (41.1).</p></li>
-    <li><span class="n">6</span><p><b>Speed varies 60-fold.</b> CLM answers in ~4 ms once its cache is warm (10 games in
-      16 s), GLiNER in 70–80 ms, Kev in ~110, Decider 2B in ~145, Decider 4B in ~260 and Clef-flash in ~520 ms per move. ximing's extra
-      questions roughly double that, and on those rows code picks up to two moves in three.</p></li>
-    <li><span class="n">7</span><p><b>A table of phrases does as well.</b> Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, level with the best model (Clef-flash, 39.3). In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options.</p></li>
+    <li><span class="n">1</span><p><b>The simple way fails, for Jev and for the open models.</b> The only published numbers of Jev playing (nadeem4's arena) are 1.8 food per game against 17.3 for a few lines of greedy code; it circled until it starved, and hosted Jev does the same here with that phrasing (82% right turns, starved in 10 of 10). On the raw board every model dies in every game. Reading a single position is easier: hosted Jev picks a good move on 97% of the hard raw-board states, Clef-flash on 85% and Kev 4B on 79%, but none of them turns that into a game.</p></li>
+    <li><span class="n">2</span><p><b>The demos that look good move the spatial work into code</b>: filtering out fatal moves, flood-fill facts, confidence gates, or a waypoint pathfinder that steers every tick while Jev only picks a target every 2.6 seconds. CLM's own game demo does the same.</p></li>
+    <li><span class="n">3</span><p><b>What works: one verdict per option, and nothing else in the state.</b> Code writes "moves closer to the food; keeps the most room" into each option. For five open models the best such request picks a good single move 95–99% of the time (90–100% on the hard states). Three things had broken them: numbers to compare across options, direction words in the state, and, for two models, the word "eats".</p></li>
+    <li><span class="n">4</span><p><b>The wording has to suit the model.</b> CLM 8B and GLiNER 340M give any option that says "eats the food" almost no probability, so they circle next to the food. Worded as "moves closer to the food", CLM goes from 0 to 36.2 food per game and GLiNER from 2.7 to 26.3. For the other models it makes little difference.</p></li>
+    <li><span class="n">5</span><p><b>Hosted Jev is the best player, Clef-flash the best open one.</b> With judged options Jev eats 40.6 food per game and Clef-flash 39.3, neither dying once in 10 games, against 41.1 for the best code baseline. Decider 4B and Kev 4B follow "closer to the food" into tight spaces and die in 9 and 10 of 10 games; Decider 2B (36.9) in 2. Only Jev also plays well from sorrycc's facts in the options (37.3; the open models 0.5–17.2).</p></li>
+    <li><span class="n">6</span><p><b>Speed varies over 100-fold.</b> CLM answers in ~4 ms once its cache is warm (10 games in 16 s), GLiNER in 70–80 ms, Kev in ~110, Decider 2B in ~145, Decider 4B in ~260 and Clef-flash in ~520 ms per move on the laptop; hosted Jev in ~270 ms including the network round trip. ximing's extra questions roughly double that, and on those rows code picks up to two moves in three.</p></li>
+    <li><span class="n">7</span><p><b>A table of phrases does about as well.</b> Once each option carries a verdict, adding up points for seven phrases, with no model at all, picks a good move on 100% of the hard states and eats 39.0 food per game without dying, between Clef-flash (39.3) and Jev (40.6). In Snake the model doesn't need to be smart: code has already done the understanding when it wrote the options.</p></li>
   </ul>
 </section>
 
 <section>
-  <h2>The eight models</h2>
+  <h2>The models</h2>
   <p>All zero-shot, as released: the same models as in the sentiment benchmark. Every one answers the same Jev request,
   <code>{state, questions}</code>, and returns a probability per option. They differ in how they read it, which turns out to
   matter here.</p>
@@ -135,6 +113,7 @@ footer { font-size: 13px; color: var(--muted); }
     <table>
       <thead><tr><th>Model</th><th>How it reads the request</th><th>Runs here as</th><th class="num">Sentiment</th></tr></thead>
       <tbody>
+        <tr><td>Jev (hosted)</td><td>TypeSafe's own System One model, closed weights; the reference the others reproduce (jev-1.13.0, run by Rami Luisto)</td><td>TypeSafe API over the network (<code>jev_client.py</code>); latency includes the round trip</td><td class="num">73.7%</td></tr>
         <tr><td>Clef-flash</td><td>Cloudflare's post-trained Qwen3.5-9B: a joint schema head reads the final hidden states and scores the options of all questions together; options are sorted before encoding</td><td>own environment, <code>/v1/systemone</code> adapter (PyTorch MPS)</td><td class="num">59.7%</td></tr>
         <tr><td>Decider 2B</td><td>Qwen3.5-2B fine-tune: state, question and lettered options in one sequence; answer from the letter logits</td><td>in-process, PyTorch MPS</td><td class="num">74.0%</td></tr>
         <tr><td>Decider 4B v2</td><td>the same, on Qwen3.5-4B</td><td>in-process, PyTorch MPS</td><td class="num">75.0%</td></tr>

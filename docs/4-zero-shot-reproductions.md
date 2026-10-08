@@ -239,9 +239,9 @@ Two details of its input code matter for the results:
   0.620 / 0.623 with `s` / `q`, and 0.600 with label words only: within noise, and every variant calls about two
   thirds of the tweets neutral.
 
-Results: **0.597 on the tweets** (macro-F1 0.594, ECE 0.205, 477 ms per tweet), but the **best model in the Finnish
-test** (0.928 in Finnish, ECE ≈ 0.03) and the **best player in Snake** (39.3 food per game with judged options, no
-death in 10 games; 85% good moves on the hard raw-board probe states). The 27B Clef (55 GB bf16) does not fit a
+Results: **0.597 on the tweets** (macro-F1 0.594, ECE 0.205, 477 ms per tweet), but the **best open model in the Finnish
+test** (0.928 in Finnish, ECE ≈ 0.03; hosted Jev 0.931, level) and the **best open player in Snake** (39.3 food per game
+with judged options, no death in 10 games; hosted Jev 40.6; 85% good moves on the hard raw-board probe states, Jev 97%). The 27B Clef (55 GB bf16) does not fit a
 32 GB Mac. Its probabilities are the head's raw softmax; the release applies no temperature.
 
 ## 4.8 Results

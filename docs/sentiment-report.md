@@ -2,7 +2,7 @@
 
 > Generated from the same data as the interactive version, [`docs/page/index.html`](page/index.html), by `docs/page/build.py`.
 
-Jev (TypeSafe AI, 15 Sept 2026) answers typed questions with probabilities instead of generating text. Within a week, dozens of open reproductions appeared. We take every well-ranked one that runs on a 32 GB Apple M5, plus newly released ones (Decider 4B v2, GLiNER2.5-Decide, CLM, Cloudflare's Clef-flash), ask each the **same sentiment question** about **300 human-labelled tweets**, and race them against local LLMs in LM Studio. The main comparison is **zero-shot**; a reference section documents three models we also trained on tweets.
+Jev (TypeSafe AI, 15 Sept 2026) answers typed questions with probabilities instead of generating text. Within a week, dozens of open reproductions appeared. We take every well-ranked one that runs on a 32 GB Apple M5, plus newly released ones (Decider 4B v2, GLiNER2.5-Decide, CLM, Cloudflare's Clef-flash), and hosted Jev as the reference, ask each the **same sentiment question** about **300 human-labelled tweets**, and race them against local LLMs in LM Studio. The main comparison is **zero-shot**; a reference section documents three models we also trained on tweets.
 
 |  |  |
 |---|---|
@@ -41,6 +41,7 @@ They differ mainly in *how* they turn a language model into a chooser. Six famil
 | Inference technique | **stock** LLM; lettered options, answer read from letter logits | nothing | SemIf, openvons |
 | Contrastive bi-encoder | frozen LLM embeds text and each option **separately**; heads align them; softmax of cosine | projection heads | CLM 8B |
 | Backbone + joint head | post-trained LLM; a small transformer head reads its final hidden states and scores all options of all questions **jointly** | whole model + head | Clef-flash (Cloudflare) |
+| Reference: hosted Jev | TypeSafe's own closed model, called over its API; the model the others reproduce | – | Jev 1.13.0 (Rami Luisto's run, [6-jev.md](6-jev.md)) |
 
 Chosen from the [Jev Decision Index](https://huggingface.co/spaces/multimodalart/jev-decision-index) (31 reproductions, 37 benchmarks, run on a 96 GB NVIDIA card): the best-ranked ones that fit this laptop.
 
@@ -75,7 +76,7 @@ Same 300 tweets, one per call, after a warm-up call. The LLMs get the same label
 | Decider 4B v2 | Full fine-tune | 75.0% | 0.751 | 258 ms | 296 ms | 0.056 |
 | Decider 2B | Full fine-tune | 74.0% | 0.745 | 143 ms | 163 ms | 0.032 |
 | Gemma 4 26B-A4B | LLM (LM Studio) | 74.0% | 0.736 | 660 ms | 894 ms | 0.260 |
-| jev | Encoder + head | 73.7% | 0.723 | 260 ms | 355 ms | 0.154 |
+| Jev (hosted) | Hosted Jev (reference) | 73.7% | 0.723 | 260 ms | 355 ms | 0.154 |
 | SemIf · Qwen3.5-9B (variant) | Inference technique | 73.0% | 0.707 | 320 ms | 349 ms | 0.080 |
 | Gemma 4 26B · bare prompt | LLM (LM Studio) | 72.3% | 0.715 | 388 ms | 447 ms | 0.277 |
 | SemIf · Qwen3.5-4B | Inference technique | 71.7% | 0.698 | 189 ms | 349 ms | 0.054 |
@@ -134,12 +135,12 @@ Every model confuses polar tweets with neutral ones far more than negative with 
 
 The same 300 tweets with the three options in all 6 orders (1,800 decisions per model):
 
-|  | Laya | SemIf · 4B | Decider 2B | Clef-flash |
-|---|---|---|---|---|
-| Accuracy, correct answer listed 1st / 2nd / 3rd | 69 / 61 / 59% | 72 / 71 / 72% | 75 / 73 / 74% | 62 / 62 / 62% |
-| Picks by position 1st / 2nd / 3rd (order-blind = 33/33/33) | 37 / 32 / 31% | 34 / 33 / 34% | 34 / 33 / 34% | 33 / 33 / 33% |
-| Consistent preference? (χ² p) | **yes**, p = 0.00431 | no, p = 0.851 | no, p = 0.835 | no, p = 1 |
-| Tweets whose answer changes with order alone | 22.0% | 19.3% | 5.7% | 0.0% |
+|  | Laya | SemIf · 4B | Decider 2B | Clef-flash | Jev (hosted) |
+|---|---|---|---|---|---|
+| Accuracy, correct answer listed 1st / 2nd / 3rd | 69 / 61 / 59% | 72 / 71 / 72% | 75 / 73 / 74% | 62 / 62 / 62% | 73 / 75 / 73% |
+| Picks by position 1st / 2nd / 3rd (order-blind = 33/33/33) | 37 / 32 / 31% | 34 / 33 / 34% | 34 / 33 / 34% | 33 / 33 / 33% | 33 / 34 / 33% |
+| Consistent preference? (χ² p) | **yes**, p = 0.00431 | no, p = 0.851 | no, p = 0.835 | no, p = 1 | no, p = 0.663 |
+| Tweets whose answer changes with order alone | 22.0% | 19.3% | 5.7% | 0.0% | 5.0% |
 
 Only Laya has a consistent pull (towards the first option). SemIf has no preferred position but flips almost a fifth of its answers. Decider, trained on shuffled options, is nearly order-blind; the bi-encoder CLM is order-blind by construction.
 
@@ -229,6 +230,16 @@ Accept the System One answer when its top probability clears a threshold, otherw
 | ≥ 0.9 | 74.3% | 72% | 681 ms |
 | LLM only | 74.0% | 100% | 669 ms |
 
+| Jev (hosted) → Gemma 4 26B-A4B | Accuracy | Sent to LLM | Avg per tweet |
+|---|---|---|---|
+| System One only | 73.7% | 0% | 275 ms |
+| ≥ 0.5 | 74.3% | 2% | 292 ms |
+| ≥ 0.6 | 74.7% | 12% | 355 ms |
+| ≥ 0.7 | 73.7% | 20% | 410 ms |
+| ≥ 0.8 | 73.3% | 29% | 472 ms |
+| ≥ 0.9 | 72.7% | 39% | 534 ms |
+| LLM only | 74.0% | 100% | 669 ms |
+
 ## For reference: the trained models
 
 Not part of the main comparison (with labelled data you could train a classifier on embeddings instead), but it shows each architecture's ceiling. Same 3,000 training tweets, one epoch, temperature refitted on 300 validation tweets; test tweets unseen.
@@ -242,7 +253,8 @@ Not part of the main comparison (with labelled data you could train a classifier
 ## Takeaways
 
 - **Zero-shot, the Decider models match the best local LLM.** Decider 4B v2 75.0% and Decider 2B 74.0% vs Gemma 4 26B-A4B 74.0%: a statistical tie (paired p ≈ 0.8), at 2.6× and 4.6× lower latency, with honest probabilities. On this task the 2B is the better deal.
-- **One task is not enough to rank these models.** Cloudflare's Clef-flash is the best model in our Finnish and Snake tests, but here scores 59.7%: it calls about two thirds of the tweets neutral, whatever the question ID or label wording (0.60–0.62). Its option order never matters: its code sorts the options first.
+- **One task is not enough to rank these models.** Cloudflare's Clef-flash is the best open model in our Finnish and Snake tests, but here scores 59.7%: it calls about two thirds of the tweets neutral, whatever the question ID or label wording (0.60–0.62). Its option order never matters: its code sorts the options first.
+- **Hosted Jev is in the top group, not ahead of it.** Jev scores 73.7%, level with the Decider models and Gemma 26B (paired p ≥ 0.7). It gets 93 of 100 negative tweets right but only 47 neutral ones, often confidently (ECE 0.154); its latency includes the network round trip to TypeSafe.
 - **Letter logits are the strongest readout here.** Even a *stock* base model read that way gets 71.7% (SemIf 4B) and 73.0% (9B); pointer and marker heads trail (Kev 9B 69.0%, Laya 63.3%).
 - **The base model matters as much as the technique.** The same idea on an instruct model (openvons) reaches 68.7% but almost never says "neutral" (macro-F1 0.617) and is over-confident (ECE 0.305).
 - **Bigger isn't automatically better within a family.** GLiNER2.5-Decide-1B (63.0%) doesn't beat the 340M (63.7%); Decider 4B v2 only ties the 2B.

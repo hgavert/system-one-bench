@@ -8,7 +8,7 @@ summary = json.loads(Path("results/summary.json").read_text())
 slim = [{k: s[k] for k in ("name", "accuracy", "macro_f1", "latency_ms_p50", "latency_ms_p95",
                            "throughput_msgs_per_s", "ece", "confusion_matrix")} for s in summary]
 # zero-shot cascades shown on the page: System One model -> best LLM
-SHOW = ["decider-2b", "semif"]
+SHOW = ["decider-2b", "semif", "jev"]
 cascades = {n: json.loads(Path(f"results/cascades/{n}.json").read_text())["rows"]
             for n in SHOW if Path(f"results/cascades/{n}.json").exists()}
 html = (here / "template.html").read_text()

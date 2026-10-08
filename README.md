@@ -15,7 +15,7 @@ repo takes the best-ranked ones that run on a 32 GB Apple M5, plus the strongest
 | **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game | understand Finnish: topic, reading comprehension, intent, reviews |
 | **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways | the same `choice` questions on 4 datasets × 300 items, in English and in Finnish |
 | **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) | Qwen 3.8 27B (vLLM, another machine) |
-| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster; Clef-flash, best in the other two tests, scores 59.7% | asked to read the board, the models fail (so does Jev); with one verdict per option, Clef-flash eats 39.3 food per game without dying, Decider 2B 36.9, close to code's 41.1 | Clef-flash is best, ahead of the 27B LLM (0.928 vs 0.907 in Finnish); Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish; Decider 2B loses ~7; CLM collapses |
+| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster; hosted Jev 73.7%, in the same top group; Clef-flash, the best open model in the other two tests, 59.7% | asked to play from the board, every model fails, Jev included; with one verdict per option, hosted Jev eats 40.6 food per game and Clef-flash 39.3 (best open model), neither dying, close to code's 41.1 | hosted Jev and Clef-flash lead, level with each other (0.931 / 0.928 in Finnish) and ahead of the 27B LLM (0.907); Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish; Decider 2B loses ~7; CLM collapses |
 | **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [docs/finnish-report.md](docs/finnish-report.md) · [interactive](docs/finnish-report/index.html) |
 
 The reports are generated from `results/`: `uv run python docs/page/build.py`,
@@ -79,7 +79,7 @@ after the Decision Index edition used here.)
 * **The Decider models tie the best local LLM zero-shot**: Decider 4B v2 0.750 and Decider 2B 0.740 vs
   Gemma 26B 0.740 (paired p ≈ 0.8), with honest probabilities. The 2B is the better deal: as accurate, 4.6× faster
   than the LLM and 1.8× faster than the 4B.
-* **One task is not enough to rank these models**: Cloudflare's Clef-flash, best in the Snake and Finnish tests,
+* **One task is not enough to rank these models**: Cloudflare's Clef-flash, the best open model in the Snake and Finnish tests,
   scores 0.597 here. It calls about two thirds of the tweets neutral, whatever the question ID or label wording
   (0.60–0.62, [adapters/clef_question_variants.py](adapters/clef_question_variants.py)).
 * **Bigger isn't automatically better within a family**: GLiNER2.5-Decide-1B (0.630) doesn't beat the 340M
@@ -158,8 +158,8 @@ Each model's best request (among those where the model decides every move), 10 g
 
 * **The simple way fails, for Jev too.** Given the raw board, or nadeem4's or sorrycc's published phrasing, the models
   drive into walls or circle until they starve. Jev's only published result is 1.8 food per game against 17.3 for
-  greedy code. The demos that look good let code do the geometry. Clef-flash reads the raw board best (a good move on
-  85% of the hard probe states) but still dies in every raw-board game.
+  greedy code. The demos that look good let code do the geometry. Hosted Jev reads a single raw board best (a good move on
+  97% of the hard probe states), Clef-flash next (85%), but both still die in every raw-board game.
 * **What works: one verdict per option, and nothing else in the state.** Code writes "moves closer to the food; keeps
   the most room" into each option. Numbers to compare across options and direction words in the state (`heading: up`)
   are what break the small models.
@@ -168,7 +168,7 @@ Each model's best request (among those where the model decides every move), 10 g
 * **Better single moves don't mean longer games.** Decider 4B v2 and Kev 4B are as accurate as Decider 2B on single
   moves but chase the food into tight spaces and die in 9–10 games of 10.
 * **Speed varies over 100-fold**, from CLM's ~4 ms per move (everything cached) to Decider 4B v2's ~260 ms and
-  Clef-flash's ~520 ms. Clef-flash is also the best player: 39.3 food per game with judged options, never dying.
+  Clef-flash's ~520 ms. With judged options hosted Jev eats 40.6 food per game and Clef-flash, the best open model, 39.3, neither ever dying.
 * **A phrase table matches the models.** Once each option carries a verdict, adding up points for seven phrases
   ("moves closer to the food" +3, "DEAD END" −100, ...) picks as well as the best model and eats as much per game
   (39.0, Clef-flash 39.3), in under a millisecond. What a model adds in Snake is reading the player's strategy text
@@ -210,8 +210,9 @@ SIB, Belebele and MASSIVE items (paired, so much less noisy).
 \*Decider was trained on MASSIVE's training split (multilingual), so that column is not zero-shot for Decider.
 Chance: 0.14 / 0.25 / 0.10 / 0.50.
 
-* **Clef-flash is the best model in Finnish**: 0.928 averaged over the four datasets in Finnish, ahead of the 27B
-  LLM (0.907); −1.8 points from English, best on reading comprehension (Belebele 0.927 vs the LLM's 0.863), ECE ≈ 0.03.
+* **Hosted Jev and Clef-flash lead, level with each other**: 0.931 and 0.928 averaged over the four datasets in Finnish
+  (no dataset differs significantly), ahead of the 27B LLM (0.907); −1.3 and −1.8 points from English; best on reading
+  comprehension (Belebele 0.950 and 0.927 vs the LLM's 0.863). Clef-flash is the best open model, with ECE ≈ 0.03.
 * **Three more System One models keep their English level in Finnish**: Decider 4B v2, Kev 9B and Kev 4B lose about 2
   points on the same items, less than the 27B LLM (3.6). Decider 4B v2 is the strongest of these and beats the LLM on
   Belebele, which its card lists as held out of training; Kev 9B ties the LLM on native Finnish reviews.

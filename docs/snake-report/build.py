@@ -15,7 +15,7 @@ from pathlib import Path
 R = Path("results/snake")
 HERE = Path(__file__).parent
 DATA = R / "report-data.json"
-MODELS = [("clef-flash", "Clef-flash", "var(--clef)"), ("decider", "Decider 2B", "var(--accent)"), ("decider-4b-v2", "Decider 4B", "var(--d4)"),
+MODELS = [("jev", "Jev (hosted)", "var(--jev)"), ("clef-flash", "Clef-flash", "var(--clef)"), ("decider", "Decider 2B", "var(--accent)"), ("decider-4b-v2", "Decider 4B", "var(--d4)"),
           ("kev-4b", "Kev 4B", "var(--code)"), ("clm-latest", "CLM 8B", "var(--clm)"),
           ("gliner-decide", "GLiNER 340M", "var(--gl)"), ("gliner-decide-1b", "GLiNER 1B", "color-mix(in srgb, var(--gl) 55%, var(--muted))"),
           ("laya", "Laya", "var(--muted)")]
@@ -55,6 +55,33 @@ def aggregate(d):
     return row
 
 
+def summary_rows(engine, label, path):
+    """Rows for a model whose per-move logs aren't in the repo, read from its SUMMARY table (e.g. hosted Jev's
+    results/snake/SUMMARY-jev.md). Everything the report shows is in that table except composed's who-decided split."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))          # repo root, for snake/
+    from snake.formulations import FORMULATIONS
+    title = {f.title: k for k, f in FORMULATIONS.items()}
+    text = path.read_text()
+    games = int(text.split(" seeds")[0])
+    rows = []
+    for line in text.splitlines():
+        if not line.startswith(f"| {label} · "):
+            continue
+        c = [x.strip() for x in line.strip("|").split("|")]
+        name = title[c[0].split(" · ", 1)[1]]
+        mean, best = (float(x) for x in c[1].split(" / "))
+        died = round(float(c[3].rstrip("%")) / 100 * games)
+        starved = int(c[4])
+        p50, avg = (float(x) for x in c[7].replace(" ms", "").split(" / "))
+        ended = {k: v for k, v in (("died", died), ("starved", starved), ("step cap (500)", games - died - starved)) if v}
+        rows.append({"engine": engine, "name": name, "games": games, "score_mean": mean, "score_max": int(best),
+                     "steps_mean": float(c[2]), "latency_p50_ms": p50, "latency_mean_ms": avg, "died": died, "ended": ended})
+    return rows
+
+
+SUMMARY_ONLY = {"jev": ("Jev (hosted)", R / "SUMMARY-jev.md")}   # engine -> (label in that table, file)
+
+
 def load():
     probe = {m: json.load(open(R / f"probe-{m}.json"))["results"] for m, _, _ in MODELS if (R / f"probe-{m}.json").exists()}
     files = sorted((R / "games").glob("*.json"))
@@ -70,6 +97,10 @@ def load():
         data = json.loads(DATA.read_text())
     else:
         sys.exit("no game logs in results/snake/games/ and no results/snake/report-data.json: run 09_snake_benchmark.py")
+    have = {r["engine"] for r in data["rows"]}
+    for engine, (label, path) in SUMMARY_ONLY.items():
+        if engine not in have and path.exists():
+            data["rows"] += summary_rows(engine, label, path)
     order = {m: i for i, (m, _, _) in enumerate(MODELS)} | {"code": 99}
     fo = {k: i for i, k in enumerate(NAMES)}
     data["rows"].sort(key=lambda r: (order.get(r["engine"], 50), fo.get(r["name"], 99)))
@@ -90,10 +121,12 @@ def keyword_rows(data):
         rows.append({"who": f"{KEYWORD[r['engine']]} · {NAMES[r['name']]}", "food": f"{r['score_mean']:.1f}",
                      "best": r["score_max"], "died": f"{r['died']} of {r['games']}",
                      "probe": f"{pr:.0%}" if pr is not None else "–", "win": r["engine"] == "keyword"})
-    ref = [r for r in data["rows"] if (r["engine"], r["name"]) in (("decider", "judged"), ("code", "greedy-safe"))]
+    judged = [r for r in data["rows"] if r["name"] == "judged" and r["engine"] != "code"]
+    top = max(judged, key=lambda r: r["score_mean"]) if judged else None
+    ref = [r for r in data["rows"] if r is top or (r["engine"], r["name"]) == ("code", "greedy-safe")]
     for r in ref:
         pr = data["probe"].get(r["engine"], {}).get(r["name"], {}).get("hard", {}).get("good")
-        rows.append({"who": who(r) + (" (best model)" if r["engine"] == "decider" else ""), "food": f"{r['score_mean']:.1f}",
+        rows.append({"who": who(r) + (" (best model)" if r is top else ""), "food": f"{r['score_mean']:.1f}",
                      "best": r["score_max"], "died": f"{r['died']} of {r['games']}",
                      "probe": f"{pr:.0%}" if pr is not None else "–", "ref": True})
     other = {r["name"]: r for r in data["keyword"] if r["engine"] == "keyword"}
