@@ -1,0 +1,606 @@
+{
+ "results": {
+  "image-clear-joint": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.97,
+    "balanced_acc": 0.969,
+    "p_truth": 0.895,
+    "majority": 0.508,
+    "picks": {
+     "false": 69,
+     "true": 63
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.944,
+    "balanced_acc": 0.946,
+    "p_truth": 0.861,
+    "majority": 0.524,
+    "picks": {
+     "false": 66,
+     "true": 58
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.367,
+    "balanced_acc": 0.368,
+    "p_truth": 0.338,
+    "majority": 0.26,
+    "picks": {
+     "right": 74,
+     "left": 25,
+     "up": 26,
+     "down": 25
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.76,
+    "balanced_acc": 0.651,
+    "p_truth": 0.677,
+    "majority": 0.707,
+    "picks": {
+     "true": 124,
+     "false": 26
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.827,
+    "balanced_acc": 0.768,
+    "p_truth": 0.698,
+    "majority": 0.68,
+    "picks": {
+     "true": 114,
+     "false": 36
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.82,
+    "balanced_acc": 0.797,
+    "p_truth": 0.677,
+    "majority": 0.693,
+    "picks": {
+     "true": 101,
+     "false": 49
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.733,
+    "balanced_acc": 0.686,
+    "p_truth": 0.648,
+    "majority": 0.673,
+    "picks": {
+     "false": 45,
+     "true": 105
+    }
+   },
+   "_": {
+    "p50_ms": 2218.7,
+    "input_tokens": 1009,
+    "engine": "clef-flash over HTTP"
+   }
+  },
+  "image-plain-joint": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.97,
+    "balanced_acc": 0.969,
+    "p_truth": 0.898,
+    "majority": 0.508,
+    "picks": {
+     "false": 69,
+     "true": 63
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.935,
+    "balanced_acc": 0.938,
+    "p_truth": 0.869,
+    "majority": 0.524,
+    "picks": {
+     "false": 67,
+     "true": 57
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.26,
+    "balanced_acc": 0.263,
+    "p_truth": 0.252,
+    "majority": 0.26,
+    "picks": {
+     "down": 55,
+     "left": 31,
+     "up": 30,
+     "right": 34
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.753,
+    "balanced_acc": 0.726,
+    "p_truth": 0.682,
+    "majority": 0.707,
+    "picks": {
+     "true": 99,
+     "false": 51
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.807,
+    "balanced_acc": 0.786,
+    "p_truth": 0.713,
+    "majority": 0.68,
+    "picks": {
+     "true": 99,
+     "false": 51
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.833,
+    "balanced_acc": 0.825,
+    "p_truth": 0.751,
+    "majority": 0.693,
+    "picks": {
+     "true": 97,
+     "false": 53
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.793,
+    "balanced_acc": 0.741,
+    "p_truth": 0.727,
+    "majority": 0.673,
+    "picks": {
+     "false": 40,
+     "true": 110
+    }
+   },
+   "_": {
+    "p50_ms": 2177.8,
+    "input_tokens": 955,
+    "engine": "clef-flash over HTTP"
+   }
+  },
+  "text-joint": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.977,
+    "balanced_acc": 0.978,
+    "p_truth": 0.889,
+    "majority": 0.508,
+    "picks": {
+     "false": 64,
+     "true": 68
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.774,
+    "balanced_acc": 0.78,
+    "p_truth": 0.691,
+    "majority": 0.524,
+    "picks": {
+     "false": 75,
+     "true": 49
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.213,
+    "balanced_acc": 0.215,
+    "p_truth": 0.212,
+    "majority": 0.26,
+    "picks": {
+     "down": 69,
+     "up": 59,
+     "left": 17,
+     "right": 5
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.567,
+    "balanced_acc": 0.527,
+    "p_truth": 0.547,
+    "majority": 0.707,
+    "picks": {
+     "true": 91,
+     "false": 59
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.773,
+    "balanced_acc": 0.822,
+    "p_truth": 0.719,
+    "majority": 0.68,
+    "picks": {
+     "false": 78,
+     "true": 72
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.847,
+    "balanced_acc": 0.811,
+    "p_truth": 0.711,
+    "majority": 0.693,
+    "picks": {
+     "true": 107,
+     "false": 43
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.607,
+    "balanced_acc": 0.493,
+    "p_truth": 0.593,
+    "majority": 0.673,
+    "picks": {
+     "true": 124,
+     "false": 26
+    }
+   },
+   "_": {
+    "p50_ms": 1931.4,
+    "input_tokens": 868,
+    "engine": "clef-flash over HTTP"
+   }
+  },
+  "image-clear-separate": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.977,
+    "balanced_acc": 0.977,
+    "p_truth": 0.905,
+    "majority": 0.508,
+    "picks": {
+     "false": 68,
+     "true": 64
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.944,
+    "balanced_acc": 0.946,
+    "p_truth": 0.864,
+    "majority": 0.524,
+    "picks": {
+     "false": 66,
+     "true": 58
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.44,
+    "balanced_acc": 0.439,
+    "p_truth": 0.383,
+    "majority": 0.26,
+    "picks": {
+     "right": 59,
+     "up": 33,
+     "down": 19,
+     "left": 39
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.747,
+    "balanced_acc": 0.601,
+    "p_truth": 0.677,
+    "majority": 0.707,
+    "picks": {
+     "true": 134,
+     "false": 16
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.793,
+    "balanced_acc": 0.727,
+    "p_truth": 0.675,
+    "majority": 0.68,
+    "picks": {
+     "true": 115,
+     "false": 35
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.787,
+    "balanced_acc": 0.755,
+    "p_truth": 0.661,
+    "majority": 0.693,
+    "picks": {
+     "true": 102,
+     "false": 48
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.74,
+    "balanced_acc": 0.66,
+    "p_truth": 0.661,
+    "majority": 0.673,
+    "picks": {
+     "false": 32,
+     "true": 118
+    }
+   },
+   "_": {
+    "p50_ms": 1015.0,
+    "input_tokens": 425,
+    "engine": "clef-flash over HTTP"
+   }
+  },
+  "image-blocks-joint": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.985,
+    "balanced_acc": 0.985,
+    "p_truth": 0.891,
+    "majority": 0.508,
+    "picks": {
+     "false": 69,
+     "true": 63
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.96,
+    "balanced_acc": 0.962,
+    "p_truth": 0.878,
+    "majority": 0.524,
+    "picks": {
+     "false": 64,
+     "true": 60
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.527,
+    "balanced_acc": 0.528,
+    "p_truth": 0.423,
+    "majority": 0.26,
+    "picks": {
+     "down": 34,
+     "left": 38,
+     "up": 22,
+     "right": 56
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.72,
+    "balanced_acc": 0.722,
+    "p_truth": 0.643,
+    "majority": 0.707,
+    "picks": {
+     "true": 88,
+     "false": 62
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.773,
+    "balanced_acc": 0.789,
+    "p_truth": 0.696,
+    "majority": 0.68,
+    "picks": {
+     "true": 84,
+     "false": 66
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.8,
+    "balanced_acc": 0.813,
+    "p_truth": 0.743,
+    "majority": 0.693,
+    "picks": {
+     "true": 88,
+     "false": 62
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.767,
+    "balanced_acc": 0.785,
+    "p_truth": 0.71,
+    "majority": 0.673,
+    "picks": {
+     "false": 68,
+     "true": 82
+    }
+   },
+   "_": {
+    "p50_ms": 2267.9,
+    "input_tokens": 1018,
+    "engine": "clef-flash over HTTP"
+   }
+  },
+  "image-blocks-nowall-joint": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.962,
+    "balanced_acc": 0.962,
+    "p_truth": 0.898,
+    "majority": 0.508,
+    "picks": {
+     "false": 70,
+     "true": 62
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.935,
+    "balanced_acc": 0.938,
+    "p_truth": 0.88,
+    "majority": 0.524,
+    "picks": {
+     "false": 67,
+     "true": 57
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.527,
+    "balanced_acc": 0.528,
+    "p_truth": 0.474,
+    "majority": 0.26,
+    "picks": {
+     "left": 25,
+     "up": 27,
+     "right": 65,
+     "down": 33
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.733,
+    "balanced_acc": 0.718,
+    "p_truth": 0.682,
+    "majority": 0.707,
+    "picks": {
+     "true": 94,
+     "false": 56
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.747,
+    "balanced_acc": 0.759,
+    "p_truth": 0.669,
+    "majority": 0.68,
+    "picks": {
+     "true": 84,
+     "false": 66
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.8,
+    "balanced_acc": 0.832,
+    "p_truth": 0.731,
+    "majority": 0.693,
+    "picks": {
+     "true": 82,
+     "false": 68
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.807,
+    "balanced_acc": 0.814,
+    "p_truth": 0.727,
+    "majority": 0.673,
+    "picks": {
+     "false": 62,
+     "true": 88
+    }
+   },
+   "_": {
+    "p50_ms": 2209.5,
+    "input_tokens": 967,
+    "engine": "clef-flash over HTTP"
+   }
+  },
+  "image-blocks-2f-joint": {
+   "food_above": {
+    "n": 132,
+    "acc": 0.947,
+    "balanced_acc": 0.946,
+    "p_truth": 0.874,
+    "majority": 0.508,
+    "picks": {
+     "false": 72,
+     "true": 60
+    }
+   },
+   "food_right": {
+    "n": 124,
+    "acc": 0.96,
+    "balanced_acc": 0.962,
+    "p_truth": 0.89,
+    "majority": 0.524,
+    "picks": {
+     "false": 64,
+     "true": 60
+    }
+   },
+   "heading": {
+    "n": 150,
+    "acc": 0.7,
+    "balanced_acc": 0.702,
+    "p_truth": 0.55,
+    "majority": 0.26,
+    "picks": {
+     "left": 43,
+     "right": 57,
+     "up": 16,
+     "down": 34
+    }
+   },
+   "free_up": {
+    "n": 150,
+    "acc": 0.653,
+    "balanced_acc": 0.662,
+    "p_truth": 0.609,
+    "majority": 0.707,
+    "picks": {
+     "true": 82,
+     "false": 68
+    }
+   },
+   "free_down": {
+    "n": 150,
+    "acc": 0.673,
+    "balanced_acc": 0.705,
+    "p_truth": 0.623,
+    "majority": 0.68,
+    "picks": {
+     "false": 77,
+     "true": 73
+    }
+   },
+   "free_left": {
+    "n": 150,
+    "acc": 0.76,
+    "balanced_acc": 0.803,
+    "p_truth": 0.701,
+    "majority": 0.693,
+    "picks": {
+     "true": 76,
+     "false": 74
+    }
+   },
+   "free_right": {
+    "n": 150,
+    "acc": 0.74,
+    "balanced_acc": 0.77,
+    "p_truth": 0.666,
+    "majority": 0.673,
+    "picks": {
+     "true": 76,
+     "false": 74
+    }
+   },
+   "_": {
+    "p50_ms": 2829.9,
+    "input_tokens": 1235,
+    "engine": "clef-flash over HTTP"
+   }
+  }
+ }
+}

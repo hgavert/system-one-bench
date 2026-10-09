@@ -1,0 +1,112 @@
+{
+ "results": {
+  "see-4-blocks": {
+   "all": {
+    "n": 150,
+    "good": 0.833,
+    "mass": 0.727,
+    "straight": 0.533,
+    "fatal": 0.06,
+    "p50_ms": 1137.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.74,
+    "mass": 0.56,
+    "straight": 0.26,
+    "fatal": 0.0,
+    "p50_ms": 1134.9
+   }
+  },
+  "see-legal-blocks": {
+   "all": {
+    "n": 150,
+    "good": 0.98,
+    "mass": 0.833,
+    "straight": 0.393,
+    "fatal": 0.0,
+    "p50_ms": 1112.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.98,
+    "mass": 0.752,
+    "straight": 0.02,
+    "fatal": 0.0,
+    "p50_ms": 1108.8
+   }
+  },
+  "see-ask-blocks": {
+   "all": {
+    "n": 150,
+    "good": 0.82,
+    "mass": 0.64,
+    "straight": 0.467,
+    "fatal": 0.02,
+    "p50_ms": 2564.5
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.73,
+    "mass": 0.462,
+    "straight": 0.23,
+    "fatal": 0.0,
+    "p50_ms": 2542.8
+   }
+  },
+  "see-4-blocks-2f": {
+   "all": {
+    "n": 150,
+    "good": 0.827,
+    "mass": 0.703,
+    "straight": 0.62,
+    "fatal": 0.067,
+    "p50_ms": 1788.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.66,
+    "mass": 0.492,
+    "straight": 0.34,
+    "fatal": 0.0,
+    "p50_ms": 1794.9
+   }
+  },
+  "see-legal-blocks-2f": {
+   "all": {
+    "n": 150,
+    "good": 0.92,
+    "mass": 0.779,
+    "straight": 0.533,
+    "fatal": 0.0,
+    "p50_ms": 1817.0
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.78,
+    "mass": 0.619,
+    "straight": 0.21,
+    "fatal": 0.0,
+    "p50_ms": 1847.0
+   }
+  },
+  "see-ask-blocks-2f": {
+   "all": {
+    "n": 150,
+    "good": 0.807,
+    "mass": 0.631,
+    "straight": 0.5,
+    "fatal": 0.013,
+    "p50_ms": 3169.8
+   },
+   "hard": {
+    "n": 100,
+    "good": 0.59,
+    "mass": 0.406,
+    "straight": 0.39,
+    "fatal": 0.0,
+    "p50_ms": 3106.9
+   }
+  }
+ }
+}

@@ -1,4 +1,4 @@
-# Open-source Jev reproductions, tested zero-shot in three situations
+# Open-source Jev reproductions, tested zero-shot in four situations
 
 [![Decider 2B playing Snake zero-shot: the board on the left, each move's options, probabilities and the exact prompt on the right](docs/snake-demo.png)](docs/snake-report.md)
 
@@ -8,18 +8,19 @@ move is one typed question, answered with a probability per option.*
 A hands-on tutorial. **Jev** (TypeSafe AI, released 15 Sept 2026) is a "System One" model: it answers typed
 questions with probabilities instead of generating text. Within a week, dozens of open reproductions appeared. This
 repo takes the best-ranked ones that run on a 32 GB Apple M5, plus the strongest ones released since, and tests them
-**zero-shot, with no training for the task**, in three very different situations:
+**zero-shot, with no training for the task**, in four very different situations:
 
-| | Tweet sentiment | Snake | Finnish |
-|---|---|---|---|
-| **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game | understand Finnish: topic, reading comprehension, intent, reviews |
-| **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways | the same `choice` questions on 4 datasets × 300 items, in English and in Finnish |
-| **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) | Qwen 3.8 27B (vLLM, another machine) |
-| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster; hosted Jev 73.7%, in the same top group; Clef-flash, the best open model in the other two tests, 59.7% | asked to play from the board, every model fails, Jev included; with one verdict per option, hosted Jev eats 40.6 food per game and Clef-flash 39.3 (best open model), neither dying, close to code's 41.1 | hosted Jev and Clef-flash lead, level with each other (0.931 / 0.928 in Finnish) and ahead of the 27B LLM (0.907); Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish; Decider 2B loses ~7; CLM collapses |
-| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [docs/finnish-report.md](docs/finnish-report.md) · [interactive](docs/finnish-report/index.html) |
+| | Tweet sentiment | Snake | Finnish | Snake from a picture |
+|---|---|---|---|---|
+| **The situation** | classify one text: negative / neutral / positive | a decision loop: one move per tick, hundreds per game | understand Finnish: topic, reading comprehension, intent, reviews | the same Snake, but the model sees an image of the board (Clef-flash, the only model here that takes images) |
+| **The question** | the same `choice` question about 300 human-labelled tweets | one `choice` per move, asked six different ways | the same `choice` questions on 4 datasets × 300 items, in English and in Finnish | can it see the board (7 questions with known answers), then one move per tick, asked three ways |
+| **Compared with** | local LLMs in LM Studio | code-only players (greedy, greedy + dead-end check) | Qwen 3.8 27B (vLLM, another machine) | the text Snake results, code-only players, published screenshot runs |
+| **Headline** | Decider 4B v2 and 2B tie the best local LLM (75.0% / 74.0% vs 74.0%), 2.6–4.6× faster; hosted Jev 73.7%, in the same top group; Clef-flash, the best open model in the other two tests, 59.7% | asked to play from the board, every model fails, Jev included; with one verdict per option, hosted Jev eats 40.6 food per game and Clef-flash 39.3 (best open model), neither dying, close to code's 41.1 | hosted Jev and Clef-flash lead, level with each other (0.931 / 0.928 in Finnish) and ahead of the 27B LLM (0.907); Decider 4B v2, Kev 9B and Kev 4B lose ~2 points from English to Finnish; Decider 2B loses ~7; CLM collapses | it sees where the food is (94–98%) and, with the board drawn for it, 81% of blocked cells; alone it crashes every game (1.1 food), with deadly moves removed by code it eats 25.2 food per game, more than greedy code (21.0) but less than text with code-written hints (39.3) |
+| **Report** | [docs/sentiment-report.md](docs/sentiment-report.md) · [interactive](docs/page/index.html) | [docs/snake-report.md](docs/snake-report.md) · [interactive](docs/snake-report/index.html) | [docs/finnish-report.md](docs/finnish-report.md) · [interactive](docs/finnish-report/index.html) | [docs/vision-snake-report.md](docs/vision-snake-report.md) |
 
 The reports are generated from `results/`: `uv run python docs/page/build.py`,
-`uv run python docs/snake-report/build.py` and `uv run python docs/finnish-report/build.py`.
+`uv run python docs/snake-report/build.py` and `uv run python docs/finnish-report/build.py`. The vision report is
+written by hand from `results/vision_snake/`.
 
 ## The models
 
@@ -35,7 +36,7 @@ The reports are generated from `results/`: `uv run python docs/page/build.py`,
   last five, released after it; why the index's top five don't fit a 32 GB Mac: [docs/1-landscape.md](docs/1-landscape.md)
 * **Which test ran which:** all of them ran the sentiment test; eight of them also played Snake: Clef-flash, Decider 2B,
   Decider 4B v2, Kev 4B, CLM 8B, GLiNER2.5-Decide 340M and 1B, and Laya. Finnish: Clef-flash, Decider 2B and 4B v2,
-  Kev 0.8B / 4B / 9B, GLiNER2.5-multi-Decide and CLM 8B.
+  Kev 0.8B / 4B / 9B, GLiNER2.5-multi-Decide and CLM 8B. Snake from a picture: Clef-flash only (the rest are text-only).
 * **LLM baselines (sentiment):** Gemma 4 26B-A4B, Gemma 4 12B and Qwen 3.8 27B in LM Studio, with JSON-schema output.
   **Finnish:** Qwen 3.8 27B (FP8) on a vLLM server, thinking off; that test compares accuracy, not speed
 
@@ -226,6 +227,25 @@ Chance: 0.14 / 0.25 / 0.10 / 0.50.
   above chance; GLiNER2.5-multi-Decide, at chance anyway, seldom picks the second answer (0.10 when it is right vs
   0.23–0.39 for the others).
 
+## Test 4: Snake from a picture
+
+The same Snake game, but the model sees a picture of the board instead of text. Only Clef-flash takes images among
+these models, so this is its own test, open to other vision models later (any `/v1/systemone` server that reads
+`images`). First a perception probe (`14_vision_snake_probe.py`, questions with known answers), then moves and games
+(`15_vision_snake.py`, the text test's seeds and rules).
+
+* **It sees the board when it's drawn for it**: food direction 0.94–0.98 balanced accuracy, blocked cells next to the
+  head 0.81 with every obstacle drawn as the same dark square (0.57 with a joined green body), heading 0.53.
+* **Given the picture and only the safe moves, it eats 25.2 food per game**, more than greedy code (21.0), but gets
+  trapped in 9 of 10 games (text verdicts with dead-end warnings: 39.3; the raw text board, without the safe-move
+  filter: 6.5).
+* **Alone it dies like the published vision models** (1.1 food, 10 of 10 into a wall, mostly by choosing to reverse),
+  and split into yes/no questions per direction it wanders and starves (1.2). A previous frame, which shows the
+  motion, makes every request go straight more often.
+
+Report: [docs/vision-snake-report.md](docs/vision-snake-report.md); method and every number:
+[docs/7-vision-snake.md](docs/7-vision-snake.md).
+
 ## Hosted Jev on the same tests
 
 With a TypeSafe API key, `jev-1.13.0` answered exactly the requests above, zero-shot, about 26,600 requests
@@ -347,11 +367,12 @@ Snake:
 Hosted Jev:
 
 * [docs/6-jev.md](docs/6-jev.md): Jev itself on all three tests, with paired comparisons against the open models
+* [docs/7-vision-snake.md](docs/7-vision-snake.md): test 4, Snake from a picture: prior work, how the board is drawn for the vision encoder, the perception probe, three move requests, games
 
 ## Files
 
 ```
-Both tests
+All tests
   scripts/                  setup_engines.sh, download_models.py (pinned revisions + SHA-256 check), fetch helpers
   01_hello_laya.py          step 1: hello world
   jev_client.py             hosted Jev: endpoint, JEV_API_KEY from .env, POST /v1/systemone with backoff
@@ -386,6 +407,11 @@ Finnish
   12_finnish_benchmark.py   step 12: one engine over every item and condition -> results/finnish/runs/<name>.jsonl
   13_finnish_report.py      step 13: all runs -> results/finnish/REPORT.md, summary.json
   docs/finnish-report/      report page (template + build.py -> index.html; build_md.py -> docs/finnish-report.md)
+
+Snake from a picture
+  vision_snake/             the board drawn for a vision encoder (render.py), perception questions, three move requests
+  14_vision_snake_probe.py  step 14: can the model see the board -> results/vision_snake/probe-<engine>.json
+  15_vision_snake.py        step 15: single moves and games -> results/vision_snake/moves-<engine>.json, games/, SUMMARY.md
 ```
 
 ## Data and license
