@@ -15,6 +15,11 @@ kill it. Then it plays better than a simple greedy program; alone, it crashes wi
 *The same position drawn three ways. **blocks** (right) worked best: walls and body are the same dark squares, the
 head is an arrow.*
 
+![One move request: the picture, the text sent with it, only the safe moves as options, and the probability Clef-flash gave each](vision-snake-request.png)
+
+*One move, as Clef-flash gets it: the picture, a sentence saying what the colours mean, and the safe moves to choose
+from. It answers with a probability per move in one forward pass, about 1.1 s on the laptop.*
+
 ## What we found
 
 1. **It sees where the food is.** Above or below, left or right of the head: right 94–98% of the time, in every
@@ -42,6 +47,11 @@ head is an arrow.*
 **Step 1, seeing:** 150 board positions, seven questions each whose answer code knows: is the food above / to the
 right of the head, which way is the head moving, and is each of the four cells next to the head free. Asked from
 four drawing styles, from two frames, and from the text board.
+
+![The board with the vision encoder's patch grid: 16 px patches merged 2 by 2 into one token per 32 px cell](vision-snake-tokens.png)
+
+*Why the cells are 32 px: the encoder merges 16-px patches 2 × 2 into one token, so each board cell is exactly one
+token.*
 
 **Step 2, playing:** three ways of asking for a move, each first on single positions with a known good answer, then
 in 10 games (12×12 board, the same seeds and rules as the text test):
@@ -94,6 +104,16 @@ Games (one frame, blocks style, 10 games each):
 | *Code: the same, plus a dead-end check* | *41.1 / 44* | *2 of 10* |
 | *Qwen3-VL-4B / 8B from screenshots (hatch, 23 games)* | *1.1 / 0.0* | *23 of 23* |
 
+![The last four frames of a see-4 game: the model picks left, towards the food behind the head, which is a reversal, and the snake goes on into the wall](vision-snake-reversal.png)
+
+*How see-4 dies: the food is behind the head, so it picks the way to the food, which is backwards. The game can't
+reverse, so the snake keeps going into the wall. 8 of its 10 games ended like this.*
+
+![A see-legal game: the snake steers towards the food from the picture, eating 25 food in 259 steps](vision-snake-game.gif)
+
+*A see-legal game (seed 1, every 2nd step): from the picture it steers straight to the food, until it boxes itself
+in (25 food, 259 steps).*
+
 * see-4 matches the earlier screenshot experiment almost exactly: 1.1 food and a median of 8 moves, against hatch's
   1.1 and 9.
 * see-legal moves at about 1.1 s per move on the laptop; see-ask takes 2.6 s (eight questions per request).
@@ -130,6 +150,7 @@ uv run python 14_vision_snake_probe.py --style blocks          # seeing (also --
 uv run python 15_vision_snake.py probe --style blocks          # single moves, all three requests
 uv run python 15_vision_snake.py games --style blocks          # 10 games each
 uv run python 15_vision_snake.py summary
+uv run python docs/vision_snake_figures.py                     # the figures here, from the saved games
 ```
 
 Any model behind a `/v1/systemone` server that reads `images` can be tested the same way with `--engine`.
